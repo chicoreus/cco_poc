@@ -17,7 +17,7 @@ create table identifiable_item (
   identifiable_item_id bigint not null primary key auto_increment,
   occurrenceId varchar(900),
   unit_id bigint not null,
-  preparation_id big int not null,  -- allow nulls if including unvouchered observational data
+  preparation_id bigint not null,  -- allow nulls if including unvouchered observational data
   cataloged_item_id bigint,
   individual_count int,
   individual_count_modifier varchar(50),  -- e.g. +
@@ -43,25 +43,25 @@ alter table preparation add constraint fk_parentprep foreign key (parent_prepara
 
 -- add constraint, a preparation for which parent_preparation_id is not null is not allowed to have it's preparation_id present as the parent_preparation_id of any preparation.  Needs a trigger.
 
-delimiter //
-create triger tr_prep_const before update on preparation
-for each row 
-begin
-   IF NEW.parent_id is not null THEN
-      select count(*) from preparation where parent_id = NEW.taxon_id into childcount
-      IF  childcount > 0 
-         SIGNAL sqlstate '45001' set message_text = "A preparation which is a child cannot itself have children."
-      ENDIF;
-   ENDIF;
-end;//
-delimiter ;
+--delimiter //
+-- create trigger tr_prep_const before update on preparation
+-- for each row 
+--begin
+--   IF NEW.parent_id is not null THEN
+ --     select count(*) from preparation where parent_id = NEW.taxon_id into childcount
+ --     IF  childcount > 0 
+ --        SIGNAL sqlstate '45001' set message_text = "A preparation which is a child cannot itself have children."
+  --    ENDIF;
+ --  ENDIF;
+--end;//
+--delimiter ;
 
 --changeset chicoreus:4
 alter table identifiable_item add constraint fk_colobj foreign key (unit_id) references unit (unit_id) on update cascade;
 alter table identifiable_item add constraint fk_prep foreign key (preparation_id) references preparation (preparation_id) on update cascade;
 
 --changeset chicoreus:5
-create table identification
+create table identification(
   -- Definition: The application of a scientific name by some agent at some point in time to an identifiable item.
   identification_id bigint not null primary key auto_increment,
   identifiable_item_id bigint not null,
@@ -141,14 +141,14 @@ create table catalog_number_series (
 create table collecting_event (
    -- Definition: An event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected.
    collecting_event_id bigint not null primary key auto_increment,
-   datecollected_event_date_id big int, 
+   datecollected_event_date_id bigint, 
    collector_number varchar(255),  -- number assigned by the collector to this collecting event
    locality_id bigint,
    collecting_method varchar(255)
 );
 
 --changeset chicoreus:12
-alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references collecting_event (collecting_event_id) on update cascade;
+-- alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references collecting_event (collecting_event_id) on update cascade;
 
 --changeset chicoreus:13
 create table event_date ( 
@@ -185,7 +185,7 @@ create table other_number (
 );
  
 --changeset chicoreus:17
-alter table other_number add unique index idx_tablepk on other_number(targettable, pk);
+-- alter table other_number add unique index idx_tablepk on other_number(targettable, pk);
 
 --changeset chicoreus:18
 create table transaction_item (
@@ -223,11 +223,11 @@ create table agent (
 );
 
 --changeset chicoreus:21
-alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
-alter table taxon add constraint foreign key fk_citauthagent (citedinauthor_agent_id) references agent (agent_id) on update cascade;
+-- alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
+-- alter table taxon add constraint foreign key fk_citauthagent (citedinauthor_agent_id) references agent (agent_id) on update cascade;
