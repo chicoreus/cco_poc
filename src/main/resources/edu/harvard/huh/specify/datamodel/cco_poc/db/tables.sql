@@ -223,11 +223,17 @@ create table agent (
 );
 
 --changeset chicoreus:21
--- alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
+alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
+--changeset chicoreus:22
+alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
+--changeset chicoreus:23
+alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
+--changeset chicoreus:24
+alter table taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
+--changeset chicoreus:25
+alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
+--changeset chicoreus:26
+alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
+--changeset chicoreus:27
+alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
 -- alter table taxon add constraint foreign key fk_citauthagent (citedinauthor_agent_id) references agent (agent_id) on update cascade;
