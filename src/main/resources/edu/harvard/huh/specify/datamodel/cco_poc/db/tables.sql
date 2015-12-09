@@ -55,6 +55,18 @@ begin
       END IF;
    END IF;
 end;//
+create trigger tr_prep_const before insert on preparation
+for each row 
+begin
+   IF NEW.parent_preparation_id is not null THEN
+      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
+      IF  childcount > 0 THEN
+--         update errorCantMakeChildPrep set nofield = nofield;
+           SIGNAL SQLSTATE '45001' 
+               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+      END IF;
+   END IF;
+end;//
 delimiter ;
 
 -- changeset chicoreus:4
