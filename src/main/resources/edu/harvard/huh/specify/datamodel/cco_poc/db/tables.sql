@@ -46,13 +46,14 @@ delimiter //
 create trigger tr_prep_const before update on preparation
 for each row 
 begin
-   IF NEW.parent_id is not null THEN
-      select count(*) into @childcount from preparation where parent_id = NEW.parent_preparation_id;
+   IF NEW.parent_preparation_id is not null THEN
+      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
       IF  childcount > 0 THEN
-         SIGNAL SQLSTATE '45001' 
-             set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
-      ENDIF;
-   ENDIF;
+         update errorCantMakeChildPrep set nofield = nofield;
+--         SIGNAL SQLSTATE '45001' 
+--             set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+      END IF;
+   END IF;
 end;//
 delimiter ;
 
@@ -61,7 +62,7 @@ alter table identifiable_item add constraint fk_colobj foreign key (unit_id) ref
 alter table identifiable_item add constraint fk_prep foreign key (preparation_id) references preparation (preparation_id) on update cascade;
 
 -- changeset chicoreus:5
-create table identification
+create table identification (
   -- Definition: The application of a scientific name by some agent at some point in time to an identifiable item.
   identification_id bigint not null primary key auto_increment,
   identifiable_item_id bigint not null,
@@ -141,7 +142,7 @@ create table catalog_number_series (
 create table collecting_event (
    -- Definition: An event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected.
    collecting_event_id bigint not null primary key auto_increment,
-   datecollected_event_date_id big int, 
+   datecollected_event_date_id bigint, 
    collector_number varchar(255),  -- number assigned by the collector to this collecting event
    locality_id bigint,
    collecting_method varchar(255)
@@ -199,7 +200,7 @@ create table transaction_item (
    description varchar(900),
    item_conditions text,  -- conditions applied to this item in this transaction, e.g. no destructive sampling
    disposition varchar(50)
-)
+);
 
 -- changeset chicoreus:19
 create table col_transaction (
