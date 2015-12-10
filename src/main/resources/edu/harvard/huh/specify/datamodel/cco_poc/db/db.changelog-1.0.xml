@@ -7,7 +7,7 @@
     
     <changeSet id="chicoreus:1 xml" author="paul morris">
         <createTable tableName="unit">
-            <column name="unid_id" type="bigint" autoIncrement="true">
+            <column name="unit_id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="field_number" 			type="varchar(255)"/>
@@ -50,22 +50,24 @@
 	    <column name="remarks" 			type="text"/>
         </createTable>
     </changeSet>
-<!--
-    <changeSet id="chicoreus:3.5 xml" author="paul morris">
+
+<!-- alter table preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade;  -->
+    <changeSet id="chicoreus:3.5 xml"   author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="preparation" baseColumnNames="parent_preparation_id" 					
 					constraintName="fk_parentprep" onUpdate="CASCADE"
 					referencedColumnNames="preparation_id"
 				        referencedTableName="preparation"/>
     </changeSet>
 
-    <changeSet id="chicoreus:3.6 xml" author="paul morris">
+<!-- alter table identifiable_item add constraint fk_colobj foreign key (unit_id) references unit (unit_id) on update cascade; -->
+    <changeSet id="chicoreus:3.6 xml"   author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="identifiable_item" baseColumnNames="unit_id" 
 					constraintName="fk_colobj" onUpdate="CASCADE"					
 					referencedTableName="unit" referencedColumnNames="unit_id"
 				        />
 
     </changeSet>
-
+<!--
    <changeSet id="chicoreus:3.7 xml" author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="identifiable_item" baseColumnNames="preparation_id" 				
 					constraintName="fk_prep" onUpdate="CASCADE"					
