@@ -67,13 +67,14 @@
 				        />
 
     </changeSet>
-<!--
+<!-- alter table identifiable_item add constraint fk_prep foreign key (preparation_id) references preparation (preparation_id) on update cascade; -->
    <changeSet id="chicoreus:3.7 xml" author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="identifiable_item" baseColumnNames="preparation_id" 				
 					constraintName="fk_prep" onUpdate="CASCADE"					
 					referencedTableName="preparation" referencedColumnNames="preparation_id"
 				        />
     </changeSet>
+<!--
 -->
     <changeSet id="chicoreus:5 xml" author="paul morris">
         <createTable tableName="identification">
