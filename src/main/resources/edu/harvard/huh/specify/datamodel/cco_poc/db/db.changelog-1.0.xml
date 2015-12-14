@@ -188,18 +188,7 @@
 
         </createTable>
     </changeSet>
-	<!--
-	
-	alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references  collecting_event (collecting_event_id) on update cascade;	
-	 ERROR: relation "collection_object" does not exis
-	
-     <changeSet id="chicoreus:10.5 xml" author="paul morris">
-	<addForeignKeyConstraint  	baseTableName="collection_object" baseColumnNames="collecting_event_id" 				
-					constraintName="fk_colevent" onUpdate="CASCADE"					
-					referencedTableName="collecting_event" referencedColumnNames="collecting_event_id"
-				        />
-    </changeSet>
-	-->
+
      <changeSet id="chicoreus:11 xml" author="paul morris">
         <createTable tableName="event_date">
             <column name="event_date_id" type="bigint" autoIncrement="true">
@@ -242,19 +231,7 @@
 	    <column name="number_value" 	type="varchar(255)"/>	    
         </createTable>
     </changeSet>
-
-	<!-- Index , ett annat sätt att göra
-	<changeSet id="chicoreus:17 xml" author="paul morris">
-		alter table other_number add unique index idx_tablepk on other_number(targettable, pk);
-	</changeSet>
 	
-     	<changeSet id="chicoreus:13.5 xml" 	author="paul morris">
-	<addForeignKeyConstraint  	baseTableName="collecting_event" baseColumnNames="locality_id" 				
-					constraintName="fk_locality" onUpdate="CASCADE"					
-					referencedTableName="locality" referencedColumnNames="locality_id"
-				        />
-    	</changeSet>
-	-->
 
     <changeSet id="chicoreus:14 xml" author="paul morris">
         <createTable tableName="transaction_item">
@@ -293,21 +270,102 @@
             <column name="curated" 		type="boolean" defaultValueBoolean="false"/>
         </createTable>
     </changeSet>
+	<!--
+	
+	alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references  collecting_event (collecting_event_id) on update cascade;	
+	 ERROR: relation "collection_object" does not exis
+	
+     <changeSet id="chicoreus:10.5 xml" author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="collection_object" baseColumnNames="collecting_event_id" 				
+					constraintName="fk_colevent" onUpdate="CASCADE"					
+					referencedTableName="collecting_event" referencedColumnNames="collecting_event_id"
+				        />
+    </changeSet>
+	-->
+
+	<!-- Index , ett annat sätt att göra
+	<changeSet id="chicoreus:17 xml" author="paul morris">
+		alter table other_number add unique index idx_tablepk on other_number(targettable, pk);
+	</changeSet>
+	-->
+
+<!-- alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:21 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="cataloged_item" baseColumnNames="cataloger_agent_id" 				
+					constraintName="fk_catagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+<!-- alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:22 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="author_agent_id" 				
+					constraintName="fk_authagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+
+<!-- alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:23 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="parauthor_agent_id" 				
+					constraintName="fk_parauthagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+
+<!-- alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:24 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="exauthor_agent_id" 				
+					constraintName="fk_exauthagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+
+<!-- alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:25 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="parexauthor_agent_id" 				
+					constraintName="fk_parexauthagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+
+<!-- alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:26 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="sanctauthor_agent_id" 				
+					constraintName="fk_sanctauthagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+
+<!-- alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade; -->
+  <changeSet id="chicoreus:27 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="parsanctauthor_agent_id" 				
+					constraintName="fk_parsaauthagent" onUpdate="CASCADE"					
+					referencedTableName="agent" referencedColumnNames="agent_id"
+				        />
+    </changeSet>
+
+
 <!--
-changeset chicoreus:21
-alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
+
 changeset chicoreus:22
 alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
+
 changeset chicoreus:23
 alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
+
 changeset chicoreus:24
 alter table taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
+
 changeset chicoreus:25
 alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
+
 changeset chicoreus:26
 alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
+
 changeset chicoreus:27
 alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
+
 remma alter table taxon add constraint foreign key fk_citauthagent (citedinauthor_agent_id) references agent (agent_id) on update cascade;
 -->
+
 </databaseChangeLog>
