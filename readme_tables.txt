@@ -1,0 +1,17 @@
+drop table cataloged_item;
+drop table catalog_number_series;
+drop table col_transaction;
+drop table event_date;
+drop table identifiable_item;
+drop table identification;
+drop table material_sample;
+drop table other_number;
+drop table preparation;
+drop table taxon;
+drop table transaction_item;
+drop table unit;
+drop table agent;
+drop table collecting_event;
+drop table locality;
+drop table DATABASECHANGELOG;
+drop table DATABASECHANGELOGLOCK;

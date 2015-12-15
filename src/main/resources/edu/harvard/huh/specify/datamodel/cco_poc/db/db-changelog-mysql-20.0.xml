@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+<changeSet id="chicoreus:200 TRIGGER (mysql) xml" author="paul morris" >
+		<createProcedure>
+		create trigger tr_prep_const before update on preparation
+		for each row 
+		begin
+		   IF NEW.parent_preparation_id is not null THEN
+		      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
+		      IF  childcount > 0 THEN
+			   SIGNAL SQLSTATE '45001' 
+			       set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+		      END IF;
+		   END IF;
+		end;
+		</createProcedure>
+		<rollback>
+		    drop trigger tr_prep_const
+		</rollback>
+</changeSet>
+</databaseChangeLog>

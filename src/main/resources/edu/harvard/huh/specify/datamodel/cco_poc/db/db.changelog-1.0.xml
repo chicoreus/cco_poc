@@ -4,7 +4,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    
     <changeSet id="chicoreus:1 xml" author="paul morris">
         <createTable tableName="unit">
             <column name="unit_id" type="bigint" autoIncrement="true">
@@ -284,36 +283,6 @@
             <column name="curated" 		type="boolean" defaultValueBoolean="false"/>
         </createTable>
     </changeSet>
-	<!--
-delimiter //
-create trigger tr_prep_const before update on preparation
-for each row 
-begin
-   IF NEW.parent_preparation_id is not null THEN
-      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
-      IF  childcount > 0 THEN
-rem        update errorCantMakeChildPrep set nofield = nofield;
-           SIGNAL SQLSTATE '45001' 
-               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
-      END IF;
-   END IF;
-end;//
-create trigger tr_prep_const before insert on preparation
-for each row 
-begin
-   IF NEW.parent_preparation_id is not null THEN
-      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
-      IF  childcount > 0 THEN
-rem        update errorCantMakeChildPrep set nofield = nofield;
-           SIGNAL SQLSTATE '45001' 
-               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
-      END IF;
-   END IF;
-end;//
-delimiter ;
--->
-
-
 
 <!-- alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade; -->
   <changeSet id="chicoreus:21.0 xml" 	author="paul morris">
