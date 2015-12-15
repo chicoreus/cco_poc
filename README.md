@@ -34,7 +34,7 @@ mysql> create database paul;<br>
 
 ### Necessary files
 
-  - **liquibase.properties**
+  - **liquibase.properties (defaults to mysql)** 
     - contains : driver and url to the database
     - contains : credentials
     - contains : path to the master.xml-file
