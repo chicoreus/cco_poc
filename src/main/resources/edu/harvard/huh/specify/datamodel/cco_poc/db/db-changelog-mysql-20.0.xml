@@ -4,8 +4,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-
 <changeSet id="chicoreus:200 TRIGGER (mysql) xml" author="paul morris" >
+<!-- 
+	<comments> add constraint, a preparation for which parent_preparation_id is not null is not 
+		allowed to have it's preparation_id present as the parent_preparation_id of any preparation.  Needs a trigger.
+	</comments>
+-->
 		<createProcedure>
 		create trigger tr_prep_const before update on preparation
 		for each row 
