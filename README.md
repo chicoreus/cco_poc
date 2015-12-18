@@ -28,7 +28,8 @@ mysql> create database paul;<br>
   - pom.xml
     - db: mysql-connector-java (version  '5.1.37')
     - db: postgresql (version '9.1-901-1.jdbc4')
-    - liquibase: liquibase-maven-plugin
+    - liquibase (version '3.4.2')
+    - liquibase-maven-plugin (version '3.0.5')
 
 #Files for the liquibase-project.
 
