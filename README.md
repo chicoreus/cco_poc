@@ -20,15 +20,18 @@ You **have to** create the database 'paul' before running the project<br>
 mysql> create database paul;<br>
 
 ## at his moment : support for 2 database-engines
+
 The basic configuration is in the following 2 files.
+
 1. for postgreSQL liquibase.postgresql.properties 
 2. for MySQL liquibase.mysql.properties 
 
 ### to change from mysql to postgreSQL
+
 1. be sure that you have postgreSQL installed 
 2. create the database 'paul', check the credentials in the liquibase.postgresql.properties-file
 3. replace liquibase.properties with the liquibase.postgresql.properties.
-runt the project
+run the project
 
 ## How to run the Liquibase-project
 To run the project<br>
