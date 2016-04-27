@@ -50,16 +50,12 @@
 	    <column name="remarks" 			type="text"/>
         </createTable>
     </changeSet>
-
-<!-- alter table preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade;  -->
     <changeSet id="chicoreus:3.5 xml"   author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="preparation" baseColumnNames="parent_preparation_id" 					
 					constraintName="fk_parentprep" onUpdate="CASCADE"
 					referencedColumnNames="preparation_id"
 				        referencedTableName="preparation"/>
     </changeSet>
-
-<!-- alter table identifiable_item add constraint fk_colobj foreign key (unit_id) references unit (unit_id) on update cascade; -->
     <changeSet id="chicoreus:3.6 xml"   author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="identifiable_item" baseColumnNames="unit_id" 
 					constraintName="fk_colobj" onUpdate="CASCADE"					
@@ -67,15 +63,13 @@
 				        />
 
     </changeSet>
-<!-- alter table identifiable_item add constraint fk_prep foreign key (preparation_id) references preparation (preparation_id) on update cascade; -->
    <changeSet id="chicoreus:3.7 xml" author="paul morris">
 	<addForeignKeyConstraint  	baseTableName="identifiable_item" baseColumnNames="preparation_id" 				
 					constraintName="fk_prep" onUpdate="CASCADE"					
 					referencedTableName="preparation" referencedColumnNames="preparation_id"
 				        />
     </changeSet>
-<!--
--->
+
     <changeSet id="chicoreus:5 xml" author="paul morris">
         <createTable tableName="identification">
             <column name="identification_id" type="bigint" autoIncrement="true">
@@ -117,12 +111,26 @@
         </createTable>
     </changeSet>
 
-<!-- <changeSet id="chicoreus:6 xml" author="paul morris"> -->
-<!-- alter table identification add constraint fk_idtaxon foreign key (taxon_id) references taxon (taxon_id) on update cascade; -->
-<!-- alter table taxon add constraint fk_idparent foreign key (parent_taxon_id) references taxon (taxon_id) on update cascade; -->
-<!-- alter table taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade; -->
-<!-- </changeSet> -->
+    <changeSet id="chicoreus:6.5 xml"   author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="identification" baseColumnNames="taxon_id" 				
+					constraintName="fk_idtaxon" onUpdate="CASCADE"					
+					referencedTableName="taxon" referencedColumnNames="taxon_id"
+				        />
+    </changeSet>
 
+    <changeSet id="chicoreus:6.6 xml"   author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="parent_taxon_id" 				
+					constraintName="fk_idparent" onUpdate="CASCADE"					
+					referencedTableName="taxon" referencedColumnNames="taxon_id"
+				        />
+    </changeSet>
+
+    <changeSet id="chicoreus:6.7 xml"   author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="taxon" baseColumnNames="accepted_taxon_id" 				
+					constraintName="fk_idaccepted" onUpdate="CASCADE"					
+					referencedTableName="taxon" referencedColumnNames="taxon_id"
+				        />
+    </changeSet>
     <changeSet id="chicoreus:7 xml" author="paul morris">
         <createTable tableName="cataloged_item">
             <column name="cataloged_item_id" type="bigint" autoIncrement="true">
@@ -176,9 +184,16 @@
         </createTable>
     </changeSet>
 	<!--
-	<changeSet id="chicoreus:12 xml" author="paul morris">
-	alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references collecting_event (collecting_event_id) on update cascade;	
-	</changeSet>
+	
+	alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references  collecting_event (collecting_event_id) on update cascade;	
+	 ERROR: relation "collection_object" does not exis
+	
+     <changeSet id="chicoreus:10.5 xml" author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="collection_object" baseColumnNames="collecting_event_id" 				
+					constraintName="fk_colevent" onUpdate="CASCADE"					
+					referencedTableName="collecting_event" referencedColumnNames="collecting_event_id"
+				        />
+    </changeSet>
 	-->
      <changeSet id="chicoreus:11 xml" author="paul morris">
         <createTable tableName="event_date">
@@ -203,11 +218,13 @@
             <column name="verbatim_locality" 	type="varchar(900)"/>
         </createTable>
     </changeSet>
-	<!--
-	<changeSet id="chicoreus:15 xml" author="paul morris">
-	alter table collecting_event add constraint fk_locality foreign key (locality_id) references locality (locality_id) on update cascade;
-	</changeSet>
-	-->
+
+    <changeSet id="chicoreus:12.5 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="collecting_event" baseColumnNames="locality_id" 				
+					constraintName="fk_locality" onUpdate="CASCADE"					
+					referencedTableName="locality" referencedColumnNames="locality_id"
+				        />
+    </changeSet>
     <changeSet id="chicoreus:13 xml" author="paul morris">
         <createTable tableName="other_number">
             <column name="other_number_id" type="bigint" autoIncrement="true">
@@ -219,10 +236,17 @@
 	    <column name="number_value" 	type="varchar(255)"/>	    
         </createTable>
     </changeSet>
-	<!--
+	<!-- Index , ett annat sätt att göra
 	<changeSet id="chicoreus:17 xml" author="paul morris">
 		alter table other_number add unique index idx_tablepk on other_number(targettable, pk);
 	</changeSet>
+	
+     	<changeSet id="chicoreus:13.5 xml" 	author="paul morris">
+	<addForeignKeyConstraint  	baseTableName="collecting_event" baseColumnNames="locality_id" 				
+					constraintName="fk_locality" onUpdate="CASCADE"					
+					referencedTableName="locality" referencedColumnNames="locality_id"
+				        />
+    	</changeSet>
 	-->
     <changeSet id="chicoreus:14 xml" author="paul morris">
         <createTable tableName="transaction_item">
