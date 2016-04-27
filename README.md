@@ -26,11 +26,12 @@ The basic configuration is in the following 2 files.
 1. for postgreSQL see the liquibase.postgresql.properties file
 2. for MySQL see the liquibase.mysql.properties file
 
-### to change from mysql to postgreSQL
+### How to  change from MySQL to postgreSQL
 
 1. be sure that you have postgreSQL installed 
 2. create the database 'paul', check the credentials in the liquibase.postgresql.properties-file
 3. replace liquibase.properties with the liquibase.postgresql.properties.
+
 run the project
 
 ## How to run the Liquibase-project
