@@ -10,12 +10,12 @@ src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/tables.sql
 
 ## Software 
 
-  1.java ( tested with OpenJDK ver. 1.7.0_95 )
-  2.[maven](https://maven.apache.org/) 
-  3. either mysql or postgresql , the default database should be mysql ( defined in liquibase.properties )
+  1. java ( tested with OpenJDK ver. 1.7.0_95 )
+  2. [maven](https://maven.apache.org/) 
+  3. either MySQL or postgreSQL
 
 ## Default database
-the default database should be **mysql** in this repo, defined in  the file liquibase.properties  <br>
+the default database should be **MySQL** in this repo, defined in  the file liquibase.properties  <br>
 You **have to** create the database 'paul' before running the project<br>
 mysql> create database paul;<br>
 
