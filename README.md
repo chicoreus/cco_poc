@@ -1,6 +1,7 @@
 # cco_poc
 Proof of concept files for an implementation of an information model for complex natural science collections objects. <br>
-This is the first draft using liquibase to illustrate the information model from the manuscript by ; Morris, Macklin, Kelly, and Tocci. <br> this liquibase-project should serve as a basis for a discussion by the Dina consortium.
+This is the first draft using liquibase to illustrate the information model from the manuscript by ; Morris, Macklin, Kelly, and Tocci. <br> this liquibase-project should serve as a basis for a discussion by the Dina consortium. <br>
+
 
 ## The original DDL for the schema is in:
 src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/tables.sql
@@ -17,10 +18,17 @@ src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/tables.sql
 the default database should be **mysql** in this repo, see the liquibase.properties  <br>
 You **have to** create the database 'paul' before running the project<br>
 mysql> create database paul;<br>
-if you would like to change to postgreSQL:
-1. be sure that you have postgresql installed 
+
+## at his moment : support for 2 database-engines
+The basic configuration is in the following 2 files.
+1. for postgreSQL liquibase.postgresql.properties 
+2. for MySQL liquibase.mysql.properties 
+
+### to change from mysql to postgreSQL
+1. be sure that you have postgreSQL installed 
 2. create the database 'paul', check the credentials in the liquibase.postgresql.properties-file
-2. replace liquibase.properties with the liquibase.postgresql.properties.
+3. replace liquibase.properties with the liquibase.postgresql.properties.
+runt the project
 
 ## How to run the Liquibase-project
 To run the project<br>
