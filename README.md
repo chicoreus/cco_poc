@@ -23,8 +23,8 @@ mysql> create database paul;<br>
 
 The basic configuration is in the following 2 files.
 
-1. for postgreSQL liquibase.postgresql.properties 
-2. for MySQL liquibase.mysql.properties 
+1. for postgreSQL see the liquibase.postgresql.properties file
+2. for MySQL see the liquibase.mysql.properties file
 
 ### to change from mysql to postgreSQL
 
