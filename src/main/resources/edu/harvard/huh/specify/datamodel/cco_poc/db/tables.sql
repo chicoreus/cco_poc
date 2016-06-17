@@ -1,6 +1,6 @@
---liquibase formatted sql
+-- liquibase formatted sql
 
---changeset chicoreus:1
+-- changeset chicoreus:1
 create table unit (
   -- Definition: Logical unit that was collected or observed in a collecting event.
   unit_id bigint not null primary key auto_increment,
@@ -11,7 +11,7 @@ create table unit (
   unit_remarks text
 );  
 
---changeset chicoreus:2
+-- changeset chicoreus:2
 create table identifiable_item (
   -- Definition: A component of a unit for which a scientific identification can be made.
   identifiable_item_id bigint not null primary key auto_increment,
@@ -24,7 +24,7 @@ create table identifiable_item (
   individual_count_units varchar(50)      -- e.g. valves
 );
 
---changeset chicoreus:3
+-- changeset chicoreus:3
 create table preparation (
   -- Definition: A physical artifact that could participate in a transaction, e.g. be sent in a loan.
   -- Note: Does not specify preparation history or conservation history, additional entities are needed for these.
@@ -35,7 +35,6 @@ create table preparation (
   preservation_type varchar(50),
   conservation_status varchar(255),
   parent_preparation_id bigint,
-  preparation_remarks bigint,
   remarks text
 );
 
@@ -43,25 +42,39 @@ alter table preparation add constraint fk_parentprep foreign key (parent_prepara
 
 -- add constraint, a preparation for which parent_preparation_id is not null is not allowed to have it's preparation_id present as the parent_preparation_id of any preparation.  Needs a trigger.
 
---delimiter //
+-- delimiter //
 -- create trigger tr_prep_const before update on preparation
 -- for each row 
 --begin
---   IF NEW.parent_id is not null THEN
- --     select count(*) from preparation where parent_id = NEW.taxon_id into childcount
- --     IF  childcount > 0 
- --        SIGNAL sqlstate '45001' set message_text = "A preparation which is a child cannot itself have children."
-  --    ENDIF;
- --  ENDIF;
+--   IF NEW.parent_preparation_id is not null THEN
+--      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
+--      IF  childcount > 0 THEN
+--         update errorCantMakeChildPrep set nofield = nofield;
+--           SIGNAL SQLSTATE '45001' 
+--               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+--      END IF;
+--   END IF;
+--end;//
+-- create trigger tr_prep_const before insert on preparation
+--for each row 
+--begin
+--   IF NEW.parent_preparation_id is not null THEN
+--      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
+--      IF  childcount > 0 THEN
+--         update errorCantMakeChildPrep set nofield = nofield;
+--           SIGNAL SQLSTATE '45001' 
+--               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+--      END IF;
+--   END IF;
 --end;//
 --delimiter ;
 
---changeset chicoreus:4
+-- changeset chicoreus:4
 alter table identifiable_item add constraint fk_colobj foreign key (unit_id) references unit (unit_id) on update cascade;
 alter table identifiable_item add constraint fk_prep foreign key (preparation_id) references preparation (preparation_id) on update cascade;
 
---changeset chicoreus:5
-create table identification(
+-- changeset chicoreus:5
+create table identification (
   -- Definition: The application of a scientific name by some agent at some point in time to an identifiable item.
   identification_id bigint not null primary key auto_increment,
   identifiable_item_id bigint not null,
@@ -74,7 +87,7 @@ create table identification(
   verbatim_annotation_text text
 );
 
---changeset chicoreus:6
+-- changeset chicoreus:6
 create table taxon (
    -- Definition: A scientific name string that may be curated to be linked to a nomeclatural act
    taxon_id bigint not null primary key auto_increment,
@@ -97,12 +110,12 @@ create table taxon (
    remarks text
 );
 
---changeset chicoreus:7
+-- changeset chicoreus:7
 alter table identification add constraint fk_idtaxon foreign key (taxon_id) references taxon (taxon_id) on update cascade;
 alter table taxon add constraint fk_idparent foreign key (parent_taxon_id) references taxon (taxon_id) on update cascade;
 alter table taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
 
---changeset chicoreus:8
+-- changeset chicoreus:8
 create table cataloged_item (
    -- Definition: The application of a catalog number out of some catalog number series.
    cataloged_item_id bigint not null primary key auto_increment,
@@ -112,7 +125,7 @@ create table cataloged_item (
    cataloger_agent_id bigint
 ); 
 
---changeset chicoreus:9
+-- changeset chicoreus:9
 create table material_sample(
    -- Definition: See DarwinCore.
    material_sample_id bigint not null primary key auto_increment,
@@ -122,7 +135,7 @@ create table material_sample(
    sampled_by_agent_id bigint
 ); 
 
---changeset chicoreus:10
+-- changeset chicoreus:10
 create table catalog_number_series ( 
    -- Definition: A sequence of numbers of codes assigned as catalog numbers to material held in a natural science collection.
    -- Note: This entity is not fully normalized.  
@@ -137,7 +150,7 @@ create table catalog_number_series (
    remarks text
 );
 
---changeset chicoreus:11
+-- changeset chicoreus:11
 create table collecting_event (
    -- Definition: An event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected.
    collecting_event_id bigint not null primary key auto_increment,
@@ -147,10 +160,10 @@ create table collecting_event (
    collecting_method varchar(255)
 );
 
---changeset chicoreus:12
--- alter table collection_object add constraint fk_colevent foreign key (collecting_event_id) references collecting_event (collecting_event_id) on update cascade;
+-- changeset chicoreus:12
+alter table unit add constraint fk_colevent foreign key (collecting_event_id) references collecting_event (collecting_event_id) on update cascade;
 
---changeset chicoreus:13
+-- changeset chicoreus:13
 create table event_date ( 
    -- Definition: A span of time in which some event occurred.
    event_date_id bigint not null primary key auto_increment,
@@ -163,7 +176,7 @@ create table event_date (
    start_end_fully_specifies boolean default true -- true if a single date or a continuous range.
 );
 
---changeset chicoreus:14
+-- changeset chicoreus:14
 create table locality ( 
    -- Definition: A place.  
    -- Note: Table is only minimally specified.  
@@ -171,10 +184,10 @@ create table locality (
    verbatim_locality varchar(900)
 );
 
---changeset chicoreus:15
+-- changeset chicoreus:15
 alter table collecting_event add constraint fk_locality foreign key (locality_id) references locality (locality_id) on update cascade;
 
---changeset chicoreus:16
+-- changeset chicoreus:16
 create table other_number (
    --  Definition: A number or code associated with a specimen that is not known to be its catalog number
    other_number_id bigint not null primary key auto_increment,
@@ -184,10 +197,10 @@ create table other_number (
    number_value varchar(255) not null  -- The value of the other number
 );
  
---changeset chicoreus:17
--- alter table other_number add unique index idx_tablepk on other_number(targettable, pk);
+-- changeset chicoreus:17
+create unique index idx_tablepk on other_number(targettable, pk);
 
---changeset chicoreus:18
+-- changeset chicoreus:18
 create table transaction_item (
    -- Definition:  The participation of a preparation in a transaction (e.g. a loan).
    -- Note: Table is only minimally specified.
@@ -199,9 +212,9 @@ create table transaction_item (
    description varchar(900),
    item_conditions text,  -- conditions applied to this item in this transaction, e.g. no destructive sampling
    disposition varchar(50)
-)
+);
 
---changeset chicoreus:19
+-- changeset chicoreus:19
 create table col_transaction (
    -- Definition: A record of the movement of a set of specimens in or out of a collection, e.g. loan, accession, outgoing gift, deaccession, borrow.
    -- Note: Table is only minimally specified.
@@ -213,7 +226,7 @@ create table col_transaction (
    conditions text
 );
 
---changeset chicoreus:20
+-- changeset chicoreus:20
 create table agent (
     -- Definition: a person or organization with some role related to natural science collections.
     -- Note: Not fully specified.
@@ -222,18 +235,12 @@ create table agent (
     curated boolean not null default false
 );
 
---changeset chicoreus:21
+-- changeset chicoreus:21
 alter table cataloged_item add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
---changeset chicoreus:22
 alter table taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
---changeset chicoreus:23
 alter table taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
---changeset chicoreus:24
 alter table taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
---changeset chicoreus:25
 alter table taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
---changeset chicoreus:26
 alter table taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
---changeset chicoreus:27
 alter table taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
--- alter table taxon add constraint foreign key fk_citauthagent (citedinauthor_agent_id) references agent (agent_id) on update cascade;
+alter table taxon add constraint foreign key fk_citauthagent (cited_in_agent_id) references agent (agent_id) on update cascade;
