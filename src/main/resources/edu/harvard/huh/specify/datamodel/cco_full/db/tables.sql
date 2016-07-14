@@ -16,6 +16,10 @@ CREATE TABLE scope (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
+-- each scope has zero to one parent scope
+-- each scope is the parent for zero to many scopes
+
 CREATE TABLE principal (
    -- Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
    principal_id bigint not null primary key auto_increment,
@@ -27,6 +31,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 create unique index idx_principal_u_scopename on principal(principal_name, scope_id);
+alter table principal add constraint fk_principal_scopeid foreign key (scope_id) references scope(scope_id) on update cascade;
+-- each principal has one and only one scope
+-- each scope is for zero to many principals
 
 CREATE TABLE systemuser ( 
    -- Definition: A user of the system
@@ -35,7 +42,7 @@ CREATE TABLE systemuser (
    password_hash varchar(900) not null default '', -- cryptographic hash of the password for this user
    is_enabled boolean default TRUE,
    last_login date, 
-   user_agent_id bigint -- The agent record for this user
+   user_agent_id bigint not null -- The agent record for this user
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -43,13 +50,24 @@ DEFAULT CHARSET=utf8;
 create unique index idx_sysuser_u_username on systemuser (username);
 
 CREATE TABLE systemuserprincipal (
-   -- Definition: Participation of a system user in principles.
+   -- Definition: Participation of a system user in principles (associative entity relating systemusers to principals).
    systemuserprincipal_id bigint not null primary key auto_increment,
    systemuser_id bigint not null,
    principal_id bigint not null
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+create unique index idx_syuspr_u_sysuserprincipal on systemuserprincipal(systemuser_id, principal_id);
+
+alter table systemuserprincipal add constraint fk_supr_sysuserid foreign key (systemuser_id) references systemuser(systemuser_id) on update cascade;
+alter table systemuserprincipal add constraint fk_supr_principalid foreign key (principal_id) references principal(principal_id) on update cascade;
+-- each systemuser has zero to many principals
+-- each principal is for zero to many systemusers
+-- each systemuserprincipal is for one and only one principal 
+-- each principal has zero to many systemuserprincipals
+-- each systemuserprincipal is for one and only one systemuser
+-- each systemuser has zero to many systemuserprincipals
 
 -- Example of composition of scope, principal, and systemuser to define permissions for users.
 insert into scope (scope_id, name) values (1,'Example Institution');
@@ -60,7 +78,7 @@ insert into scope (scope_id, name,parent_scope_id) values (5,'Example Ornitholog
 insert into principal (principal_id, principal_name,scope_id) values (1,'exampleuser',1);
 insert into principal (principal_id, principal_name,scope_id) values (2,'data entry',2);
 insert into principal (principal_id, principal_name,scope_id) values (3,'manage transactions',2);
-insert into systemuser (systemuser_id, username, is_enabled) values (1,'example@example.com',FALSE);  
+insert into systemuser (systemuser_id, username, is_enabled,user_agent_id) values (1,'example@example.com',FALSE,1);  
 insert into systemuserprincipal (systemuser_id, principal_id) values (1,1);  -- example user has user permissions in example institution
 insert into systemuserprincipal (systemuser_id, principal_id) values (1,2);  -- example user has data entry permissions in example collection
 
@@ -1767,6 +1785,14 @@ alter table collectingevent add constraint fk_colev_paleoid foreign key (paleoco
 
 
 -- changeset chicoreus:34
+-- additional accumulated foreign key constraints
 
 alter table collectingevent add constraint fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
 alter table collectingevent add constraint fk_colev_eventdateid foreign key (date_collected_eventdate_id) references eventdate(eventdate_id) on update cascade;
+
+create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
+
+insert into agent(agent_id, preferred_name_string) values (0,'example');
+alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
+-- each systemuser is one and only one agent
+-- each agent is also zero or one systemuser
