@@ -17,11 +17,11 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE principal (
-   -- Definition: An entity to which some access rights may apply, typically a group
+   -- Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
    principal_id bigint not null primary key auto_increment,
    principal_name varchar(255) not null,  
    is_active boolean not null default TRUE, -- does this principal have any currently active rights 
-   scope_id bigint not null -- the scope to which this principal extends
+   scope_id bigint not null -- the scope to which this principal extends (e.g. principal may be data entry, scope limits that to data entry in some collection.
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -43,6 +43,7 @@ DEFAULT CHARSET=utf8;
 create unique index idx_sysuser_u_username on systemuser (username);
 
 CREATE TABLE systemuserprincipal (
+   -- Definition: Participation of a system user in principles.
    systemuserprincipal_id bigint not null primary key auto_increment,
    systemuser_id bigint not null,
    principal_id bigint not null
@@ -659,6 +660,7 @@ INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (180,2,'c
 INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (180,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
 
 CREATE TABLE transactionagent (
+  -- Definition: the participation of an agent in a transaction in some defined role (e.g. the agent who gave approval for some loan).
   transactionagent_id bigint NOT NULL primary key AUTO_INCREMENT,
   agent_id bigint not null,  -- the agent involved in this transaction 
   ctransaction_id bigint not null, -- the transaction the agent is involved in
@@ -826,7 +828,7 @@ INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'a
 
 
 CREATE TABLE agentrelation (
-   --  representing relationships (family,marrage,mentorship) amongst agents.
+   -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
    agentrelation_id bigint not null primary key auto_increment, 
    from_agent_id bigint not null,  --  parent agent in this relationship 
    to_agent_id bigint not null,    --  child agent in this relationship 
@@ -870,7 +872,7 @@ alter table agentspeciality add constraint fk_agentspeci_taxonid foreign key (ta
 -- changeset chicoreus:24
 
 CREATE TABLE codetableint ( 
-    -- internationalization for code tables, allows use of a single language key in code tables, provides
+    -- Definition: internationalization for code tables, allows use of a single language key in code tables, provides
     -- translations of that key and definitions for that key in an arbitrary number of languages.
     codetableintid bigint not null primary key auto_increment,
     name varchar(255) not null, -- name/key in code table.
@@ -883,7 +885,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE cttextattributetype (
-    -- types of text attributes
+    -- Definition: types of text attributes
     name varchar(255) not null primary key,  -- the name of the attribute type
     scope varchar(900)  -- list of tables to which this attribute type applies
 )
@@ -891,7 +893,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE textattribute (
-    --  a generic typed text attribute that can be added to any table.
+    -- Definition: a generic typed text attribute that can be added to any table.
     textattributeid bigint not null primary key auto_increment,
     name varchar(255) not null,   -- the type of attribute
     value varchar(900) not null,  -- the value of the attribute
@@ -904,7 +906,7 @@ DEFAULT CHARSET=utf8;
 ALTER TABLE textattribute add constraint fk_textattributetype foreign key (name) references cttextattributetype (name) on update cascade; 
 
 CREATE TABLE inference (
-    --  metadata description of the basis of an inference made in interpreting a value in any field in any table
+    -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
     inferenceid bigint not null primary key auto_increment,
     inference text not null,  -- the interpreter's description of the inference tha was made
     by_agent_id bigint not null, -- who (most recently) made the inference
@@ -920,7 +922,7 @@ CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,
 -- changeset chicoreus:25
 
 CREATE TABLE ctnumericattributetype (
-    -- types of numeric attributes
+    -- Definition: types of numeric attributes
     name varchar(255) not null primary key,  -- the name of the attribute type
     scope varchar(900)  -- list of tables to which this attribute type applies
 )
@@ -928,7 +930,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE numericattribute (
-    --  a generic typed numeric attribute that can be added to any table.
+    -- Definition: a generic typed numeric attribute that can be added to any table.
     attributeid bigint not null primary key auto_increment,
     name varchar(255) not null,   -- the type of attribute
     value float(20,10) not null,  -- the value of the attribute
@@ -946,7 +948,7 @@ ALTER TABLE numericattribute add constraint fk_numericattributetype foreign key 
 -- definitions for pick lists associated with biological attributes and generic attributes.  Table picklist's table/field binding can't be used for these.
 
 CREATE TABLE ctbiologicalattributetype (
-    -- types of biological attributes, by discipline
+    -- Definition: types of biological attributes, by discipline (scope). 
     ctbiologicalattributeid bigint not null primary key auto_increment,
     name varchar(255) not null,  -- the name of the attribute type
     scope_id varchar(255),  -- discipline to which this attribute type applies
@@ -960,6 +962,7 @@ DEFAULT CHARSET=utf8;
 CREATE UNIQUE INDEX idx_ctbiolatt_u_namescope ON ctbiologicalattributetype(name,scope_id);
 
 CREATE TABLE ctlengthunit (
+  -- Definition: controled vocabulary for units of length.
   lengthunit varchar(255) not null primary key
 )
 ENGINE=InnoDB 
@@ -970,6 +973,7 @@ INSERT INTO ctlengthunit (lengthunit) VALUES ('centimeters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('milimeters');
 
 CREATE TABLE ctmassunit (
+  -- Definition: controled vocabulary for units of mass.
   massunit varchar(255) not null primary key
 )
 ENGINE=InnoDB 
@@ -980,6 +984,7 @@ INSERT INTO ctmassunit (massunit) VALUES ('kilograms');
 INSERT INTO ctmassunit (massunit) VALUES ('miligrams');
 
 CREATE TABLE ctageclass (
+  -- Definition: controled vocabulary for age classes.
   ageclassid bigint not null primary key auto_increment,
   ageclass varchar(255) not null,
   scope_id bigint
@@ -1038,7 +1043,7 @@ INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('plumage coloratio
 INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('plumage description',5);
 
 CREATE TABLE biologicalattribute (
-    --  a generic typed attribute for biological characteristics of organisms, 
+    -- Definition: a generic typed attribute for biological characteristics of organisms, 
     --  including metadata about who determined the attribute value when.
     attributeid bigint not null primary key auto_increment,
     name varchar(255) not null,  -- restricted by ctbiologicalattributetype
@@ -1062,7 +1067,7 @@ ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreig
 -- For more detailed audit logs, use a mechanism intrinsic to the database or a plugin.
 
 CREATE TABLE auditlog ( 
-    -- timestamps and users who have inserted, deleted, or updated data in each table.  maintain with triggers on each table.
+    -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  NOTE: Maintain with triggers on each table.
     auditlogid bigint not null primary key auto_increment,
     action varchar(50),  -- action carried out, insert, delete, update 
     timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
@@ -1081,6 +1086,7 @@ ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) r
 -- encumbarances, masking visiblity of data, generalized from mechainism in Arctos.
 
 CREATE TABLE ctencumberancetype ( 
+   -- Definition: controled vocabulary of encumberance types.
    encumberance_type varchar(50) not null primary key
 ) 
 ENGINE=InnoDB 
@@ -1190,7 +1196,7 @@ INSERT INTO ctelectronicaddresstype (typename) VALUES ('fax');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
 
 CREATE TABLE electronicaddress ( 
-   -- email, phone, fax, or other contact address for an agent
+   -- Definition: email, phone, fax, or other electronic contact address for an agent
    electronicaddress_id bigint not null primary key auto_increment,
    typename varchar(255) not null,
    address varchar(255) not null,
@@ -1231,7 +1237,7 @@ ALTER TABLE loan add constraint fk_loan_loanaddress foreign key (recipient_addre
 
 -- 
 CREATE TABLE accession (
-  --  a record of the acceptance of a set of collection objects into the care of an institution.
+  -- Definition: a record of the acceptance of a set of collection objects into the care of an institution.
   --  forms a record of the legal ownership of the material, unless the material is being held for another organization
   --  under a repository agreement, where legal ownership is retained by the other organization, but the accepting institution
   --  agrees to be a repository for the material.
@@ -1259,7 +1265,7 @@ create unique index idx_access_u_daterecid on accession(date_received_eventdate_
 alter table accession add constraint fk_acc_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
 
 CREATE TABLE repositoryagreement (
-  --  an agreement under which one institution agrees to be the repository for material that is owned by another organization.
+  -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
   repositoryagreementid bigint not null primary key auto_increment,
   datereceived date default null,  -- date at which the repository agreement document was received.
   enddate date default null,  -- date at which this repository agreement ends.
@@ -1284,11 +1290,12 @@ ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key
 
 
 CREATE TABLE accessionagent (
+  -- Definition: The participation of an agent in an accession in some defined role (e.g. the agent who approved some accession).
   accessionagent_id bigint not null primary key auto_increment,
-  remarks text,
   role varchar(50) not null,
   accession_id bigint default null,
-  agent_id bigint not null
+  agent_id bigint not null,
+  remarks text
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1367,6 +1374,7 @@ ALTER TABLE collector add constraint fk_col_colevent foreign key (collectingeven
 
 
 CREATE TABLE ctcoordinatetype ( 
+   -- Definition: Controled vocabulary of vocabulary types.
    coordinatetype varchar(50) not null primary key,  -- allowed coordinate types for table coordinate
    fieldprefix varchar(5) not null  -- prefix for field names that apply for this coordinate type
 ) 
@@ -1384,7 +1392,7 @@ INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('swiss grid',
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('public land survey system (township section range)','plss');
 
 CREATE TABLE coordinate ( 
-   -- a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about 
+   -- Definition: a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about 
    coordinateid bigint not null primary key auto_increment,  
    geodeticdatum varchar(255) not null default 'not recorded',   -- geodetic datum that applies for this coordinate
    remarkslatlongmeridian varchar(50) default null, -- meridian (grenwich, paris) for latitude and longitude, could apply to any lat/long representation
@@ -1429,7 +1437,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE georeference (
-  -- a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined
+  -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined
   georeferenceid bigint not null primary key auto_increment,
   locality_id bigint not null, -- the locality to which this georeference applies 
   acceptedflag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
@@ -1480,7 +1488,7 @@ ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeferen
 -- changeset chicoreus:35
 
 CREATE TABLE geography (
-  -- Defintion: heriarchically nested higher geographical entities 
+  -- Definition: heriarchically nested higher geographical entities 
   geography_id bigint not null primary key auto_increment,
   name varchar(255) not null,
   fullname varchar(900) default null,
@@ -1511,7 +1519,7 @@ alter table geography add constraint fk_geo_parent_id foreign key (parent_id) re
 alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
 
 CREATE TABLE geographytreedef (
-  -- Definition: Definition of a geography trees
+  -- Definition: Definition of a geography tree
   geographytreedef_id bigint not null primary key auto_increment,
   fullname_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
   name varchar(64) not null,  -- name of the geographic tree
@@ -1583,7 +1591,7 @@ alter table agentgeography add constraint fk_agentgeog_geogid foreign key (geogr
 -- changeset chicoreus:36 
 
 CREATE TABLE collection (
-  -- a managed set of collection objects that corresponds to an entity to which a dwc:collectioncode is assigned
+  -- Definition: a managed set of collection objects that corresponds to an entity to which a dwc:collectioncode is assigned
   usergroupscope_id bigint not null primary key auto_increment,
   collection_name varchar(900) default null,
   institution_code varchar(900) default null,  -- dwc:institutionCode
@@ -1673,7 +1681,7 @@ ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_i
 -- a model for geological context 
 
 CREATE TABLE geologictimeperiod (
-  -- a geological time, rock, or rock/time unit.
+  -- Definition: a geological time, rock, or rock/time unit.
   geologictimeperiod_id bigint not null primary key auto_increment,
   name varchar(64) not null,
   rank_id int(11) not null,  -- the rank 
@@ -1693,7 +1701,7 @@ alter table geologictimeperiod add constraint fk_geoltp_parent_id foreign key (p
 alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key (accepted_id) references geologictimeperiod (geologictimeperiod_id);
 
 CREATE TABLE geologictimeperiodtreedef (
-  -- geologic rock/time unit trees
+  -- Definition: geologic rock/time unit trees
   geologictimeperiodtreedef_id bigint not null primary key auto_increment,
   fullname_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
   name varchar(64) not null,  -- name 
@@ -1709,7 +1717,7 @@ INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_dir
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
 
 CREATE TABLE geologictimeperiodtreedefitem (
-  -- a definition of a rank in a geologic rock/time unit tree
+  -- Definition: a definition of a rank in a geologic rock/time unit tree
   geologictimeperiodtreedefitem_id bigint not null primary key auto_increment,
   name varchar(64) not null,  -- name for this rank 
   rank_id int(11) not null, -- rank for this name in the tree, larger numbers are lower ranks.
@@ -1742,7 +1750,7 @@ insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geo
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
 CREATE TABLE paleocontext (
-  -- Defintion: a geological context from which some material was collected 
+  -- Definition: a geological context from which some material was collected 
   paleocontext_id bigint NOT NULL primary key AUTO_INCREMENT,
   paleocontext_name varchar(80) DEFAULT NULL,  -- incase context is named
   verbatim_geologic_context varchar(900) not null default '',
