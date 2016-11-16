@@ -1,3 +1,5 @@
 /target
 .project
 .settings/
+src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/specify.6.6.06.sql
+src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/specify_huh.sql

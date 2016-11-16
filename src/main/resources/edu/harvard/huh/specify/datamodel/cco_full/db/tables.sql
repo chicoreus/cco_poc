@@ -172,14 +172,13 @@ CREATE TABLE unit (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-
 -- each unit was collected in one and only one collectingevent
 -- each collectingevent had zero to many units collected in it 
 
 -- each unit had zero or one material sample produced from it.
 
 -- each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity)
--- each preparation is derived from one to many units 
+-- each preparation is a physical preparation of one to many units 
 
 -- changeset chicoreus:4
 CREATE TABLE identifiableitem (
@@ -187,7 +186,7 @@ CREATE TABLE identifiableitem (
   identifiableitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   occurrence_guid varchar(900),  -- dwc:occurrenceId
   unit_id bigint not null,  -- the unit in which this identifiable item was collected,
-  preparation_id bigint not null,  -- NOTE: allow nulls if including unvouchered observational data
+  parent_preparation_id bigint not null,  -- NOTE: allow nulls if including unvouchered observational data
   catalogeditem_id bigint,
   individual_count int,
   individual_count_modifier varchar(50),  -- e.g. +
@@ -195,6 +194,9 @@ CREATE TABLE identifiableitem (
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
+
+-- each identifiable item comes from one and only one unit
+-- each unit has zero to many identifiable items
 
 -- To apply a pick list to a field, first define a picklist
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
@@ -215,9 +217,10 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'egg
 
 -- changeset chicoreus:5
 CREATE TABLE preparation (
-  -- Definition: a physical artifact that could participate in a transaction, e.g. be sent in a loan.
+  -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.
   -- note: does not specify preparation history or conservation history, additional entities are needed for these.
   preparation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  is_existing_as_physical boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, otherwise true).
   catalogeditem_id bigint,
   materialsample_id bigint,
   preparation_type varchar(50),
@@ -229,16 +232,33 @@ CREATE TABLE preparation (
   status varchar(32) default 'in collection',
   description text default null,
   storage_id bigint default null,
+  preparation_of_identifiableitem_id default null,  -- to support linking a derived preparation to a particular identifiable item in a mixed collection, for example a packet containing moss and lichen on bark, with a slide derived from the moss.
   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
+-- each preparation has zero or one parent preparation from which it was derived.
+
+-- each identifiable item is on one and only one parent preparation
+-- each preparation is the parent preparation of zero to many identifiable items
+
 ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
+ALTER TABLE preparation add constraint fk_deritentitem foreign key (derived_from_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade.
+
+ALTER TABLE identifiableitem add constraint fk_item_unitid foreign key (unit_id) references unit(unit_id) on update cascade;  
+ALTER TABLE identifiableitem add constraint fk_item_prepid foreign key (preparation_id) references preparation (preparation_id) on update cascade;
+
+-- each preparation may be a preparation of zero or one identifiable item.
+-- each identifiable item may be prepared into zero to many preparations.
+
+ALTER TABLE preparation add constraint fk_prepofitem foreign key (preparation_of_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade.
 
 
-ALTER TABLE identifiableitem add constraint fk_colobj foreign key (unit_id) references unit (unit_id) on update cascade;
-ALTER TABLE identifiableitem add constraint fk_prep foreign key (preparation_id) references preparation (preparation_id) on update cascade;
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
 
 -- changeset chicoreus:6
 CREATE TABLE identification (
@@ -1180,6 +1200,7 @@ CREATE TABLE auditlog (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
 
 ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
