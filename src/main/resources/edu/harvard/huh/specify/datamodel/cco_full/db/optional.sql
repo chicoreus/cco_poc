@@ -20,7 +20,7 @@ alter table unit change column collectingevent_id collectingevent_id bigint defa
 alter table identifiableitem change column unit_id unit_id bigint default null;
 
 -- To constrain a tree of preparations to a depth of two:
--- Add constraint, a preparation for which parent_preparation_id is not null is not allowed to have its preparation_id present as the parent_preparation_id of any preparation.  needs a trigger.
+-- Add constraint, a preparation for which parent_preparation_id is not null is not allowed to have its preparation_id present as the parent_preparation_id of any preparation.  needs a trigger. 
 
 delimiter //
 create trigger tr_prep_const before update on preparation
@@ -49,3 +49,11 @@ begin
 end;//
 delimiter ;
 
+--  To relate particular identifiable items to particular preparations in arbitrary ways
+create table preparationitemrelation (
+  preprarationitemrelation_id bigint not null primary key auto increment,
+  identifiableitem_id big int not null,
+  preparation_id big int not null,
+  relationtype varchar(255),
+  relationremarks text
+);
