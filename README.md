@@ -61,3 +61,12 @@ type '**mvn  clean install**' in the same directory that the pom.xml-file reside
 
 
 
+=======
+DDL for an example (entirely proof of concept) schema is in:
+src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/tables.sql
+
+DDL for a much more complete schema suitable for implementation is in:
+src/main/resources/edu/harvard/huh/specify/datamodel/cco_poc/db/tables.sql
+
+With some additional configuration (driver, credentials) you can build with liquibase.
+mvn liquibase:update

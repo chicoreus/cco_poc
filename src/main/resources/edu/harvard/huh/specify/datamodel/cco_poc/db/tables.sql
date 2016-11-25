@@ -42,32 +42,32 @@ alter table preparation add constraint fk_parentprep foreign key (parent_prepara
 
 -- add constraint, a preparation for which parent_preparation_id is not null is not allowed to have it's preparation_id present as the parent_preparation_id of any preparation.  Needs a trigger.
 
--- delimiter //
--- create trigger tr_prep_const before update on preparation
--- for each row 
---begin
---   IF NEW.parent_preparation_id is not null THEN
---      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
---      IF  childcount > 0 THEN
+delimiter //
+create trigger tr_prep_const before update on preparation
+for each row 
+begin
+   IF NEW.parent_preparation_id is not null THEN
+      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
+      IF  childcount > 0 THEN
 --         update errorCantMakeChildPrep set nofield = nofield;
---           SIGNAL SQLSTATE '45001' 
---               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
---      END IF;
---   END IF;
---end;//
--- create trigger tr_prep_const before insert on preparation
---for each row 
---begin
---   IF NEW.parent_preparation_id is not null THEN
---      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
---      IF  childcount > 0 THEN
+           SIGNAL SQLSTATE '45001' 
+               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+      END IF;
+   END IF;
+end;//
+create trigger tr_prep_const before insert on preparation
+for each row 
+begin
+   IF NEW.parent_preparation_id is not null THEN
+      select count(*) into @childcount from preparation where parent_preparation_id = NEW.parent_preparation_id;
+      IF  childcount > 0 THEN
 --         update errorCantMakeChildPrep set nofield = nofield;
---           SIGNAL SQLSTATE '45001' 
---               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
---      END IF;
---   END IF;
---end;//
---delimiter ;
+           SIGNAL SQLSTATE '45001' 
+               set MESSAGE_TEXT = 'A preparation which is a child cannot itself have children.';
+      END IF;
+   END IF;
+end;//
+delimiter ;
 
 -- changeset chicoreus:4
 alter table identifiable_item add constraint fk_colobj foreign key (unit_id) references unit (unit_id) on update cascade;
