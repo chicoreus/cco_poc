@@ -1781,3 +1781,16 @@ alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithos
 
 alter table locality add constraint fk_local_paleocontext foreign key (paleocontext_id) references paleocontext (paleocontext_id) on update cascade;
 alter table collectingevent add constraint fk_colev_paleoid foreign key (paleocontext_id) references paleocontext(paleocontext_id) on update cascade;
+
+-- changeset chicoreus:34
+-- additional accumulated foreign key constraints
+
+alter table collectingevent add constraint fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
+alter table collectingevent add constraint fk_colev_eventdateid foreign key (date_collected_eventdate_id) references eventdate(eventdate_id) on update cascade;
+
+create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
+
+insert into agent(agent_id, preferred_name_string) values (0,'example');
+alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
+-- each systemuser is one and only one agent
+-- each agent is also zero or one systemuser
