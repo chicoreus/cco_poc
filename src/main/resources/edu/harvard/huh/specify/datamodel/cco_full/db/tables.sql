@@ -229,14 +229,11 @@ CREATE TABLE part (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (190, 'preparation status','preparation','status');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,1,'in collection','in collection');  -- verified in an inventory as in the collection
-
 CREATE TABLE preparation (
   -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.
   -- note: does not specify preparation history or conservation history, additional entities are needed for these.
   preparation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, otherwise true).
+  prep_exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, otherwise true).
   catalogeditem_id bigint,
   materialsample_id bigint,
   preparation_type varchar(50),
@@ -251,13 +248,6 @@ CREATE TABLE preparation (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (190, 'preparation status','preparation','status');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,1,'in collection','in collection');  -- verified in an inventory as in the collection
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,2,'unknown','unknown'); -- usual status for material entered from ledgers or other paper records. 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'on loan','on loan'); -- preparation is out on loan
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'destroyed','destroyed'); -- preparation known to have been destroyed
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'lost','lost'); -- preparation lost
-
 
 -- each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
 -- each preparation has zero or one parent preparation from which it was derived.
@@ -271,15 +261,17 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'los
 
 ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
 
-ALTER TABLE preparation add constraint fk_deritentitem foreign key (derived_from_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade.
+--  aleternative relations not used:
+--  ALTER TABLE preparation add constraint fk_deritentitem foreign key (derived_from_identifiable_item_id) references identifiableitem (identifiableitem_id) on update cascade;
+--  ALTER TABLE preparation add constraint fk_prepofitem foreign key (preparation_of_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade;
 
 ALTER TABLE identifiableitem add constraint fk_item_unitid foreign key (unit_id) references unit(unit_id) on update cascade;  
-ALTER TABLE identifiableitem add constraint fk_item_prepid foreign key (preparation_id) references preparation (preparation_id) on update cascade;
+
+ALTER TABLE part add constraint fk_item_prepid foreign key (preparation_id) references preparation (preparation_id) on update cascade;
+ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
 
 -- each preparation may be a preparation of zero or one identifiable item.
 -- each identifiable item may be prepared into zero to many preparations.
-
-ALTER TABLE preparation add constraint fk_prepofitem foreign key (preparation_of_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade.
 
 
 -- Cardinality descriptions completed to here 
@@ -327,6 +319,14 @@ INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) 
 
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (15,'en_gb','sp. nov.','place holder for types of soon to be described species where the name is not yet available.  the taxon used in the identification should be a genus, the assertion in the identification is that this is a new species in that genus.');
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (16,'en_gb','ssp. nov.','place holder for types of soon to be described subspecies where the name is not yet available.  the taxon used in the identification should be a species, the assertion in the identification is that this is a new subspecies in that species.');
+
+--  picklist for preparation types
+INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (190, 'preparation status','preparation','status');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,1,'in collection','in collection');  -- verified in an inventory as in the collection
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,2,'unknown','unknown'); -- usual status for material entered from ledgers or other paper records. 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'on loan','on loan'); -- preparation is out on loan
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'destroyed','destroyed'); -- preparation known to have been destroyed
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'lost','lost'); -- preparation lost
 
 -- changeset chicoreus:7
 -- scientific name strings and taxonomic placement therof
