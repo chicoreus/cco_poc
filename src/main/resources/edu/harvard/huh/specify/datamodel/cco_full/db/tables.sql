@@ -158,7 +158,7 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:3
 
--- unit, identifiableitem, preparation, and catalogeditem are the core tables of the cco model.
+-- unit, identifiableitem, preparation, part, and catalogeditem are the core tables of the cco model.
 
 CREATE TABLE unit (
   -- Definition: logical unit that was collected or observed in a collecting event.
@@ -274,10 +274,6 @@ ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id)
 -- each identifiable item may be prepared into zero to many preparations.
 
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 -- changeset chicoreus:6
 CREATE TABLE identification (
    -- Definition: the application of a scientific name by some agent at some point in time to an identifiable item.  Includes both non-type and type identifications and metadata about validation of type status.
@@ -307,6 +303,15 @@ DEFAULT CHARSET=utf8;
 
 create unique index idx_ident_u_dateidentid on identification(date_determined_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_ident_u_dateverifid on identification(date_verified_eventdate_id);  --  Event dates should not be reused.
+
+-- Each identifiableitem has zero to many identifications.
+-- Each identification is of one and only one identifiable item. 
+
+-- Each identification has zero or one determining agent.
+-- Each agent is the determiner for zero to many identifications.
+
+-- Each identification has zero or one verifying agent.
+-- Each agent is the verifier for zero to many identifications.
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (130, 'identification qualifier','identification','qualifier');
 INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (10,130,1,'?','?');
@@ -365,6 +370,8 @@ CREATE TABLE taxon (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- Each identification involves one and only one taxon.
+-- Each taxon is used in zero to many identifications.
 
 -- Each taxon has zero or one accepted taxon 
 -- Each taxon is accepted for zero to many taxa.
@@ -374,6 +381,25 @@ DEFAULT CHARSET=utf8;
 
 -- Each taxon has zero or one parent taxon (each taxon except the root node has one and only one parent taxon)
 -- Each taxon is the parent for zero to many child taxa
+
+-- Each taxon has zero or one author agent.
+-- Each agent is the author for zero to many taxa.
+
+-- Each taxon has zero or one parenthetical author agent.
+-- Each agent is the parenthetical author for zero to many taxa.
+-- Each taxon has zero or one ex author agent.
+-- Each agent is the ex author for zero to many taxa.
+-- Each taxon has zero or one parenthetical ex author agent.
+-- Each agent is the parenthetical ex author for zero to many taxa.
+-- Each taxon has zero or one sanctioning author agent.
+-- Each agent is the sanctioning author for zero to many taxa.
+-- Each taxon has zero or one parenthetical sanctioning author agent.
+-- Each agent is the parenthetical sanctioning author for zero to many taxa.
+-- Each taxon has zero or one cited in author agent.
+-- Each agent is the cited in author for zero to many taxa.
+
+-- Each taxon was created in a nomenclatural act published in zero or one publication.
+-- Each publication contains zero to many nomenlcatural acts creating taxa.
 
 create index idx_taxon_acceptaxonid on taxon (accepted_taxon_id); 
 alter table taxon add constraint fk_taxon_acceptedid foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
@@ -390,6 +416,10 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,3,'no
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,1,'ICZN','ICZN');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,2,'ICNafp','ICNafp');
 
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
 
 CREATE TABLE taxontreedef (
   -- Definition: Definition of a taxonomic tree
