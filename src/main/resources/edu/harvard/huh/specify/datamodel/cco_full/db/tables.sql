@@ -417,10 +417,6 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,1,'IC
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,2,'ICNafp','ICNafp');
 
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 CREATE TABLE taxontreedef (
   -- Definition: Definition of a taxonomic tree
   taxontreedef_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -453,6 +449,15 @@ DEFAULT CHARSET=utf8;
 alter table taxontreedefitem add constraint fk_ttdefitem_ttreedef foreign key (taxontreedef_id) references taxontreedef (taxontreedef_id) on update cascade;
 
 alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedefitem_id)  references taxontreedefitem (taxontreedefitem_id) on update cascade;
+
+-- Each taxontreedef is the tree for zero to many taxontreedefitem nodes.
+-- Each taxontreedefitem is a node in one and only one taxontreedef.
+
+-- Each taxon has a rank defined by one and only one taxontreedefitem.
+-- Each taxontreedefitem defines the rank of zero to many taxa.
+
+
+
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5005, 'Nomenclatural Code','taxontreedefitem','nomenclatural_code');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'Any','Any');
@@ -508,6 +513,18 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_eventdate_id);  --  Event dates should not be reused.
+
+
+-- Each catalogeditem is the catalog record for zero or one identifiableitem.
+-- Each catalogeditem is the catalog record for zero or one preparation.
+
+-- Each preparation is cataloged as zero or one catalogeditem.
+-- Each identifiableitem is cataloged as zero or one catalogeditem.
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
+
 
 -- changeset chicoreus:9
 CREATE TABLE materialsample(
