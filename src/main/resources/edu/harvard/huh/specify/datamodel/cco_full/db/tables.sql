@@ -172,10 +172,13 @@ CREATE TABLE unit (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
--- each unit was collected in one and only one collectingevent
--- each collectingevent had zero to many units collected in it 
+-- each unit was collected in one and only one collectingevent.
+-- each collectingevent had zero to many units collected in it.
 
--- each unit had zero or one material sample produced from it.
+-- each unit had zero or one materialsample derived from it.
+-- each prepraration has zero or one material sample derived from it.
+-- each materialsample is derived from zero or one one unit.
+-- each materialsample is derived from zero or one preparation.
 
 -- each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity)
 -- each preparation is a physical preparation of one to many units 
@@ -521,10 +524,6 @@ create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_even
 -- Each preparation is cataloged as zero or one catalogeditem.
 -- Each identifiableitem is cataloged as zero or one catalogeditem.
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 
 -- changeset chicoreus:9
 CREATE TABLE materialsample(
@@ -557,6 +556,9 @@ CREATE TABLE catalognumberseries (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- Each catalogeditem is cataloged in one and only one catalognumberseries.
+-- Each catalognumberseries is used for zero to many catalogeditems.
+
 -- changeset chicoreus:11
 
 CREATE TABLE collectingevent (
@@ -576,6 +578,11 @@ CREATE TABLE collectingevent (
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
+
+-- Each unit was gathered in one and only one collectingevent.
+-- Each collectingevent results in the gathering of one to many units.
+-- Each collectingevent is at one and only one locality.
+-- Each locality is the site of zero to many collecting events.
 
 create unique index idx_colev_u_datecollid on collectingevent(date_collected_eventdate_id);  --  Event dates should not be reused.
 alter table unit add constraint fk_unit_colleventid foreign key (collectingevent_id) references collectingevent(collectingevent_id) on update cascade;
@@ -607,6 +614,18 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,3,'ye
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,4,'year/month','year/month');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,5,'date time','date time');
 
+-- Each eventdate is the date collected for zero or one collectingevent.
+-- Each collectingevent has a date collected of zero or one eventdate.
+
+-- Each eventdate is the date sampled for zero or one materialsample.
+-- Each materialsample has a date sampled of zero or one eventdate.
+-- Each eventdate is the date cataloged for zero or one catalogeditem.
+-- Each catalogeditem has a date cataloged of zero or one eventdate.
+-- Each eventdate is the date identified for zero or one identification.
+-- Each identification has a date identified of zero or one eventdate.
+-- Each eventdate is the date verified for zero or one identification.
+-- Each identification has a date verified of zero or one eventdate.
+
 -- changeset chicoreus:13
 
 ALTER TABLE unit add constraint fk_colevent foreign key (collectingevent_id) references collectingevent (collectingevent_id) on update cascade;
@@ -616,6 +635,10 @@ ALTER TABLE materialsample add constraint fk_matsamp_samdate foreign key (date_s
 ALTER TABLE catalogeditem add constraint fk_catitem_catdate foreign key (date_cataloged_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE identification add constraint fk_ident_detdate foreign key (date_determined_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE identification add constraint fk_ident_verdate foreign key (date_verified_eventdate_id) references eventdate (eventdate_id) on update cascade;
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
 
 -- changeset chicoreus:14
 
