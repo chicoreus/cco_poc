@@ -17,8 +17,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
--- each scope has zero to one parent scope
--- each scope is the parent for zero to many scopes
+-- Each scope has zero to one parent scope
+-- Each scope is the parent for zero to many scopes
 
 CREATE TABLE principal (
    -- Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
@@ -32,8 +32,8 @@ DEFAULT CHARSET=utf8;
 
 create unique index idx_principal_u_scopename on principal(principal_name, scope_id);
 alter table principal add constraint fk_principal_scopeid foreign key (scope_id) references scope(scope_id) on update cascade;
--- each principal has one and only one scope
--- each scope is for zero to many principals
+-- Each principal has one and only one scope
+-- Each scope is for zero to many principals
 
 CREATE TABLE systemuser ( 
    -- Definition: A user of the system
@@ -62,12 +62,12 @@ create unique index idx_syuspr_u_sysuserprincipal on systemuserprincipal(systemu
 
 alter table systemuserprincipal add constraint fk_supr_sysuserid foreign key (systemuser_id) references systemuser(systemuser_id) on update cascade;
 alter table systemuserprincipal add constraint fk_supr_principalid foreign key (principal_id) references principal(principal_id) on update cascade;
--- each systemuser has zero to many principals
--- each principal is for zero to many systemusers
--- each systemuserprincipal is for one and only one principal 
--- each principal has zero to many systemuserprincipals
--- each systemuserprincipal is for one and only one systemuser
--- each systemuser has zero to many systemuserprincipals
+-- Each systemuser has zero to many principals
+-- Each principal is for zero to many systemusers
+-- Each systemuserprincipal is for one and only one principal 
+-- Each principal has zero to many systemuserprincipals
+-- Each systemuserprincipal is for one and only one systemuser
+-- Each systemuser has zero to many systemuserprincipals
 
 -- Example of composition of scope, principal, and systemuser to define permissions for users.
 insert into scope (scope_id, name) values (1,'Example Institution');
@@ -103,8 +103,8 @@ DEFAULT CHARSET=utf8;
 CREATE INDEX idx_picklist_name ON picklist(name); 
 CREATE UNIQUE INDEX idx_picklist_u_tablefield ON picklist (table_name,field_name); -- one picklist for a field in a table, scope is per item.
 
--- each picklist applies to one and only one table and field 
--- each table and field may have zero to one picklist
+-- Each picklist applies to one and only one table and field 
+-- Each table and field may have zero to one picklist
 
 CREATE TABLE picklistitem (
   -- Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
@@ -120,10 +120,10 @@ DEFAULT CHARSET=utf8;
 
 ALTER TABLE picklistitem add constraint fk_pklstit_picklist_id foreign key (picklist_id) references picklist(picklist_id) on update cascade on delete cascade;  
 ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_id) references scope(scope_id) on update cascade;  
--- each picklist has zero to many picklistitems
--- each picklistitem is on one and only one picklist 
--- each ctpiclistitem is in zero to one scope (where zero scopes means the picklistitem applies in any scope)
--- each scope may apply to zero to many picklistitems
+-- Each picklist has zero to many picklistitems
+-- Each picklistitem is on one and only one picklist 
+-- Each ctpiclistitem is in zero to one scope (where zero scopes means the picklistitem applies in any scope)
+-- Each scope may apply to zero to many picklistitems
 
 
 CREATE TABLE picklistitemint (
@@ -138,8 +138,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (picklist_item_id) references picklistitem(picklist_item_id) on update cascade;  
--- each picklistitem has zero to many translations in picklistitemint
--- each picklistitemint is a translation for one and only one picklistitem 
+-- Each picklistitem has zero to many translations in picklistitemint
+-- Each picklistitemint is a translation for one and only one picklistitem 
 
 -- code tables (tables prefixed by ct and keyed on varchar(255)) have different bindings and are internationalized separately from picklistitems (which key on a surrogate numeric primary key).
 
@@ -172,16 +172,16 @@ CREATE TABLE unit (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
--- each unit was collected in one and only one collectingevent.
--- each collectingevent had zero to many units collected in it.
+-- Each unit was collected in one and only one collectingevent.
+-- Each collectingevent had zero to many units collected in it.
 
--- each unit had zero or one materialsample derived from it.
--- each prepraration has zero or one material sample derived from it.
--- each materialsample is derived from zero or one one unit.
--- each materialsample is derived from zero or one preparation.
+-- Each unit had zero or one materialsample derived from it.
+-- Each prepraration has zero or one material sample derived from it.
+-- Each materialsample is derived from zero or one one unit.
+-- Each materialsample is derived from zero or one preparation.
 
--- each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity)
--- each preparation is a physical preparation of one to many units 
+-- Each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity)
+-- Each preparation is a physical preparation of one to many units 
 
 -- changeset chicoreus:4
 CREATE TABLE identifiableitem (
@@ -197,8 +197,8 @@ CREATE TABLE identifiableitem (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
--- each identifiable item comes from one and only one unit
--- each unit has zero to many identifiable items
+-- Each identifiable item comes from one and only one unit
+-- Each unit has zero to many identifiable items
 
 -- To apply a pick list to a field, first define a picklist
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
@@ -220,7 +220,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'egg
 -- changeset chicoreus:5
 
 CREATE TABLE part ( 
-  -- Defintion:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.
+  -- Defintion:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
   part_id bigint not null primary key auto_increment,  -- surrogae numeric primary key 
   identifiableitem_id bigint not null,  -- the identification of the organism that this part is of
   preparation_id bigint not null, -- the preparation this part is in/on/is
@@ -233,7 +233,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE preparation (
-  -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.
+  -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts.
   -- note: does not specify preparation history or conservation history, additional entities are needed for these.
   preparation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   prep_exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, otherwise true).
@@ -245,21 +245,21 @@ CREATE TABLE preparation (
   parent_preparation_id bigint,   -- the preparation from which this preparation was derived. 
   status varchar(32) default 'in collection',
   description text default null,
-  storage_id bigint default null,
+  storage_id bigint default null,  -- The current storage location for this preparation, if any.
   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 
--- each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
--- each preparation has zero or one parent preparation from which it was derived.
+-- Each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
+-- Each preparation has zero or one parent preparation from which it was derived.
 
--- each identifiable item has zero to one parts preserved in a collection.
--- each part is one and only one identifable item.
+-- Each identifiable item has zero to one parts preserved in a collection.
+-- Each part is one and only one identifable item.
 
--- each part is prepared as as one and only one preparation.
--- each preparation is composed of one to many parts
+-- Each part is prepared as as one and only one preparation.
+-- Each preparation is composed of one to many parts
 
 
 ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
@@ -273,8 +273,8 @@ ALTER TABLE identifiableitem add constraint fk_item_unitid foreign key (unit_id)
 ALTER TABLE part add constraint fk_item_prepid foreign key (preparation_id) references preparation (preparation_id) on update cascade;
 ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
 
--- each preparation may be a preparation of zero or one identifiable item.
--- each identifiable item may be prepared into zero to many preparations.
+-- Each preparation may be a preparation of zero or one identifiable item.
+-- Each identifiable item may be prepared into zero to many preparations.
 
 
 -- changeset chicoreus:6
@@ -455,12 +455,6 @@ alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedef
 
 -- Each taxontreedef is the tree for zero to many taxontreedefitem nodes.
 -- Each taxontreedefitem is a node in one and only one taxontreedef.
-
--- Each taxon has a rank defined by one and only one taxontreedefitem.
--- Each taxontreedefitem defines the rank of zero to many taxa.
-
-
-
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5005, 'Nomenclatural Code','taxontreedefitem','nomenclatural_code');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'Any','Any');
@@ -917,8 +911,8 @@ INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('spou
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('could be', 'confused with', 'confused with');  -- to accompany nototherwisespecified 
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('successor of', 'predecessor of', 'sucessors');  -- to relate organizations 
 
--- each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
--- each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
+-- Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
+-- Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
 
 CREATE TABLE agentteam (
    --  Definition: Composition of agents into teams of individuals, such that both the team and the members can be agents.
@@ -1065,11 +1059,11 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
--- each cttextattribute type is the key for zero to many textattributes
--- each textattribute has one and only one cttextattributetype as a key
+-- Each cttextattribute type is the key for zero to many textattributes
+-- Each textattribute has one and only one cttextattributetype as a key
 
--- each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value)
--- each row in a table has zero to many textattributes (keyed on for_table and primary_key_value)
+-- Each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value)
+-- Each row in a table has zero to many textattributes (keyed on for_table and primary_key_value)
 
 CREATE TABLE inference (
     -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
@@ -1086,8 +1080,8 @@ DEFAULT CHARSET=utf8;
 
 CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,primary_key_value); -- allow zero or one inferences for one field in one table.
 
--- each inference applies to one and only one tuple (keyed on for_table, for_field, and primary_key_value)
--- each tuple has zero or one inference (keyed on for_table, for_field, and primary_key_value)
+-- Each inference applies to one and only one tuple (keyed on for_table, for_field, and primary_key_value)
+-- Each tuple has zero or one inference (keyed on for_table, for_field, and primary_key_value)
 
 -- changeset chicoreus:21
 
@@ -1170,10 +1164,10 @@ DEFAULT CHARSET=utf8;
 create unique index idx_scopect_u_keytable on scopect (key_name, ct_table_name, scope_id);
 
 alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) references scope (scope_id) on update cascade;
--- each scopect has one and only one scope
--- each scope applies to zero to many scope_id
--- each scopect is for one and only one key name in a code table
--- each key name in a code table has zero to many scope-codetable relations in codect
+-- Each scopect has one and only one scope
+-- Each scope applies to zero to many scope_id
+-- Each scopect is for one and only one key name in a code table
+-- Each key name in a code table has zero to many scope-codetable relations in codect
 
 INSERT INTO ctageclass (ageclass) VALUES ('unknown');
 INSERT INTO ctageclass (ageclass) VALUES ('adult');
@@ -1884,8 +1878,16 @@ CREATE INDEX idx_storage_name ON storage(name);
 ALTER TABLE storage add constraint fk_stor_parent_id foreign key (parent_id) references storage (storage_id) on update cascade;
 ALTER TABLE storage add constraint fk_stor_treeitemdefid foreign key (storagetreedefitem_id) references storagetreedefitem (storagetreedefitem_id) on update cascade;
 
-
 ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_id) references storage (storage_id) on update cascade;
+
+-- Each preparation has one and only one storage location.
+-- Each storage is the location for zero to many preparations.
+
+-- Each storagetreedef is the tree for zero to many storagetreedefitem nodes.
+-- Each storagetreedefitem is a node in one and only one storagetreedef.
+
+-- Each storage is defined by one and only one storagetreedefitem.
+-- Each storagetreedefitem defines zero to many taxa.
 
 -- changeset chicoreus:33
 -- a model for geological context 
@@ -1909,6 +1911,9 @@ DEFAULT CHARSET=utf8;
 
 alter table geologictimeperiod add constraint fk_geoltp_parent_id foreign key (parent_id) references geologictimeperiod (geologictimeperiod_id);
 alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key (accepted_id) references geologictimeperiod (geologictimeperiod_id);
+
+-- Each geologictimeperiod has zero or one parent geologictimeperiod. 
+-- Each geologictimeperiod is the parent for zero to many geologictimeperiods.
 
 CREATE TABLE geologictimeperiodtreedef (
   -- Definition: geologic rock/time unit trees
@@ -1942,6 +1947,12 @@ CREATE TABLE geologictimeperiodtreedefitem (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each geologictimeperiodtreedef is the tree for zero to many geologictimeperiodtreedefitem nodes.
+-- Each geologictimeperiodtreedefitem is a node in one and only one geologictimeperiodtreedef.
+
+-- Each geologictimeperiod is defined by one and only one geologictimeperiodtreedefitem.
+-- Each geologictimeperiodtreedefitem defines zero to many taxa.
+
 -- Ranks in geochronologic (geological time, rather than chronostratigraphic rock/time) heirarchy
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (1,1,':',0,'Eon',100);
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (2,1,':',1,'Era',200);
@@ -1960,9 +1971,9 @@ insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geo
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
 CREATE TABLE paleocontext (
-  -- Definition: a geological context from which some material was collected 
+  -- Definition: a geological context from which some material was collected.
   paleocontext_id bigint NOT NULL primary key AUTO_INCREMENT,
-  paleocontext_name varchar(80) DEFAULT NULL,  -- incase context is named
+  paleocontext_name varchar(80) DEFAULT NULL,  -- in case context is named
   verbatim_geologic_context varchar(900) not null default '',
   verbatim_lithology varchar(900) not null default '',  -- verbatim description of the lithology 
   lithology varchar(255) default null,  -- lithology using a controled vocabulary
@@ -1985,6 +1996,19 @@ alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithos
 alter table locality add constraint fk_local_paleocontext foreign key (paleocontext_id) references paleocontext (paleocontext_id) on update cascade;
 alter table collectingevent add constraint fk_colev_paleoid foreign key (paleocontext_id) references paleocontext(paleocontext_id) on update cascade;
 
+-- Each collectingevent has zero or one paleocontext.
+-- Each locality has zero or one paleocontext.
+-- Each paleocontext is for zero to many collecting events.
+-- Each paleocontext is for zero to many localities.
+
+-- Each paleocontext includes zero or one lithostratigraphicunit.
+-- Each paleocontext has zero or one lower bound earlyest geologictimeperiod.
+-- Each paleocontext has zero or one upper bound latest geologictimeperiod.
+
+-- Each lithostratigraphic unit is exposed in zero to many paleocontexts.
+
+-- Each geologictimeperiod is the lower bound for zero to many paleocontexts.
+-- Each geologictimeperiod is the upper bound for zero to many paleocontexts.
 
 -- changeset chicoreus:34
 -- additional accumulated foreign key constraints
@@ -1996,5 +2020,6 @@ create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
 
 insert into agent(agent_id, preferred_name_string) values (0,'example');
 alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
--- each systemuser is one and only one agent
--- each agent is also zero or one systemuser
+
+-- Each systemuser is one and only one agent
+-- Each agent is also zero or one systemuser
