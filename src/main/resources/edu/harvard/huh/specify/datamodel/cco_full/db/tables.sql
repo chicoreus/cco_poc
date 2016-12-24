@@ -951,6 +951,11 @@ CREATE TABLE agentreference (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each agentreference is about one and only one agent.
+-- Each agent has zero to many agentreferences.
+
+-- Each agentreference is in 
+
 create index idx_refagentlks_refagent on agentreference (refid, agent_id);
 
 CREATE TABLE agentlink (
@@ -964,6 +969,9 @@ CREATE TABLE agentlink (
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each agent has zero to many agentlinks.
+-- Each agentlink is for one and only one agent.
 
 
 CREATE TABLE agentname (
@@ -980,6 +988,12 @@ ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;  
 
 create unique index idx_agentname_u_idtypename on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
+
+-- Each agent has zero to many agentnames.
+-- Each agentname is for one and only one agent.
+
+-- Each agentname has one and only one name type (ctnametypes.type).
+-- Each ctnametype is the type for zero to many agentnames.
 
 create fulltext index ft_collectorname on agentname(name);
 
@@ -1059,11 +1073,11 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
--- Each cttextattribute type is the key for zero to many textattributes
--- Each textattribute has one and only one cttextattributetype as a key
+-- Each cttextattribute type is the key for zero to many textattributes.
+-- Each textattribute has one and only one cttextattributetype as a key.
 
--- Each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value)
--- Each row in a table has zero to many textattributes (keyed on for_table and primary_key_value)
+-- Each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value).
+-- Each row in a table has zero to many textattributes (keyed on for_table and primary_key_value).
 
 CREATE TABLE inference (
     -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
@@ -1723,8 +1737,14 @@ DEFAULT CHARSET=utf8;
 create index idx_geog_name on geography(name);
 create index idx_geog_fullname on geography(fullname);
 
-alter table geography add constraint fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
+alter table geography add constraint fk_geo_par
+ent_id foreign key (parent_id) references geography (geography_id);
 alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
+
+-- Each locality is politically contained in zero or one geography.
+-- Each locality is geographically contained in zero or one geography.
+-- Each geography is the political container for zero to many localities.
+-- Each geography is the geographic container for zero to many localities.
 
 CREATE TABLE geographytreedef (
   -- Definition: Definition of a geography tree
@@ -1796,6 +1816,12 @@ alter table locality add constraint fk_local_geogeogid foreign key (geographic_g
 
 alter table agentgeography add constraint fk_agentgeog_geogid foreign key (geography_id) references geography(geography_id) on update cascade;
 
+-- Each geographytreedef is the tree for zero to many geographytreedefitem nodes.
+-- Each geographytreedefitem is a node in one and only one geographytreedef.
+
+-- Each geography is defined by one and only one geographytreedefitem.
+-- Each geographytreedefitem defines zero to many taxa.
+
 -- changeset chicoreus:31
 
 CREATE TABLE collection (
@@ -1820,6 +1846,12 @@ DEFAULT CHARSET=utf8;
 create index idx_coll_name on collection(collection_name);
 
 ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (in_collection_id) references collection(usergroupscope_id);
+
+-- Each catalogeditem is cataloged in one and only one collection.
+-- Each collection catalogs zero to many catalogeditems.
+
+-- Each collection falls into zero or one scope.
+-- Each scope convers zero to many collections.
 
 -- changeset chicoreus:32
 
