@@ -1119,6 +1119,9 @@ CREATE TABLE numericattribute (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each numericattribute is of one and only one numericattrubutetype (ctnumericattributetype).
+-- Each ctnumericattributetype is the type of zero to many numeric attribtues.
+
 ALTER TABLE numericattribute add constraint fk_numericattributetype foreign key (name) references ctnumericattributetype (name) on update cascade; 
 
 -- changeset chicoreus:22
@@ -1286,6 +1289,9 @@ DEFAULT CHARSET=utf8;
 
 ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
 
+-- Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).
+-- Each ctbiologicalattributetype is the type of zero to many biological attribtues.
+
 -- changeset chicoreus:23
 
 -- Minimal audit log of who applied changes to what tables when, does not record the query that was fired.
@@ -1327,7 +1333,7 @@ CREATE TABLE encumberance (
    --  Definition: a description of the limitations on the visiblity of some data to the public.  All public presentations of data must observe the encumberance associated with that data.  
    encumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    explanation text,   -- the reason for the encumberance 
-   encumberance_type varchar(50),   
+   encumberance_type varchar(50) not null,   
    createdby_agent_id bigint not null,
    make_visible_on date, -- date on which encumberance expires, null for no expiration date
    make_visible_criteria text, -- description of criteria under which encumberance expires 
@@ -1335,6 +1341,9 @@ CREATE TABLE encumberance (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each encumberance is of one and only one encumberancetype (ctencumberancetype).
+-- Each ctencumberancetype is the type of zero to many encumberances.
 
 ALTER TABLE encumberance add constraint fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 ALTER TABLE encumberance add constraint fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
