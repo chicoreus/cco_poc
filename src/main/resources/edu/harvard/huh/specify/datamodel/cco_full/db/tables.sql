@@ -630,10 +630,6 @@ ALTER TABLE catalogeditem add constraint fk_catitem_catdate foreign key (date_ca
 ALTER TABLE identification add constraint fk_ident_detdate foreign key (date_determined_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE identification add constraint fk_ident_verdate foreign key (date_verified_eventdate_id) references eventdate (eventdate_id) on update cascade;
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 -- changeset chicoreus:14
 
 CREATE TABLE locality (
@@ -685,6 +681,9 @@ CREATE TABLE othernumber (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
  
+-- Each [arbitrary table (unit, identifieableitem, part, preparation)] has zero to many othernumbers.
+-- Each othernumber is for one and ony one [arbitrary table].
+
 CREATE UNIQUE INDEX idx_tablepk on othernumber(target_table, pk);
 
 -- changeset chicoreus:16
@@ -694,6 +693,7 @@ CREATE TABLE transactionitem (
    -- Definition:  the participation of a preparation in a transaction (e.g. a loan).
    -- note: table is only minimally specified.
    transactionitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   transactionc_id bigint not null, -- transaction this item is a part of.
    trans_preparation_id bigint, -- can be null to allow for transactions of non-cataloged items
    item_count int, -- number of items involved in the transaction.
    item_count_modifier varchar(50),  -- modifier on the item count (about, more than, etc.)
@@ -734,6 +734,20 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,1,'in 
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,2,'open','open'); 
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,3,'open partial return','open partial return'); 
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,4,'closed','closed'); 
+
+-- Each transactionitem is zero or one preparation.
+-- Each preparation is zero to many transactionitems.
+
+-- Each transactionitem is in one and only one transaction(c).
+-- Each transaction(c) consists of zero to many transaction items.
+
+ALTER TABLE transactionitem add constraint fk_transid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
+
 
 CREATE TABLE loan (
   -- Definition: A record of a returnable movement of a set of specimens out of a collection 
@@ -830,6 +844,12 @@ CREATE TABLE transactionagent (
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
+
+-- Each transactionagent participates in one and only one transaction.
+-- Each transaction has zero to many marticipating transactionagents.
+
+-- Each transactionagent is one and only one agent.
+-- Each agent may be zero to many transactionagents.
 
 create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
 
@@ -1746,8 +1766,7 @@ DEFAULT CHARSET=utf8;
 create index idx_geog_name on geography(name);
 create index idx_geog_fullname on geography(fullname);
 
-alter table geography add constraint fk_geo_par
-ent_id foreign key (parent_id) references geography (geography_id);
+alter table geography add constraint fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
 alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
 
 -- Each locality is politically contained in zero or one geography.
