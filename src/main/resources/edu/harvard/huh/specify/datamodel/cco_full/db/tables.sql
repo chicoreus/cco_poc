@@ -995,10 +995,6 @@ alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent
 -- Each agent has zero to many agentnumberpatterns.
 -- Each agentnumberpattern is for one and only one agent.
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 CREATE TABLE agentreference (
    --  Definition: Links to published references the content of which is about collectors/agents (e.g. obituaries, biographies).
    agentreference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1130,6 +1126,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
+
 -- Each cttextattribute type is the key for zero to many textattributes.
 -- Each textattribute has one and only one cttextattributetype as a key.
 
@@ -1202,6 +1199,9 @@ CREATE TABLE ctlengthunit (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each ctbiologicalattributetype has zero or one length unit in ctlengthunit.
+-- Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.
+
 INSERT INTO ctlengthunit (lengthunit) VALUES ('meters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('centimeters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('milimeters');
@@ -1212,6 +1212,9 @@ CREATE TABLE ctmassunit (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each ctbiologicalattributetype has zero or one mass unit in ctmassunit.
+-- Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.
 
 INSERT INTO ctmassunit (massunit) VALUES ('grams');
 INSERT INTO ctmassunit (massunit) VALUES ('kilograms');
@@ -1225,6 +1228,9 @@ CREATE TABLE ctageclass (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each ctbiologicalattributetype is an age class in ctageclass.
+-- Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.
+
 CREATE TABLE scopect (
   -- Definition relationship between a key in a code table and a scope.
   scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1234,6 +1240,9 @@ CREATE TABLE scopect (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each {code table} has zero to many scopes in scopect.
+-- Each scopect provides the scope for zero to many {code table}.
 
 create unique index idx_scopect_u_keytable on scopect (key_name, ct_table_name, scope_id);
 
@@ -1368,8 +1377,13 @@ CREATE TABLE auditlog (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each {table} has zero to many auditlogs.
+-- Each audit log is for one and only one {table}.
 
 ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
+
+-- Each auditlog records an action by one and noly one agent.
+-- Each agent made a change recorded in zero to many auditlogs.
 
 -- changeset chicoreus:24
 
@@ -1401,6 +1415,10 @@ DEFAULT CHARSET=utf8;
 
 -- Each encumberance is of one and only one encumberancetype (ctencumberancetype).
 -- Each ctencumberancetype is the type of zero to many encumberances.
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
 
 ALTER TABLE encumberance add constraint fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 ALTER TABLE encumberance add constraint fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
