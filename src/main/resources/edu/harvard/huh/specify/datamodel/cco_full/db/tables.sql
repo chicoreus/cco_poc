@@ -744,11 +744,6 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,4,'clo
 ALTER TABLE transactionitem add constraint fk_transid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
-
 CREATE TABLE loan (
   -- Definition: A record of a returnable movement of a set of specimens out of a collection 
   loan_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -774,6 +769,12 @@ CREATE TABLE loan (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each transaction(c) is zero or one loan.
+-- Each loan is one and only one transaction(c).
+
+create unique index idx_loan_transid on loan (transactionc_id);  
+ALTER TABLE loan add constraint fk_loantransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+
 CREATE TABLE gift (
   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to another insitution
   gift_id bigint not null primary key AUTO_INCREMENT,
@@ -784,6 +785,12 @@ CREATE TABLE gift (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each transaction(c) is zero or one gift.
+-- Each gift is one and only one transaction(c).
+
+create unique index idx_gift_transid on gift (transactionc_id);  
+ALTER TABLE gift add constraint fk_gifttransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 CREATE TABLE borrow (
   -- Definition: Loan records kept by this insititution for material borrowed from other insititutions. 
@@ -813,6 +820,12 @@ CREATE TABLE borrow (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each transaction(c) is zero or one borrow.
+-- Each borrow is one and only one transaction(c).
+
+create unique index idx_borrow_transid on borrow (transactionc_id);  
+ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+
 CREATE TABLE deaccession (
   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to outside of institutional care
   deaccession_id bigint not null primary key AUTO_INCREMENT,
@@ -823,6 +836,12 @@ CREATE TABLE deaccession (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each transaction(c) is zero or one deaccession.
+-- Each deacession is one and only one transaction(c).
+
+create unique index idx_deaccession_transid on deaccession (transactionc_id);  
+ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (160, 'loan type','loan','loan_type');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,1,'returnable','returnable');  -- returnable in whole or in part
@@ -852,6 +871,11 @@ DEFAULT CHARSET=utf8;
 -- Each agent may be zero to many transactionagents.
 
 create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
+
 
 -- changeset chicoreus:17
 
