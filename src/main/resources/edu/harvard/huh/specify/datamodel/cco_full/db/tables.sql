@@ -864,17 +864,13 @@ CREATE TABLE transactionagent (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
--- Each transactionagent participates in one and only one transaction.
--- Each transaction has zero to many marticipating transactionagents.
+-- Each transactionagent participates in one and only one transaction(c).
+-- Each transaction(c) has zero to many marticipating transactionagents.
 
 -- Each transactionagent is one and only one agent.
 -- Each agent may be zero to many transactionagents.
 
 create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
-
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
 
 
 -- changeset chicoreus:17
@@ -938,6 +934,9 @@ ALTER TABLE taxon add constraint foreign key fk_citauthagent (cited_in_agent_id)
 alter table transactionagent add constraint fk_ta_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
 alter table transactionagent add constraint fk_ta_coltransid foreign key (transactionc_id) references agent(agent_id) on update cascade;
 
+-- Each catalogeditem has zero or one cataloging agent.
+-- Each agent cataloged zero to many catalogeditems.
+
 -- changeset chicoreus:19
 
 -- add additional tables to support agents
@@ -962,12 +961,19 @@ CREATE TABLE agentteam (
    --  Definition: Composition of agents into teams of individuals, such that both the team and the members can be agents.
    agentteam_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    team_agent_id bigint not null, 
-   memberagent_id bigint not null, 
+   member_agent_id bigint not null, 
    ordinal int
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table agentteam add constraint fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
-alter table agentteam add constraint fk_agentt_membid foreign key (memberagent_id) references agent(agent_id) on delete no action on update cascade;
+alter table agentteam add constraint fk_agentt_membid foreign key (member_agent_id) references agent(agent_id) on delete no action on update cascade;
+
+-- Each agent is a member of zero to many agentteams.
+-- Each agent is the team for zero to many agentteams.
+-- Each agentteam links one and only one member agents.
+-- Each agentteam links one and only one team agent.
+
+create unique index idx_agentteam_u_teammember on agentteam(team_agent_id, member_agent_id);
 
 CREATE TABLE agentnumberpattern (
    -- Definition: machine and human redable descriptions of collector number patterns
@@ -985,6 +991,13 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent_id) references agent(agent_id) on delete cascade on update cascade;
+
+-- Each agent has zero to many agentnumberpatterns.
+-- Each agentnumberpattern is for one and only one agent.
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
 
 CREATE TABLE agentreference (
    --  Definition: Links to published references the content of which is about collectors/agents (e.g. obituaries, biographies).
