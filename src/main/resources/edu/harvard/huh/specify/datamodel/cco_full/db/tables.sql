@@ -1655,14 +1655,21 @@ DEFAULT CHARSET=utf8;
 
 alter table attachmentrelation add constraint fk_attrel_attid foreign key (attachment_id) references attachment (attachment_id) on update cascade;
 
+-- Each attachmentrelation involves one and only one attachment.
+-- Each attachment is involved in zero to many attachmentrelations.
+
+-- Each attachmentrelation involves one and only one {arbitrary table}.
+-- Each {aribtrary table} has zero to many attachmentrelations.
+
 -- changeset chicoreus:28
 
 
 CREATE TABLE collector (
-  -- Definition: The relation of an agent, possibly with additional un-named agents, to a collecting event.
-  collectorid bigint not null primary key auto_increment, -- surrogate numeric primary key
+  -- Definition: The relation of an agent, possibly with additional un-named agents, to a collecting event (supports a workflow where collectors are transcribed verbatim and then subsequently parsed into known agent teams.
+  collector_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   verbatim_collector text,  -- the verbatim transcribed text for the collector 
-  collectoragent_id bigint,  -- the agent (individual or group) that has been identified as the collector
+  collectoragent_id bigint,  -- the agent (individual or group) that has been identified as the collector.
+  primary_collectoragent_id bigint,  -- the agent (individual) that has been identified as the primary collector (who's number series is used in the collecting event).
   etal text, -- unnamed individuals and groups that were part of the collecting team.  examples: and students; and native guide.
   remarks text
 )
@@ -1670,7 +1677,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE collector add constraint fk_col_collectoragent foreign key (collectoragent_id) references agent (agent_id) on update cascade;
--- ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collector_id) references collector (collector_id) on update cascade;
+ALTER TABLE collector add constraint fk_col_pricollectoragent foreign key (primary_collectoragent_id) references agent (agent_id) on update cascade;
+ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collector_id) references collector (collector_id) on update cascade;
 
 -- Each collector is zero to one agent.
 -- Each agent is one to many collectors.
