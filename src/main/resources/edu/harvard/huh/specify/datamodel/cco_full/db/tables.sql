@@ -559,6 +559,7 @@ CREATE TABLE collectingevent (
    -- Definition: an event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected, time at which a collector visited a locality and collected one or more collected units using a single sampling method.
   collectingevent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   locality_id bigint default null,
+  collector_id bigint not null, -- the collector who collected in this collecting event.
   sampling_method varchar(50) default null,  -- the sampling method that was applied in this collecting event
   collectors_field_number varchar(255) default null,  -- a number assigned by the collector to the collecting event, this might be called a field number or a station number or a collector number, but the semantics for this number must be that it applies to the collecting event.
   verbatim_date varchar(255) default null,
@@ -1662,18 +1663,21 @@ CREATE TABLE collector (
   collectorid bigint not null primary key auto_increment, -- surrogate numeric primary key
   verbatim_collector text,  -- the verbatim transcribed text for the collector 
   collectoragent_id bigint,  -- the agent (individual or group) that has been identified as the collector
-  collectingevent_id bigint not null, -- the collecting event in which this collector collected
   etal text, -- unnamed individuals and groups that were part of the collecting team.  examples: and students; and native guide.
   remarks text
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-CREATE UNIQUE INDEX idx_colltor_u_agentevent ON collector(collectoragent_id, collectingevent_id);  
-CREATE INDEX idx_coltor_eventid ON collector(collectingevent_id);
-
 ALTER TABLE collector add constraint fk_col_collectoragent foreign key (collectoragent_id) references agent (agent_id) on update cascade;
-ALTER TABLE collector add constraint fk_col_colevent foreign key (collectingevent_id) references collectingevent (collectingevent_id) on update cascade;
+-- ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collector_id) references collector (collector_id) on update cascade;
+
+-- Each collector is zero to one agent.
+-- Each agent is one to many collectors.
+
+-- Each collector collected in zero to many collectingevents.
+-- Each collectingevent had one and only one collector (handle teams by verbatim collector and etal, then parse into collectoragent as a group with etal).
+
 
 -- changeset chicoreus:29
 -- tables supporting coordinates and georeferences
@@ -1686,6 +1690,9 @@ CREATE TABLE ctcoordinatetype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each coordinate is of one and only one (ct)coordinatetype.
+-- Each (ct)coordintetype is the type for zero to many coordinates.
+
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('utm/ups','utm');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('decimal degrees','ddg');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees minutes seconds','dms');
@@ -1697,7 +1704,7 @@ INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('swiss grid',
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('public land survey system (township section range)','plss');
 
 CREATE TABLE coordinate ( 
-   -- Definition: a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about 
+   -- Definition: a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about original coordinates, separate from subsequent georeferences.
    coordinateid bigint not null primary key auto_increment, -- surrogate numeric primary key  
    geodeticdatum varchar(255) not null default 'not recorded',   -- geodetic datum that applies for this coordinate
    remarkslatlongmeridian varchar(50) default null, -- meridian (grenwich, paris) for latitude and longitude, could apply to any lat/long representation
@@ -1741,8 +1748,13 @@ CREATE TABLE coordinate (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+create unique index idx_coord_u_typelocalityid on coordinate(coordinatetype, locality_id);  --  Localities are limited to one coordinate of a given type.
+
+-- Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type]
+-- Each coordinate is for one and only one locality.
+
 CREATE TABLE georeference (
-  -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined
+  -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined, interpreted from textual locality and coordinate information.
   georeferenceid bigint not null primary key auto_increment, -- surrogate numeric primary key
   locality_id bigint not null, -- the locality to which this georeference applies 
   acceptedflag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
@@ -1789,6 +1801,15 @@ create unique index idx_georef_u_dategeorefid on georeference(georeference_event
 ALTER TABLE georeference add constraint fk_gr_byagent foreign key (by_agent_id) references agent (agent_id) on update cascade;
 ALTER TABLE georeference add constraint fk_gr_geography foreign key (locality_id) references locality (locality_id) on update cascade;
 ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeference_eventdate_id) references eventdate (eventdate_id) on update cascade;
+
+-- Each locality has zero to many georeferences.
+-- Each georeference is for one and only one locality.
+
+-- Each georeference was georeferenced on zero to one eventdate.
+-- Each eventdate is the date of zero or one georeference.
+
+-- Each georeference was by one and only one agent.
+-- Each agent made zero to many georeferences.
 
 -- changeset chicoreus:30
 -- tables supporting geography
