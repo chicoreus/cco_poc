@@ -1417,9 +1417,11 @@ DEFAULT CHARSET=utf8;
 -- Each encumberance is of one and only one encumberancetype (ctencumberancetype).
 -- Each ctencumberancetype is the type of zero to many encumberances.
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
+-- Each encumberance was created by one and only one agent.
+-- Each agent is the creator of zero to many encumberances.
+
+-- Each encumberance is visible to one and only one scope.
+-- Each scope provides the visiblility for zero to many encumberances.
 
 ALTER TABLE encumberance add constraint fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 ALTER TABLE encumberance add constraint fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
@@ -1451,7 +1453,7 @@ DEFAULT CHARSET=utf8;
 
 -- Each encumberance is zero to many attachmentencumberances.
 -- Each attachmentencumberance is one and only one encumberance.
--- Each attachmentencumberance is for one and only one catalogeditem.
+-- Each attachmentencumberance is for one and only one attachment.
 
 CREATE TABLE localityencumberance ( 
    -- Definition: relationship between encumberances and localities (e.g. for fossil localities where not publicizing the locality was a condition of collecting at that locality).   
@@ -1462,6 +1464,10 @@ CREATE TABLE localityencumberance (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each encumberance is zero to many localityencumberances.
+-- Each localityencumberance is one and only one encumberance.
+-- Each localityencumberance is for one and only one locality.
 
 CREATE TABLE taxonencumberance ( 
    -- Definition: relationship between encumberances and taxa (e.g. for soon-to-be-described species, or for taxa which are controled substances).   
@@ -1475,7 +1481,7 @@ DEFAULT CHARSET=utf8;
 
 -- Each encumberance is zero to many taxonencumberances.
 -- Each taxonencumberance is one and only one encumberance.
--- Each taxonencumberance is for one and only one catalogeditem.
+-- Each taxonencumberance is for one and only one taxon.
 
 -- changeset chicoreus:25 
 
@@ -1515,8 +1521,15 @@ ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_i
 -- Each address is for one and only one agent.
 -- Each agent has zero to many addresses.
 
+-- Each address starts use at zero or one eventdate.
+-- Each eventdate is the start for one and only one address.
 
+-- Each address ends use at zero or one eventdate.
+-- Each eventdate is the end for one and only one address.
 
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
 
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
@@ -1567,6 +1580,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE addressofrecord add constraint fk_aor_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade ; 
+
+-- Each addressofrecord is a preserved address for one and only one agent.
+-- Each agent has zero to many preserved addressesofrecord.
 
 ALTER TABLE loan add constraint fk_loan_loanaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade ; 
 -- changeset chicoreus:26 
