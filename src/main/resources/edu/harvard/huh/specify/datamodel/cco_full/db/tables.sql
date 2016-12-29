@@ -1388,7 +1388,7 @@ ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) r
 
 -- changeset chicoreus:24
 
--- encumbarances, masking visiblity of data, generalized from mechainism in Arctos.
+-- Encumberances: means for masking visiblity of data, generalized from mechainism in Arctos.
 
 CREATE TABLE ctencumberancetype ( 
    -- Definition: controled vocabulary of encumberance types.
@@ -1429,25 +1429,36 @@ CREATE TABLE catitemencumberance (
    -- Definition: relationship between encumberances and cataloged items
    catitemencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
-   catalogeditemid bigint not null
+   catalogeditemid bigint not null,
+   tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each encumberance is zero to many catitemencumberances.
+-- Each catitemencumberance is one and only one encumberance.
+-- Each catitemencumberance is for one and only one catalogeditem.
 
 CREATE TABLE attachmentencumberance ( 
    -- Definition: relationship between encumberances and attachment (metadata records), encumberance of actual media objects needs to be handleed by a digital asset management system.
    attachmentencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
-   attachment_id bigint not null
+   attachment_id bigint not null,
+   tablescope varchar(900) default 'attachment'  -- tables this encumberance is expected to extend to.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each encumberance is zero to many attachmentencumberances.
+-- Each attachmentencumberance is one and only one encumberance.
+-- Each attachmentencumberance is for one and only one catalogeditem.
 
 CREATE TABLE localityencumberance ( 
    -- Definition: relationship between encumberances and localities (e.g. for fossil localities where not publicizing the locality was a condition of collecting at that locality).   
    localityencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
-   locality_id bigint not null
+   locality_id bigint not null,
+   tablescope varchar(900) default 'locality,coordinate,georeference,collectingevent,catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1456,10 +1467,15 @@ CREATE TABLE taxonencumberance (
    -- Definition: relationship between encumberances and taxa (e.g. for soon-to-be-described species, or for taxa which are controled substances).   
    taxonencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null, -- The encumberance that applies to a taxon
-   taxon_id bigint not null -- The taxon to which an encumberance applies 
+   taxon_id bigint not null, -- The taxon to which an encumberance applies 
+   tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- Each encumberance is zero to many taxonencumberances.
+-- Each taxonencumberance is one and only one encumberance.
+-- Each taxonencumberance is for one and only one catalogeditem.
 
 -- changeset chicoreus:25 
 
@@ -1496,6 +1512,12 @@ ALTER TABLE address add constraint fk_addressforagent foreign key (address_for_a
 ALTER TABLE address add constraint fk_add_startevdate foreign key (start_eventdate_id) references eventdate (eventdate_id) on update cascade; 
 ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_id) references eventdate (eventdate_id) on update cascade; 
 
+-- Each address is for one and only one agent.
+-- Each agent has zero to many addresses.
+
+
+
+
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
    typename varchar(255) not null primary key 
@@ -1521,6 +1543,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (typename) references ctelectronicaddresstype (typename) on update cascade;
+
+-- Each electronicaddress is of one and only one (ct)electronicaddresstype.
+-- Each ctelectronicaddresstype provides the type for zero to many electronic addresses.
 
 CREATE TABLE addressofrecord (
   -- Definition: an address to which something was sent, which must be preserved even as an agent changes their current address.
