@@ -763,8 +763,9 @@ CREATE TABLE loan (
   purpose_of_loan varchar(64) DEFAULT NULL, -- Recipient's description of the purpose for the loan
   received_comments varchar(255) DEFAULT NULL,
   conditions text DEFAULT null,  -- conditions for shipment, handling of material, etc imposed upon the borrower.
-  SrcGeography text DEFAULT null,  -- Countries of origin of the material.   
-  SrcTaxonomy text DEFAULT NULL,   -- Taxa included in the material.  
+  source_geography text DEFAULT null,  -- Countries of origin of the material.   
+  source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.  
+  destination_country_code varchar(3) not null,  -- The country code to which this loan is being sent.
   recipient_addressofrecord_id bigint DEFAULT NULL  -- address to which this loan was sent 
 )
 ENGINE=InnoDB 
@@ -782,6 +783,7 @@ CREATE TABLE gift (
   transactionc_id bigint not null,
   summary_description varchar(255) not null, -- brief description of the material involved in the gift.
   sent_date  date, -- the date on which the loan was made 
+  destination_country_code varchar(3) not null,  -- The country code to which this gift is being sent.
   recipient_addressofrecord_id bigint DEFAULT NULL  -- address to which this gift was sent 
 )
 ENGINE=InnoDB 
@@ -814,8 +816,9 @@ CREATE TABLE borrow (
   insurance_conditions text default NULL,
   is_closed boolean not null DEFAULT false,
   date_closed date DEFAULT NULL,
-  SrcGeography text DEFAULT null,  -- Countries of origin of the material.
-  SrcTaxonomy text DEFAULT NULL,   -- Taxa included in the material.
+  origin_country_code varchar(3) not null,  -- The country code from which this borrow was sent.
+  source_geography text DEFAULT null,  -- Countries of origin of the material.
+  source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.
   sender_addressofrecord_id bigint DEFAULT NULL  -- address to which this borrow was expected to be returned.
 )
 ENGINE=InnoDB 
@@ -1233,7 +1236,7 @@ DEFAULT CHARSET=utf8;
 -- Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.
 
 CREATE TABLE scopect (
-  -- Definition relationship between a key in a code table and a scope.
+  -- Definition: relationship between a key in a code table and a scope, the scope within which a code table applies.
   scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   key_name varchar(255) not null,  -- key which has the scope 
   ct_table_name varchar(255) not null,  -- table in which key is found
@@ -1499,8 +1502,8 @@ CREATE TABLE address (
   state_province varchar(255) default null,
   country varchar(255) default null,
   is_current boolean default null,  -- true if this is a current address 
-  isprimary boolean default null,  -- true if this is the primary address for this agent
-  isshipping boolean default null, -- true if this is an address to which shipments can be sent
+  is_primary boolean default null,  -- true if this is the primary address for this agent
+  is_shipping boolean default null, -- true if this is an address to which shipments can be sent
   ordinal int(11) default null,   -- sort order for addresses 
   start_eventdate_id bigint default null,  -- date on which this address began to be used
   end_eventdate_id bigint default null,  -- date on which this address ceased to be used
@@ -1527,10 +1530,6 @@ ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_i
 -- Each address ends use at zero or one eventdate.
 -- Each eventdate is the end for one and only one address.
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
    typename varchar(255) not null primary key 
@@ -1545,20 +1544,27 @@ INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
 CREATE TABLE electronicaddress ( 
    -- Definition: email, phone, fax, or other electronic contact address for an agent
    electronicaddress_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   address_for_agent_id bigint not null,  -- agent for which this is an address
    typename varchar(255) not null,
    address varchar(255) not null,
    remarks text,
-   is_current boolean default null,  -- true if this is a current contact number/email
-   isprimary boolean default null,  -- true if this is the primary contact number/email for this agent
+   is_current boolean default null,  -- true if this is a current contact number/email (no constraint preventing multiple current addresses).
+   is_primary boolean default null,  -- true if this is the primary contact number/email for this agent 
    ordinal int(11) default null   -- sort order for electronic addresses
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (typename) references ctelectronicaddresstype (typename) on update cascade;
+ALTER TABLE electronicaddress add constraint fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
+
+create unique index idx_eaddress_u_agentprimary on electronicaddress(address_for_agent_id, is_primary);  --  Only one primary electronic address for an agent.
 
 -- Each electronicaddress is of one and only one (ct)electronicaddresstype.
 -- Each ctelectronicaddresstype provides the type for zero to many electronic addresses.
+
+-- Each electronicaddress is for one and only one agent.
+-- Each agent has zero to many electronicaddresses.
 
 CREATE TABLE addressofrecord (
   -- Definition: an address to which something was sent, which must be preserved even as an agent changes their current address.
@@ -1584,7 +1590,21 @@ ALTER TABLE addressofrecord add constraint fk_aor_addressforagent foreign key (a
 -- Each addressofrecord is a preserved address for one and only one agent.
 -- Each agent has zero to many preserved addressesofrecord.
 
-ALTER TABLE loan add constraint fk_loan_loanaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade ; 
+ALTER TABLE loan add constraint fk_loan_loanaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+ALTER TABLE gift add constraint fk_gift_giftaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+ALTER TABLE borrow add constraint fk_borrow_senderaddress foreign key (sender_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+
+-- Each loan has zero or one recipient addressofrecord.
+-- Each addressofrecord is the recipient address for zero to many loans.
+-- Each gift has zero or one recipient addressofrecord.
+-- Each addressofrecord is the recipient address for zero to many gifts.
+-- Each borrow has zero or one sender addressofrecord.
+-- Each addressofrecord is the sender address for zero to many borrows.
+
+-- Cardinality descriptions completed to here 
+-- **************************************************************************************
+-- 
+
 -- changeset chicoreus:26 
 -- accession and closely related tables
 
