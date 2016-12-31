@@ -1601,10 +1601,6 @@ ALTER TABLE borrow add constraint fk_borrow_senderaddress foreign key (sender_ad
 -- Each borrow has zero or one sender addressofrecord.
 -- Each addressofrecord is the sender address for zero to many borrows.
 
--- Cardinality descriptions completed to here 
--- **************************************************************************************
--- 
-
 -- changeset chicoreus:26 
 -- accession and closely related tables
 
@@ -1634,6 +1630,16 @@ create unique index idx_access_u_dateackid on accession(date_acknowledged_eventd
 create unique index idx_access_u_dateaccid on accession(date_accessioned_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_access_u_daterecid on accession(date_received_eventdate_id);  --  Event dates should not be reused.
 
+-- Each accession was received on zero or one eventdate.
+-- Each accession was accessioned on zero or one eventdate.
+-- Each accession was acknowleged on zero or one eventdate.
+-- Each eventdate is the received date for zero or one accession.
+-- Each eventdate is the accession date for zero or one accession.
+-- Each eventdate is the acknowleged date for zero or one accession.
+
+-- Each accession is visible within one and only one scope.
+-- Each scope provides visibility for zero to many accessions.
+
 alter table accession add constraint fk_acc_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
 
 CREATE TABLE repositoryagreement (
@@ -1652,6 +1658,11 @@ CREATE TABLE repositoryagreement (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Each accession is under zero to one repositoryagreement.
+-- Each repositoryagreement applies to zero to many accessions.
+
+-- Each accession has zero to one source addressofrecord.
+-- Each addressofrecord is the source for zero or one accession.
 
 ALTER TABLE accession add constraint fk_acc_repositoryagreement foreign key (repositoryagreementid) references repositoryagreement (repositoryagreementid) on update cascade; 
 ALTER TABLE accession add constraint fk_acc_addresofrecrod foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
@@ -1660,12 +1671,20 @@ alter table repositoryagreement add constraint fk_ra_scope_id foreign key (scope
 ALTER TABLE repositoryagreement add constraint fk_ra_agreementwith foreign key (agreementwithagent_id) references agent (agent_id) on update cascade;
 ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade;
 
+-- Each repositoryagreeement is visible within one and only one scope.
+-- Each scope provides visibility for zero to many repositoryagreements.
+
+-- Each repositoryagreement is an agreement with one and only one agent.
+-- Each agent has zero to many repositoryagreements.
+
+-- Each repositoryagreement has zero to one addressofrecord.
+-- Each addressofrecord is for for zero or one repositoryagreeement.
 
 CREATE TABLE accessionagent (
   -- Definition: The participation of an agent in an accession in some defined role (e.g. the agent who approved some accession).
   accessionagent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   role varchar(50) not null,
-  accession_id bigint default null,
+  accession_id bigint not null,
   agent_id bigint not null,
   remarks text
 ) 
@@ -1677,6 +1696,11 @@ ALTER TABLE accessionagent add constraint fk_accessionforagent foreign key (acce
 
 --  an agent cannot have the same role twice in the same accession.
 CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role, accession_id); 
+
+-- Each accession has zero to many accessionagents.  (Each accession has zero or one accessionagent with a particular agent in a particular role).
+-- Each accessionagent is for one and only one accession.
+-- Each accessionagent is one and only one agent.
+-- Each agent is zero to many accessionagents.
 
 -- changeset chicoreus:27
 
@@ -2093,6 +2117,12 @@ ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_i
 
 -- Each storage is defined by one and only one storagetreedefitem.
 -- Each storagetreedefitem defines zero to many taxa.
+
+-- Each storage has one and only one scope.
+-- Each scope is for zero to many storage.
+
+-- Each storage has zero or one parent storage.
+-- Each storage is the parent for zero to many other storages.
 
 -- changeset chicoreus:33
 -- a model for geological context 
