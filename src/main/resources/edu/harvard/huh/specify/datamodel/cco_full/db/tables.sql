@@ -16,7 +16,10 @@ CREATE TABLE scope (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- Force combination of name and parent to be unique.
+create unique index idx_scope_u_scopeparname on scope(name, parent_scope_id);
 alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
+
 -- Each scope has zero to one parent scope
 -- Each scope is the parent for zero to many scopes
 
@@ -71,10 +74,12 @@ alter table systemuserprincipal add constraint fk_supr_principalid foreign key (
 
 -- Example of composition of scope, principal, and systemuser to define permissions for users.
 insert into scope (scope_id, name) values (1,'Example Institution');
-insert into scope (scope_id, name,parent_scope_id) values (2,'Example Department',1);
+insert into scope (scope_id, name,parent_scope_id) values (2,'Example Malacology Department',1);
 insert into scope (scope_id, name,parent_scope_id) values (3,'Example Mammalogy Department',1);
 insert into scope (scope_id, name,parent_scope_id) values (4,'Example Icthyology Department',1);
 insert into scope (scope_id, name,parent_scope_id) values (5,'Example Ornithology Department',1);
+insert into scope (scope_id, name,parent_scope_id) values (6,'Example Paleontology Department',1);
+insert into scope (scope_id, name,parent_scope_id) values (7,'Example Botany Department',1);
 insert into principal (principal_id, principal_name,scope_id) values (1,'exampleuser',1);
 insert into principal (principal_id, principal_name,scope_id) values (2,'data entry',2);
 insert into principal (principal_id, principal_name,scope_id) values (3,'manage transactions',2);
@@ -1035,7 +1040,7 @@ CREATE TABLE agentname (
    --  Definition:  multiple variant forms of names and names for a collector/agent
    agentname_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
    agent_id int not null,  
-   type varchar(32) not null default 'full name', 
+   type varchar(35) not null default 'full name', 
    name  varchar(255),  
    language varchar(6) default 'en_us', 
    foreign key (type) references ctnametypes(type) on delete no action on update cascade,
@@ -1054,16 +1059,22 @@ create unique index idx_agentname_u_idtypename on agentname(agent_id,type,name);
 
 create fulltext index ft_collectorname on agentname(name);
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (140, 'Name Types','agent','name_type');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'full name','full name'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'initials last name','initials last name'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'last name, initials','last name, initials'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'first initials last','first initials last'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'first last','first last'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'standard abbreviation','standard abbreviation'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'standard dwc list','standard dwc list'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (140,1,'also known as','also known as'); 
+CREATE TABLE ctagentnametype (
+   -- Definition: controled vocabulary for agent name types.
+   type varchar(35) not null,
+   ordinal int
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
 
+INSERT INTO ctagentnametype (type, ordinal) values ('full name',1);
+INSERT INTO ctagentnametype (type, ordinal) values ('standard abbreviation',2);
+INSERT INTO ctagentnametype (type, ordinal) values ('standard botanical abbreviation',3);
+INSERT INTO ctagentnametype (type, ordinal) values ('also known as',4);
+INSERT INTO ctagentnametype (type, ordinal) values ('initials last name',5);
+INSERT INTO ctagentnametype (type, ordinal) values ('last name, initials',5);
+INSERT INTO ctagentnametype (type, ordinal) values ('first initials last',5);
+INSERT INTO ctagentnametype (type, ordinal) values ('first last',5);
 
 CREATE TABLE agentrelation (
    -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
@@ -2251,10 +2262,21 @@ alter table collectingevent add constraint fk_colev_paleoid foreign key (paleoco
 alter table collectingevent add constraint fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
 alter table collectingevent add constraint fk_colev_eventdateid foreign key (date_collected_eventdate_id) references eventdate(eventdate_id) on update cascade;
 
-create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
 
-insert into agent(agent_id, preferred_name_string) values (0,'example');
-alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
+-- Some core sample data: 
+insert into agent(agent_id, preferred_name_string) values (1,'Example User');
+insert into agentname(agent_id, type, name) values (2,'full name','Example User');
+
+insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath) values (2,'Linnaeus','https://viaf.org/viaf/34594730',1707,1778);
+insert into agentname(agent_id, type, name) values (2,'full name','Carl von Linné');
+insert into agentname(agent_id, type, name) values (2,'also known as','Carl Linnaeus');
+insert into agentname(agent_id, type, name) values (2,'standard botanical abbreviation','L.');
+insert into agentname(agent_id, type, name) values (2,'standard abbreviation','Linné');
+
+insert into agentlink (agent_id, type, link, text) values (0,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry for Carl Linnaeus');
+
 
 -- Each systemuser is one and only one agent
 -- Each agent is also zero or one systemuser
+create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
+alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
