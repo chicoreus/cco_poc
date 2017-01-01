@@ -371,6 +371,7 @@ CREATE TABLE taxon (
    sanctauthor_agent_id bigint,  -- botanical (fungal)
    parsanctauthor_agent_id bigint,  -- botanical (fungal)
    cited_in_agent_id bigint,  -- zoological and botanical, reference to a name usage
+   year_published varchar(50),  -- the year this name was published in, per the relevant code (year for the protonym in ICZN, year for the combination in ICNafp).
    publication_id bigint,  -- the publication containing the nomenclatural act that created the protonym/basionym for this scientific name (the publication in which this taxon was originaly described).
    cites_status varchar(32) not null default 'none',  -- CITES listing for this taxon.
    remarks text
@@ -2273,7 +2274,7 @@ insert into agentname(agent_id, type, name) values (2,'also known as','Carl Linn
 insert into agentname(agent_id, type, name) values (2,'standard botanical abbreviation','L.');
 insert into agentname(agent_id, type, name) values (2,'standard abbreviation','Linné');
 
-insert into agentlink (agent_id, type, link, text) values (0,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry for Carl Linnaeus');
+insert into agentlink (agent_id, type, link, text) values (2,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry');
 
 
 -- Each systemuser is one and only one agent
