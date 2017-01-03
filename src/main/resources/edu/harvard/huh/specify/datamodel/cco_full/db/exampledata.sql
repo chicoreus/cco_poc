@@ -69,8 +69,17 @@ insert into geography (geography_id, name, fullname, rank_id, parent_id, parenta
 insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (8, 'New Hampshire', 'US: New Hampshire', 300, 7, '/1/6/7/8', 'http://www.geonames.org/5090174',1,14);
 
-insert into catalognumberseries (catalognumberseries_id, name, institution, institution_code, collection) values (1,'Example:Numbers','Example','example.org','Numbers');
-insert into collection(usergroupscope_id, collection_name, institution_id, institution_code, collection_code) values (1,'Example:Department','example.org','example.org','Department');
+insert into catalognumberseries (catalognumberseries_id, name) values (1,'Example:Botany Accession Numbers');
+insert into catalognumberseries (catalognumberseries_id, name) values (2,'Example:Zoology Catalog Numbers');
+
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (1,'Example:Botany Department','example.com','example.com','Botany Department','http://example.com/',7);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (2,'Example:Mammalogy Department','example.com','example.com','Mammalogy Department','http://example.com/',3);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (3,'Example:Paleontology Department','example.com','example.com','Paleontology Department','http://example.com/',6);
+
+insert into catnumseriescollection (catalognumberseries_id, collection_id) values (1,1);
+-- Example of a catalognumberseries that spans more than one department.
+insert into catnumseriescollection (catalognumberseries_id, collection_id) values (2,2);
+insert into catnumseriescollection (catalognumberseries_id, collection_id) values (2,3);
 
 insert into accession (accession_id, accessionnumber, remarks, scope_id) values (1,'1','Example default accession',1);
 
@@ -88,7 +97,7 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into eventdate (eventdate_id, verbatim_date, iso_date) values (2,'15 Jan, 1880','1880-01-15');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,1,0,6,2); 
 
--- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.in_collection_id = collection.collection_id limit 1;
+-- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id limit 1;
 
 -- Case 2, packet with two organisms (lichen on bark).
 -- insert into locality (locality_id) values (2) 

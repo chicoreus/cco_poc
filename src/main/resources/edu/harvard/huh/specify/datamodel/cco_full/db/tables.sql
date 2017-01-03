@@ -505,12 +505,12 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, displ
 CREATE TABLE catalogeditem (
    -- Definition: the application of a catalog number out of some catalog number series.
    catalogeditem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   catalognumberseries_id bigint not null,
+   catalognumberseries_id bigint not null, -- The catalog number series from which the catalog_number comes.
    catalog_number varchar(255) not null,
    date_cataloged_eventdate_id bigint,
    cataloger_agent_id bigint,  -- The agent who cataloged the cataloged item
    accession_id bigint not null,  -- The accession in which ownership of this cataloged item was taken
-   collection_id bigint not null  -- the collection within which this item is cataloged
+   collection_id bigint not null  -- The collection within which this item is cataloged (catalog number series doesn't uniquely idenitify collections).
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -523,7 +523,6 @@ create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_even
 
 -- Each preparation is cataloged as zero or one catalogeditem.
 -- Each identifiableitem is cataloged as zero or one catalogeditem.
-
 
 -- changeset chicoreus:9
 CREATE TABLE materialsample(
@@ -542,22 +541,48 @@ create unique index idx_matsamp_u_datesampid on materialsample(date_sampled_even
 -- changeset chicoreus:10
 CREATE TABLE catalognumberseries ( 
    -- Definition: a sequence of numbers of codes assigned as catalog numbers to material held in a natural science collection.
-   -- note: this entity is not fully normalized.  
    catalognumberseries_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   name varchar(900),
-   institution varchar(900),  
-   institution_code varchar(900),
-   collection varchar(900),
-   collection_code varchar(900),
-   dataset varchar(900),
-   dataset_id varchar(900),
+   name varchar(900),  -- a name for the catalog number series
+   catalognumber_prefix varchar(50) not null default '', -- The prefix, if any, to append to the catalognumber to identify numbers from this catalog number series. 
+   policy varchar(50) not null default 'active, manual',  -- A policy for assigning catalognumbers 
+   nextavailablenumber varchar(255), -- Place where the next number to be assigned from this number series can be managed when automatically assigned.
+   dataset varchar(900),  -- dwc:datasetName
+   dataset_guid varchar(900), -- dwc:datasetId
    remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+CREATE TABLE ctcatnumseriespolicy (
+   policy varchar(50) not null primary key
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
+
+INSERT INTO ctcatnumseriespolicy (policy) values ('inactive, complete');  -- All known numbers in this series have been assigned and databased, issue no new numbers.
+INSERT INTO ctcatnumseriespolicy (policy) values ('inactive, manual');  -- Retrospective capture of existing cataloged items only, don't autoassign numbers.
+INSERT INTO ctcatnumseriespolicy (policy) values ('active, manual');  -- Active, assigning numbers for new material, allow users to provide the number.
+INSERT INTO ctcatnumseriespolicy (policy) values ('active, automatic');  -- Active, assigning numbers for new material, provide numbers for users.
+
+ALTER TABLE catalognumberseries add constraint fk_cns_policy foreign key (policy) references ctcatnumseriespolicy (policy) on update cascade;
+
 -- Each catalogeditem is cataloged in one and only one catalognumberseries.
 -- Each catalognumberseries is used for zero to many catalogeditems.
+
+CREATE TABLE catnumseriescollection ( 
+   catnumberseriescollection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   catalognumberseries_id bigint not null, 
+   collection_id bigint not null -- the collection to which this catalog number series belongs
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
+
+create unique index idx_cnsc_u_catnumsercollid on catnumseriescollection(catalognumberseries_id, collection_id); 
+
+alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key (catalognumberseries_id) references catalognumberseries(catalognumberseries_id) on update cascade;
+
+-- Each catalognumberseries is used in zero to many collections (a catalog number series can span more than one collection).
+-- Each collection uses zero to many catalognumberseries.
 
 -- changeset chicoreus:11
 
@@ -2034,14 +2059,14 @@ alter table agentgeography add constraint fk_agentgeog_geogid foreign key (geogr
 -- changeset chicoreus:31
 
 CREATE TABLE collection (
-  -- Definition: a managed set of collection objects that corresponds to an entity to which a dwc:collectioncode is assigned
-  usergroupscope_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  -- Definition: a managed set of collection objects that corresponds to an entity to which a dwc:collectionId is assigned.  Collection manages metadata about the collection, scope is for access control, and catalognumberseries links to sets of data within a collection.
+  collection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   collection_name varchar(900) default null,
   institution_code varchar(900) default null,  -- dwc:institutionCode
-  institution_id varchar(900) default null,  -- dwc:institutionId
+  institution_guid varchar(900) default null,  -- dwc:institutionId
   collection_code varchar(900) default null,  -- dwc:collectionCode
   collection_type varchar(32) default null,
-  collection_id varchar(900) default null,  -- dwc:collectionId (guid for this collection, if any)
+  collection_guid varchar(900) default null,  -- dwc:collectionId (guid for this collection, if any)
   description text,
   estimated_size int(11) default null,
   estimated_size_units varchar(50) default 'specimens',
@@ -2054,7 +2079,8 @@ DEFAULT CHARSET=utf8;
 
 create index idx_coll_name on collection(collection_name);
 
-ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (collection_id) references collection(usergroupscope_id);
+ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (collection_id) references collection(collection_id);
+ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (collection_id) references collection(collection_id) on update cascade;
 
 -- Each catalogeditem is cataloged in one and only one collection.
 -- Each collection catalogs zero to many catalogeditems.
