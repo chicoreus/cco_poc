@@ -1,3 +1,6 @@
+-- Example data illustrating the use of the cco_full schema.
+
+-- Real agents (authors, collectors) used in the example data.
 
 insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
        values (3,'Mason Ellsworth Hale, Jr.','https://viaf.org/viaf/310661352',1928,1990,'Hale','','Jr.','Mason','Ellsworth','Hale');
@@ -25,6 +28,8 @@ insert into agentname(agent_id, type, name) values (6,'full name','Edward Tucker
 insert into agentname(agent_id, type, name) values (6,'standard botanical abbreviation','Tuckerman');
 insert into agentlink (agent_id, type, link, text) values (6,'wiki','https://en.wikipedia.org/wiki/Edward_Tuckerman','Wikipedia entry');
 
+-- Real taxa used in the example data
+
 insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (2, 'Fungi', 'Fungi', 1, '/1/2',2, 10, 'ICNafp');
 insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
@@ -51,6 +56,8 @@ insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage
 insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
        values (12, 'Quercus alba', 'L.', '<em>Quercus alba</em> L.', 11, '/1/4/10/11/12',19, 220, 'ICNafp',2,'1753','urn:lsid:ipni.org:names:295763-1:1.2.2.1.1.3');
 
+-- Real geographies used in the example data 
+
 insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (1, 'Earth', 'Earth', 0, null, '/1', 'http://sws.geonames.org/6295630/',1,1);
 insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
@@ -69,6 +76,8 @@ insert into geography (geography_id, name, fullname, rank_id, parent_id, parenta
 insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (8, 'New Hampshire', 'US: New Hampshire', 300, 7, '/1/6/7/8', 'http://www.geonames.org/5090174',1,14);
 
+-- Example catalog number series and collections used in the example data.
+
 insert into catalognumberseries (catalognumberseries_id, name) values (1,'Example:Botany Accession Numbers');
 insert into catalognumberseries (catalognumberseries_id, name) values (2,'Example:Zoology Catalog Numbers');
 
@@ -82,6 +91,8 @@ insert into catnumseriescollection (catalognumberseries_id, collection_id) value
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (2,3);
 
 insert into accession (accession_id, accessionnumber, remarks, scope_id) values (1,'1','Example default accession',1);
+
+-- The Examples: 
 
 -- Case 1, simple case, one unit, one organism, one part, one preparation.
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id) values (1, 'Mt. Monadnock','Mount Monadnock', 'Example Locality',5);
@@ -97,7 +108,9 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into eventdate (eventdate_id, verbatim_date, iso_date) values (2,'15 Jan, 1880','1880-01-15');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,1,0,6,2); 
 
--- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id limit 1;
+-- Case 1 as single row for flat darwin core:
+-- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where catalog_number = '001' and id.is_current = 1;
+
 
 -- Case 2, packet with two organisms (lichen on bark in packet).
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',5);
