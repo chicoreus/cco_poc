@@ -99,15 +99,21 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id limit 1;
 
--- Case 2, packet with two organisms (lichen on bark).
--- insert into locality (locality_id) values (2) 
+-- Case 2, packet with two organisms (lichen on bark in packet).
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',5);
 insert into eventdate (eventdate_id, verbatim_date, iso_date) values (3,'10 Feb, 1882','1882-02-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (2, 6, 'Tuckerman','');
--- insert into unit (unit_id,collecting_event_id) values (2,2);
--- insert into identifiableitem (identifiableitem_id, unit_id) values (2,2);
--- insert into identifiableitem (identifiableitem_id, unit_id) values (3,2);
--- insert into catalogeditem (catalogeditem_id, preparation_id) values (2,2);
--- insert into part (part_id, identifiableitem_id, preparation_id) values (2,2,2);
--- insert into preparation (preparation_id) values (2);  
--- insert into determination (taxon_id, identifiableitem_id) values (8,2); 
--- insert into determination (taxon_id, identifiableitem_id) values (12,2); 
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (2,2,2,'1882',3);
+insert into unit (unit_id,collectingevent_id,unit_field_number) values (2,2,'Ex-9999');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (2,2,null,1,'urn:uuid:32dfd81a-b2af-416c-b797-d610281ca15a');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (3,2,null,1,'urn:uuid:1d3c8962-8dbe-4255-89e0-3828fb30827a');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (2,1,'002',1,1);
+insert into preparation (preparation_id,preparation_type,preservation_type,status) values (2,'packet','dried','in collection');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lotcount) values (2,2,2,'whole organism',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lotcount) values (3,3,2,'bark fragment',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date) values (4,'10 Feb, 1882','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date) values (5,'10 Feb, 1882','1882-02-10');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (8,2,1,6,4); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,3,1,6,5); 
+
+
