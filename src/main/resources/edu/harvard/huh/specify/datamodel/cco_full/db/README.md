@@ -10,4 +10,5 @@ schema for managing natural science collections information.
 the changes affect the capabilities of the model.
 *triggers.sql contains (not yet complete) SQL DDL for triggers to 
 support tracking of changes in an audit log table.
-
+*exampledata.sql contains a set of example data illustrating management
+of various kinds of complex collections objects.
