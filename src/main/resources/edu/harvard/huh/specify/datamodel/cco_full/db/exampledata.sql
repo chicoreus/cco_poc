@@ -56,6 +56,18 @@ insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage
 insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
        values (12, 'Quercus alba', 'L.', '<em>Quercus alba</em> L.', 11, '/1/4/10/11/12',19, 220, 'ICNafp',2,'1753','urn:lsid:ipni.org:names:295763-1:1.2.2.1.1.3');
 
+
+insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (13, 'Mollusca', 'Mollusca', 3, '/1/3/13', 4, 30, 'ICZN');
+insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (14, 'Gastropoda', 'Gastropoda', 13, '/1/3/13/14', 7, 60, 'ICZN');
+insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (15, 'Littorinidae', 'Littorinidae', 14, '/1/3/13/14/15', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (16, 'Littorina', 'Littorina', 15, '/1/3/13/14/15/16', 17, 180, 'ICZN');
+insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+       values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> ()', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
+
 -- Real geographies used in the example data 
 
 insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
@@ -76,6 +88,9 @@ insert into geography (geography_id, name, fullname, rank_id, parent_id, parenta
 insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (8, 'New Hampshire', 'US: New Hampshire', 300, 7, '/1/6/7/8', 'http://www.geonames.org/5090174',1,14);
 
+insert into geography (geography_id, name, fullname, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (9, 'Atlantic', 'Atlantic Ocean', 100, 1, '/1/9', 'http://www.geonames.org/',1,32);
+
 -- Example catalog number series and collections used in the example data.
 
 insert into catalognumberseries (catalognumberseries_id, name) values (1,'Example:Botany Accession Numbers');
@@ -84,6 +99,7 @@ insert into catalognumberseries (catalognumberseries_id, name) values (2,'Exampl
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (1,'Example:Botany Department','example.com','example.com','Botany Department','http://example.com/',7);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (2,'Example:Mammalogy Department','example.com','example.com','Mammalogy Department','http://example.com/',3);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (3,'Example:Paleontology Department','example.com','example.com','Paleontology Department','http://example.com/',6);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (4,'Example:Malacology Department','example.com','example.com','Malacology Department','http://example.com/',2);
 
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (1,1);
 -- Example of a catalognumberseries that spans more than one department.
@@ -95,7 +111,7 @@ insert into accession (accession_id, accessionnumber, remarks, scope_id) values 
 -- The Examples: 
 
 -- Case 1, simple case, one unit, one organism, one part, one preparation.
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id) values (1, 'Mt. Monadnock','Mount Monadnock', 'Example Locality',5);
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (1, 'Mt. Monadnock','Mount Monadnock', 'Example Locality',8,8);
 insert into collector (collector_id, verbatim_collector, etal, remarks) values (1, 'Tuckerman','et al.','Example collector');
 insert into eventdate (eventdate_id, verbatim_date, iso_date) values (1,'10 Jan, 1880','1880-01-10');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (1,1,1,'1880',1);
@@ -114,7 +130,7 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- Case 2, packet with two organisms (lichen on bark in packet), with the packet being the cataloged object,
 -- thus (one catalog number and two occurrences).
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',5);
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date) values (3,'10 Feb, 1882','1882-02-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (2, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (2,2,2,'1882',3);
@@ -132,5 +148,22 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- SELECT for Case 2 as two rows (one per dwc:occurrenceId) for flat DarwinCore.
 --  select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where catalog_number = '002';
+
+
+-- Case 3, lot of one organism but two preparations (with the preparations cataloged)
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (3, 'Cardiff Bay','Cardiff Bay', 'Example Locality',5,9);
+insert into eventdate (eventdate_id, verbatim_date, iso_date) values (6,'4-10 62','1962-04-10');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (3, null, 'A. Jones','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (3,3,3,'4-10 62',6);
+insert into unit (unit_id,collectingevent_id,unit_field_number) values (3,3,'62-153');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (4,3,null,30,'');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (3,2,'Z0001',1,4);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (4,2,'Z0002',1,4);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (3,'tray','dry','in collection',2);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (4,'jar','70% ethanol','in collection',2);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lotcount) values (4,4,3,'shell',30);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lotcount) values (5,4,4,'viscera',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date) values (7,'1980','1980');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (17,4,1,6,7); 
 
 
