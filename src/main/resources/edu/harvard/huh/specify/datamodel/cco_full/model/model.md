@@ -172,274 +172,274 @@
 
 # Cardinality Descriptions 
 
-Each scope has zero to one parent scope
-Each scope is the parent for zero to many scopes
-Each principal has one and only one scope
-Each scope is for zero to many principals
-Each systemuser has zero to many principals
-Each principal is for zero to many systemusers
-Each systemuserprincipal is for one and only one principal 
-Each principal has zero to many systemuserprincipals
-Each systemuserprincipal is for one and only one systemuser
-Each systemuser has zero to many systemuserprincipals
-Each picklist applies to one and only one table and field 
-Each table and field may have zero to one picklist
-Each picklist has zero to many picklistitems
-Each picklistitem is on one and only one picklist 
-Each ctpiclistitem is in zero to one scope (where zero scopes means the picklistitem applies in any scope)
-Each scope may apply to zero to many picklistitems
-Each picklistitem has zero to many translations in picklistitemint
-Each picklistitemint is a translation for one and only one picklistitem 
-Each unit was collected in one and only one collectingevent.
-Each collectingevent had zero to many units collected in it.
-Each unit had zero or one materialsample derived from it.
-Each prepraration has zero or one material sample derived from it.
-Each materialsample is derived from zero or one one unit.
-Each materialsample is derived from zero or one preparation.
-Each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity)
-Each preparation is a physical preparation of one to many units 
-Each identifiable item comes from one and only one unit
-Each unit has zero to many identifiable items
-Each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
-Each preparation has zero or one parent preparation from which it was derived.
-Each identifiable item has zero to one parts preserved in a collection.
-Each part is one and only one identifable item.
-Each part is prepared as as one and only one preparation.
-Each preparation is composed of one to many parts
-Each preparation may be a preparation of zero or one identifiable item.
-Each identifiable item may be prepared into zero to many preparations.
-Each identifiableitem has zero to many identifications.
-Each identification is of one and only one identifiable item. 
-Each identification has zero or one determining agent.
-Each agent is the determiner for zero to many identifications.
-Each identification has zero or one verifying agent.
-Each agent is the verifier for zero to many identifications.
-Each identification involves one and only one taxon.
-Each taxon is used in zero to many identifications.
-Each taxon has zero or one accepted taxon 
-Each taxon is accepted for zero to many taxa.
-Each taxon is defined by one and only one taxontreedefitem
-Each taxontreedefitem defines zero to many taxa
-Each taxon has zero or one parent taxon (each taxon except the root node has one and only one parent taxon)
-Each taxon is the parent for zero to many child taxa
-Each taxon has zero or one author agent.
-Each agent is the author for zero to many taxa.
-Each taxon has zero or one parenthetical author agent.
-Each agent is the parenthetical author for zero to many taxa.
-Each taxon has zero or one ex author agent.
-Each agent is the ex author for zero to many taxa.
-Each taxon has zero or one parenthetical ex author agent.
-Each agent is the parenthetical ex author for zero to many taxa.
-Each taxon has zero or one sanctioning author agent.
-Each agent is the sanctioning author for zero to many taxa.
-Each taxon has zero or one parenthetical sanctioning author agent.
-Each agent is the parenthetical sanctioning author for zero to many taxa.
-Each taxon has zero or one cited in author agent.
-Each agent is the cited in author for zero to many taxa.
-Each taxon was created in a nomenclatural act published in zero or one publication.
-Each publication contains zero to many nomenlcatural acts creating taxa.
-Each taxontreedef is the tree for zero to many taxontreedefitem nodes.
-Each taxontreedefitem is a node in one and only one taxontreedef.
-Each catalogeditem is the catalog record for zero or one identifiableitem.
-Each catalogeditem is the catalog record for zero or one preparation.
-Each preparation is cataloged as zero or one catalogeditem.
-Each identifiableitem is cataloged as zero or one catalogeditem.
-Each catalogeditem is cataloged in one and only one catalognumberseries.
-Each catalognumberseries is used for zero to many catalogeditems.
-Each catalognumberseries is used in zero to many collections (a catalog number series can span more than one collection).
-Each collection uses zero to many catalognumberseries.
-Each unit was gathered in one and only one collectingevent.
-Each collectingevent results in the gathering of one to many units.
-Each collectingevent is at one and only one locality.
-Each locality is the site of zero to many collecting events.
-Each eventdate is the date collected for zero or one collectingevent.
-Each collectingevent has a date collected of zero or one eventdate.
-Each eventdate is the date sampled for zero or one materialsample.
-Each materialsample has a date sampled of zero or one eventdate.
-Each eventdate is the date cataloged for zero or one catalogeditem.
-Each catalogeditem has a date cataloged of zero or one eventdate.
-Each eventdate is the date identified for zero or one identification.
-Each identification has a date identified of zero or one eventdate.
-Each eventdate is the date verified for zero or one identification.
-Each identification has a date verified of zero or one eventdate.
-Each [arbitrary table (unit, identifieableitem, part, preparation)] has zero to many othernumbers.
-Each othernumber is for one and ony one [arbitrary table].
-Each transactionitem is zero or one preparation.
-Each preparation is zero to many transactionitems.
-Each transactionitem is in one and only one transaction(c).
-Each transaction(c) consists of zero to many transaction items.
-Each transaction(c) is zero or one loan.
-Each loan is one and only one transaction(c).
-Each transaction(c) is zero or one gift.
-Each gift is one and only one transaction(c).
-Each transaction(c) is zero or one borrow.
-Each borrow is one and only one transaction(c).
-Each transaction(c) is zero or one deaccession.
-Each deacession is one and only one transaction(c).
-Each transactionagent participates in one and only one transaction(c).
-Each transaction(c) has zero to many marticipating transactionagents.
-Each transactionagent is one and only one agent.
-Each agent may be zero to many transactionagents.
-Each catalogeditem has zero or one cataloging agent.
-Each agent cataloged zero to many catalogeditems.
-Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
-Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
-Each agent is a member of zero to many agentteams.
-Each agent is the team for zero to many agentteams.
-Each agentteam links one and only one member agents.
-Each agentteam links one and only one team agent.
-Each agent has zero to many agentnumberpatterns.
-Each agentnumberpattern is for one and only one agent.
-Each agentreference is about one and only one agent.
-Each agent has zero to many agentreferences.
-Each agentreference is in 
-Each agent has zero to many agentlinks.
-Each agentlink is for one and only one agent.
-Each agent has zero to many agentnames.
-Each agentname is for one and only one agent.
-Each agentname has one and only one name type (ctnametypes.type).
-Each ctnametype is the type for zero to many agentnames.
-Each cttextattribute type is the key for zero to many textattributes.
-Each textattribute has one and only one cttextattributetype as a key.
-Each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value).
-Each row in a table has zero to many textattributes (keyed on for_table and primary_key_value).
-Each inference applies to one and only one tuple (keyed on for_table, for_field, and primary_key_value)
-Each tuple has zero or one inference (keyed on for_table, for_field, and primary_key_value)
-Each numericattribute is of one and only one numericattrubutetype (ctnumericattributetype).
-Each ctnumericattributetype is the type of zero to many numeric attribtues.
-Each ctbiologicalattributetype has zero or one length unit in ctlengthunit.
-Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.
-Each ctbiologicalattributetype has zero or one mass unit in ctmassunit.
-Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.
-Each ctbiologicalattributetype is an age class in ctageclass.
-Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.
-Each _code table_ has zero to many scopes in scopect.
-Each scopect provides the scope for zero to many _code table_.
-Each scopect has one and only one scope
-Each scope applies to zero to many scope_id
-Each scopect is for one and only one key name in a code table
-Each key name in a code table has zero to many scope-codetable relations in codect
-Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).
-Each ctbiologicalattributetype is the type of zero to many biological attribtues.
-Each _arbitrary table_ has zero to many auditlogs.
-Each audit log is for one and only one _arbitrary table_.
-Each auditlog records an action by one and noly one agent.
-Each agent made a change recorded in zero to many auditlogs.
-Each encumberance is of one and only one encumberancetype (ctencumberancetype).
-Each ctencumberancetype is the type of zero to many encumberances.
-Each encumberance was created by one and only one agent.
-Each agent is the creator of zero to many encumberances.
-Each encumberance is visible to one and only one scope.
-Each scope provides the visiblility for zero to many encumberances.
-Each encumberance is zero to many catitemencumberances.
-Each catitemencumberance is one and only one encumberance.
-Each catitemencumberance is for one and only one catalogeditem.
-Each encumberance is zero to many attachmentencumberances.
-Each attachmentencumberance is one and only one encumberance.
-Each attachmentencumberance is for one and only one attachment.
-Each encumberance is zero to many localityencumberances.
-Each localityencumberance is one and only one encumberance.
-Each localityencumberance is for one and only one locality.
-Each encumberance is zero to many taxonencumberances.
-Each taxonencumberance is one and only one encumberance.
-Each taxonencumberance is for one and only one taxon.
-Each address is for one and only one agent.
-Each agent has zero to many addresses.
-Each address starts use at zero or one eventdate.
-Each eventdate is the start for one and only one address.
-Each address ends use at zero or one eventdate.
-Each eventdate is the end for one and only one address.
-Each electronicaddress is of one and only one (ct)electronicaddresstype.
-Each ctelectronicaddresstype provides the type for zero to many electronic addresses.
-Each electronicaddress is for one and only one agent.
-Each agent has zero to many electronicaddresses.
-Each addressofrecord is a preserved address for one and only one agent.
-Each agent has zero to many preserved addressesofrecord.
-Each loan has zero or one recipient addressofrecord.
-Each addressofrecord is the recipient address for zero to many loans.
-Each gift has zero or one recipient addressofrecord.
-Each addressofrecord is the recipient address for zero to many gifts.
-Each borrow has zero or one sender addressofrecord.
-Each addressofrecord is the sender address for zero to many borrows.
-Each accession was received on zero or one eventdate.
-Each accession was accessioned on zero or one eventdate.
-Each accession was acknowleged on zero or one eventdate.
-Each eventdate is the received date for zero or one accession.
-Each eventdate is the accession date for zero or one accession.
-Each eventdate is the acknowleged date for zero or one accession.
-Each accession is visible within one and only one scope.
-Each scope provides visibility for zero to many accessions.
-Each accession is under zero to one repositoryagreement.
-Each repositoryagreement applies to zero to many accessions.
-Each accession has zero to one source addressofrecord.
-Each addressofrecord is the source for zero or one accession.
-Each repositoryagreeement is visible within one and only one scope.
-Each scope provides visibility for zero to many repositoryagreements.
-Each repositoryagreement is an agreement with one and only one agent.
-Each agent has zero to many repositoryagreements.
-Each repositoryagreement has zero to one addressofrecord.
-Each addressofrecord is for for zero or one repositoryagreeement.
-Each accession has zero to many accessionagents.  (Each accession has zero or one accessionagent with a particular agent in a particular role).
-Each accessionagent is for one and only one accession.
-Each accessionagent is one and only one agent.
-Each agent is zero to many accessionagents.
-Each attachmentrelation involves one and only one attachment.
-Each attachment is involved in zero to many attachmentrelations.
-Each attachmentrelation involves one and only one _arbitrary table_.
-Each _aribtrary table_ has zero to many attachmentrelations.
-Each collector is zero to one agent.
-Each agent is one to many collectors.
-Each collector collected in zero to many collectingevents.
-Each collectingevent had one and only one collector (handle teams by verbatim collector and etal, then parse into collectoragent as a group with etal).
-Each coordinate is of one and only one (ct)coordinatetype.
-Each (ct)coordintetype is the type for zero to many coordinates.
-Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type]
-Each coordinate is for one and only one locality.
-Each locality has zero to many georeferences.
-Each georeference is for one and only one locality.
-Each georeference was georeferenced on zero to one eventdate.
-Each eventdate is the date of zero or one georeference.
-Each georeference was by one and only one agent.
-Each agent made zero to many georeferences.
-Each locality is politically contained in zero or one geography.
-Each locality is geographically contained in zero or one geography.
-Each geography is the political container for zero to many localities.
-Each geography is the geographic container for zero to many localities.
-Each geographytreedef is the tree for zero to many geographytreedefitem nodes.
-Each geographytreedefitem is a node in one and only one geographytreedef.
-Each geography is defined by one and only one geographytreedefitem.
-Each geographytreedefitem defines zero to many taxa.
-Each catalogeditem is cataloged in one and only one collection.
-Each collection catalogs zero to many catalogeditems.
-Each collection falls into zero or one scope.
-Each scope convers zero to many collections.
-Each preparation has one and only one storage location.
-Each storage is the location for zero to many preparations.
-Each storagetreedef is the tree for zero to many storagetreedefitem nodes.
-Each storagetreedefitem is a node in one and only one storagetreedef.
-Each storage is defined by one and only one storagetreedefitem.
-Each storagetreedefitem defines zero to many taxa.
-Each storage has one and only one scope.
-Each scope is for zero to many storage.
-Each storage has zero or one parent storage.
-Each storage is the parent for zero to many other storages.
-Each geologictimeperiod has zero or one parent geologictimeperiod. 
-Each geologictimeperiod is the parent for zero to many geologictimeperiods.
-Each geologictimeperiodtreedef is the tree for zero to many geologictimeperiodtreedefitem nodes.
-Each geologictimeperiodtreedefitem is a node in one and only one geologictimeperiodtreedef.
-Each geologictimeperiod is defined by one and only one geologictimeperiodtreedefitem.
-Each geologictimeperiodtreedefitem defines zero to many taxa.
-Each collectingevent has zero or one paleocontext.
-Each locality has zero or one paleocontext.
-Each paleocontext is for zero to many collecting events.
-Each paleocontext is for zero to many localities.
-Each paleocontext includes zero or one lithostratigraphicunit.
-Each paleocontext has zero or one lower bound earlyest geologictimeperiod.
-Each paleocontext has zero or one upper bound latest geologictimeperiod.
-Each lithostratigraphic unit is exposed in zero to many paleocontexts.
-Each geologictimeperiod is the lower bound for zero to many paleocontexts.
-Each geologictimeperiod is the upper bound for zero to many paleocontexts.
-Each systemuser is one and only one agent
-Each agent is also zero or one systemuser
+Each scope has zero to one parent scope.  
+Each scope is the parent for zero to many scopes.  
+Each principal has one and only one scope.  
+Each scope is for zero to many principals.  
+Each systemuser has zero to many principals.  
+Each principal is for zero to many systemusers.  
+Each systemuserprincipal is for one and only one principal.  
+Each principal has zero to many systemuserprincipals.  
+Each systemuserprincipal is for one and only one systemuser.  
+Each systemuser has zero to many systemuserprincipals.  
+Each picklist applies to one and only one table and field.  
+Each table and field may have zero to one picklist.  
+Each picklist has zero to many picklistitems.  
+Each picklistitem is on one and only one picklist.  
+Each ctpiclistitem is in zero to one scope (where zero scopes means the picklistitem applies in any scope).  
+Each scope may apply to zero to many picklistitems.  
+Each picklistitem has zero to many translations in picklistitemint.  
+Each picklistitemint is a translation for one and only one picklistitem.  
+Each unit was collected in one and only one collectingevent.  
+Each collectingevent had zero to many units collected in it.  
+Each unit had zero or one materialsample derived from it.  
+Each prepraration has zero or one material sample derived from it.  
+Each materialsample is derived from zero or one one unit.  
+Each materialsample is derived from zero or one preparation.  
+Each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity).  
+Each preparation is a physical preparation of one to many units.  
+Each identifiable item comes from one and only one unit.  
+Each unit has zero to many identifiable items.  
+Each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal).  
+Each preparation has zero or one parent preparation from which it was derived.  
+Each identifiable item has zero to one parts preserved in a collection.  
+Each part is one and only one identifable item.  
+Each part is prepared as as one and only one preparation.  
+Each preparation is composed of one to many parts.  
+Each preparation may be a preparation of zero or one identifiable item.  
+Each identifiable item may be prepared into zero to many preparations.  
+Each identifiableitem has zero to many identifications.  
+Each identification is of one and only one identifiable item.  
+Each identification has zero or one determining agent.  
+Each agent is the determiner for zero to many identifications.  
+Each identification has zero or one verifying agent.  
+Each agent is the verifier for zero to many identifications.  
+Each identification involves one and only one taxon.  
+Each taxon is used in zero to many identifications.  
+Each taxon has zero or one accepted taxon.  
+Each taxon is accepted for zero to many taxa.  
+Each taxon is defined by one and only one taxontreedefitem.  
+Each taxontreedefitem defines zero to many taxa.  
+Each taxon has zero or one parent taxon (each taxon except the root node has one and only one parent taxon).  
+Each taxon is the parent for zero to many child taxa.  
+Each taxon has zero or one author agent.  
+Each agent is the author for zero to many taxa.  
+Each taxon has zero or one parenthetical author agent.  
+Each agent is the parenthetical author for zero to many taxa.  
+Each taxon has zero or one ex author agent.  
+Each agent is the ex author for zero to many taxa.  
+Each taxon has zero or one parenthetical ex author agent.  
+Each agent is the parenthetical ex author for zero to many taxa.  
+Each taxon has zero or one sanctioning author agent.  
+Each agent is the sanctioning author for zero to many taxa.  
+Each taxon has zero or one parenthetical sanctioning author agent.  
+Each agent is the parenthetical sanctioning author for zero to many taxa.  
+Each taxon has zero or one cited in author agent.  
+Each agent is the cited in author for zero to many taxa.  
+Each taxon was created in a nomenclatural act published in zero or one publication.  
+Each publication contains zero to many nomenlcatural acts creating taxa.  
+Each taxontreedef is the tree for zero to many taxontreedefitem nodes.  
+Each taxontreedefitem is a node in one and only one taxontreedef.  
+Each catalogeditem is the catalog record for zero or one identifiableitem.  
+Each catalogeditem is the catalog record for zero or one preparation.  
+Each preparation is cataloged as zero or one catalogeditem.  
+Each identifiableitem is cataloged as zero or one catalogeditem.  
+Each catalogeditem is cataloged in one and only one catalognumberseries.  
+Each catalognumberseries is used for zero to many catalogeditems.  
+Each catalognumberseries is used in zero to many collections (a catalog number series can span more than one collection).  
+Each collection uses zero to many catalognumberseries.  
+Each unit was gathered in one and only one collectingevent.  
+Each collectingevent results in the gathering of one to many units.  
+Each collectingevent is at one and only one locality.  
+Each locality is the site of zero to many collecting events.  
+Each eventdate is the date collected for zero or one collectingevent.  
+Each collectingevent has a date collected of zero or one eventdate.  
+Each eventdate is the date sampled for zero or one materialsample.  
+Each materialsample has a date sampled of zero or one eventdate.  
+Each eventdate is the date cataloged for zero or one catalogeditem.  
+Each catalogeditem has a date cataloged of zero or one eventdate.  
+Each eventdate is the date identified for zero or one identification.  
+Each identification has a date identified of zero or one eventdate.  
+Each eventdate is the date verified for zero or one identification.  
+Each identification has a date verified of zero or one eventdate.  
+Each [arbitrary table (unit, identifieableitem, part, preparation)] has zero to many othernumbers.  
+Each othernumber is for one and ony one [arbitrary table].  
+Each transactionitem is zero or one preparation.  
+Each preparation is zero to many transactionitems.  
+Each transactionitem is in one and only one transaction(c).  
+Each transaction(c) consists of zero to many transaction items.  
+Each transaction(c) is zero or one loan.  
+Each loan is one and only one transaction(c).  
+Each transaction(c) is zero or one gift.  
+Each gift is one and only one transaction(c).  
+Each transaction(c) is zero or one borrow.  
+Each borrow is one and only one transaction(c).  
+Each transaction(c) is zero or one deaccession.  
+Each deacession is one and only one transaction(c).  
+Each transactionagent participates in one and only one transaction(c).  
+Each transaction(c) has zero to many marticipating transactionagents.  
+Each transactionagent is one and only one agent.  
+Each agent may be zero to many transactionagents.  
+Each catalogeditem has zero or one cataloging agent.  
+Each agent cataloged zero to many catalogeditems.  
+Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).  
+Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).  
+Each agent is a member of zero to many agentteams.  
+Each agent is the team for zero to many agentteams.  
+Each agentteam links one and only one member agents.  
+Each agentteam links one and only one team agent.  
+Each agent has zero to many agentnumberpatterns.  
+Each agentnumberpattern is for one and only one agent.  
+Each agentreference is about one and only one agent.  
+Each agent has zero to many agentreferences.  
+Each agentreference is in.  
+Each agent has zero to many agentlinks.  
+Each agentlink is for one and only one agent.  
+Each agent has zero to many agentnames.  
+Each agentname is for one and only one agent.  
+Each agentname has one and only one name type (ctnametypes.type).  
+Each ctnametype is the type for zero to many agentnames.  
+Each cttextattribute type is the key for zero to many textattributes.  
+Each textattribute has one and only one cttextattributetype as a key.  
+Each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value).  
+Each row in a table has zero to many textattributes (keyed on for_table and primary_key_value).  
+Each inference applies to one and only one tuple (keyed on for_table, for_field, and primary_key_value).  
+Each tuple has zero or one inference (keyed on for_table, for_field, and primary_key_value).  
+Each numericattribute is of one and only one numericattrubutetype (ctnumericattributetype).  
+Each ctnumericattributetype is the type of zero to many numeric attribtues.  
+Each ctbiologicalattributetype has zero or one length unit in ctlengthunit.  
+Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.  
+Each ctbiologicalattributetype has zero or one mass unit in ctmassunit.  
+Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.  
+Each ctbiologicalattributetype is an age class in ctageclass.  
+Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.  
+Each _code table_ has zero to many scopes in scopect.  
+Each scopect provides the scope for zero to many _code table_.  
+Each scopect has one and only one scope.  
+Each scope applies to zero to many scope_id.  
+Each scopect is for one and only one key name in a code table.  
+Each key name in a code table has zero to many scope-codetable relations in codect.  
+Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).  
+Each ctbiologicalattributetype is the type of zero to many biological attribtues.  
+Each _arbitrary table_ has zero to many auditlogs.  
+Each audit log is for one and only one _arbitrary table_.  
+Each auditlog records an action by one and noly one agent.  
+Each agent made a change recorded in zero to many auditlogs.  
+Each encumberance is of one and only one encumberancetype (ctencumberancetype).  
+Each ctencumberancetype is the type of zero to many encumberances.  
+Each encumberance was created by one and only one agent.  
+Each agent is the creator of zero to many encumberances.  
+Each encumberance is visible to one and only one scope.  
+Each scope provides the visiblility for zero to many encumberances.  
+Each encumberance is zero to many catitemencumberances.  
+Each catitemencumberance is one and only one encumberance.  
+Each catitemencumberance is for one and only one catalogeditem.  
+Each encumberance is zero to many attachmentencumberances.  
+Each attachmentencumberance is one and only one encumberance.  
+Each attachmentencumberance is for one and only one attachment.  
+Each encumberance is zero to many localityencumberances.  
+Each localityencumberance is one and only one encumberance.  
+Each localityencumberance is for one and only one locality.  
+Each encumberance is zero to many taxonencumberances.  
+Each taxonencumberance is one and only one encumberance.  
+Each taxonencumberance is for one and only one taxon.  
+Each address is for one and only one agent.  
+Each agent has zero to many addresses.  
+Each address starts use at zero or one eventdate.  
+Each eventdate is the start for one and only one address.  
+Each address ends use at zero or one eventdate.  
+Each eventdate is the end for one and only one address.  
+Each electronicaddress is of one and only one (ct)electronicaddresstype.  
+Each ctelectronicaddresstype provides the type for zero to many electronic addresses.  
+Each electronicaddress is for one and only one agent.  
+Each agent has zero to many electronicaddresses.  
+Each addressofrecord is a preserved address for one and only one agent.  
+Each agent has zero to many preserved addressesofrecord.  
+Each loan has zero or one recipient addressofrecord.  
+Each addressofrecord is the recipient address for zero to many loans.  
+Each gift has zero or one recipient addressofrecord.  
+Each addressofrecord is the recipient address for zero to many gifts.  
+Each borrow has zero or one sender addressofrecord.  
+Each addressofrecord is the sender address for zero to many borrows.  
+Each accession was received on zero or one eventdate.  
+Each accession was accessioned on zero or one eventdate.  
+Each accession was acknowleged on zero or one eventdate.  
+Each eventdate is the received date for zero or one accession.  
+Each eventdate is the accession date for zero or one accession.  
+Each eventdate is the acknowleged date for zero or one accession.  
+Each accession is visible within one and only one scope.  
+Each scope provides visibility for zero to many accessions.  
+Each accession is under zero to one repositoryagreement.  
+Each repositoryagreement applies to zero to many accessions.  
+Each accession has zero to one source addressofrecord.  
+Each addressofrecord is the source for zero or one accession.  
+Each repositoryagreeement is visible within one and only one scope.  
+Each scope provides visibility for zero to many repositoryagreements.  
+Each repositoryagreement is an agreement with one and only one agent.  
+Each agent has zero to many repositoryagreements.  
+Each repositoryagreement has zero to one addressofrecord.  
+Each addressofrecord is for for zero or one repositoryagreeement.  
+Each accession has zero to many accessionagents.  (Each accession has zero or one accessionagent with a particular agent in a particular role).  
+Each accessionagent is for one and only one accession.  
+Each accessionagent is one and only one agent.  
+Each agent is zero to many accessionagents.  
+Each attachmentrelation involves one and only one attachment.  
+Each attachment is involved in zero to many attachmentrelations.  
+Each attachmentrelation involves one and only one _arbitrary table_.  
+Each _aribtrary table_ has zero to many attachmentrelations.  
+Each collector is zero to one agent.  
+Each agent is one to many collectors.  
+Each collector collected in zero to many collectingevents.  
+Each collectingevent had one and only one collector (handle teams by verbatim collector and etal, then parse into collectoragent as a group with etal).  
+Each coordinate is of one and only one (ct)coordinatetype.  
+Each (ct)coordintetype is the type for zero to many coordinates.  
+Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type].  
+Each coordinate is for one and only one locality.  
+Each locality has zero to many georeferences.  
+Each georeference is for one and only one locality.  
+Each georeference was georeferenced on zero to one eventdate.  
+Each eventdate is the date of zero or one georeference.  
+Each georeference was by one and only one agent.  
+Each agent made zero to many georeferences.  
+Each locality is politically contained in zero or one geography.  
+Each locality is geographically contained in zero or one geography.  
+Each geography is the political container for zero to many localities.  
+Each geography is the geographic container for zero to many localities.  
+Each geographytreedef is the tree for zero to many geographytreedefitem nodes.  
+Each geographytreedefitem is a node in one and only one geographytreedef.  
+Each geography is defined by one and only one geographytreedefitem.  
+Each geographytreedefitem defines zero to many taxa.  
+Each catalogeditem is cataloged in one and only one collection.  
+Each collection catalogs zero to many catalogeditems.  
+Each collection falls into zero or one scope.  
+Each scope convers zero to many collections.  
+Each preparation has one and only one storage location.  
+Each storage is the location for zero to many preparations.  
+Each storagetreedef is the tree for zero to many storagetreedefitem nodes.  
+Each storagetreedefitem is a node in one and only one storagetreedef.  
+Each storage is defined by one and only one storagetreedefitem.  
+Each storagetreedefitem defines zero to many taxa.  
+Each storage has one and only one scope.  
+Each scope is for zero to many storage.  
+Each storage has zero or one parent storage.  
+Each storage is the parent for zero to many other storages.  
+Each geologictimeperiod has zero or one parent geologictimeperiod.  
+Each geologictimeperiod is the parent for zero to many geologictimeperiods.  
+Each geologictimeperiodtreedef is the tree for zero to many geologictimeperiodtreedefitem nodes.  
+Each geologictimeperiodtreedefitem is a node in one and only one geologictimeperiodtreedef.  
+Each geologictimeperiod is defined by one and only one geologictimeperiodtreedefitem.  
+Each geologictimeperiodtreedefitem defines zero to many taxa.  
+Each collectingevent has zero or one paleocontext.  
+Each locality has zero or one paleocontext.  
+Each paleocontext is for zero to many collecting events.  
+Each paleocontext is for zero to many localities.  
+Each paleocontext includes zero or one lithostratigraphicunit.  
+Each paleocontext has zero or one lower bound earlyest geologictimeperiod.  
+Each paleocontext has zero or one upper bound latest geologictimeperiod.  
+Each lithostratigraphic unit is exposed in zero to many paleocontexts.  
+Each geologictimeperiod is the lower bound for zero to many paleocontexts.  
+Each geologictimeperiod is the upper bound for zero to many paleocontexts.  
+Each systemuser is one and only one agent.  
+Each agent is also zero or one systemuser.  
 
 
