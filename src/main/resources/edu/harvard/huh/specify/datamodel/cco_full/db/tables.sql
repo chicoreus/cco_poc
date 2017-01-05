@@ -1970,7 +1970,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 create index idx_geog_name on geography(name);
-create index idx_geog_fullname on geography(fullname);
+create index idx_geog_fullname on geography(fullname(200));
 
 alter table geography add constraint fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
 alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
@@ -2077,7 +2077,7 @@ CREATE TABLE collection (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-create index idx_coll_name on collection(collection_name);
+create index idx_coll_name on collection(collection_name(200));
 
 ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (collection_id) references collection(collection_id);
 ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (collection_id) references collection(collection_id) on update cascade;
