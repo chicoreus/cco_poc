@@ -81,7 +81,7 @@ To run the project type '**mvn  clean install**' in the same directory that the 
 
 ### For maven.
 
-- pom.xml
+- **pom.xml**
    - db: mysql-connector-java (version  '5.1.37')
    - db: mysql ( version 5.5.49)
    - db: postgresql (version '9.1-901-1.jdbc4')
@@ -90,7 +90,7 @@ To run the project type '**mvn  clean install**' in the same directory that the 
 
 ### For the liquibase-project.
 
- - **config/liquibase.properties (you must create from one of the templates and set your credentials) ** 
+ - **config/liquibase.properties** (you must create from one of the templates and set your credentials)
     - contains : driver and url to the database
     - contains : credentials
     - contains : path to the master.xml-file
