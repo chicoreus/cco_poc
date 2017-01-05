@@ -9,7 +9,7 @@
 
 CREATE TABLE scope ( 
    -- Definition: Institutions and departments for which access control limitations may be applicable for some data.  NOTE: Serves to support the functionality provided with virtual private databases in Arctos.  
-   scope_id bigint not null primary key auto_increment,
+   scope_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    name varchar(255) not null,  -- the name for the scope, that is the name of the 
    parent_scope_id bigint default null -- Normally expected that there might be two levels of scope limitations, institutions and departments.
 ) 
@@ -25,7 +25,7 @@ alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scop
 
 CREATE TABLE principal (
    -- Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
-   principal_id bigint not null primary key auto_increment,
+   principal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    principal_name varchar(255) not null,  
    is_active boolean not null default TRUE, -- does this principal have any currently active rights 
    scope_id bigint not null -- the scope to which this principal extends (e.g. principal may be data entry, scope limits that to data entry in some collection.
@@ -40,7 +40,7 @@ alter table principal add constraint fk_principal_scopeid foreign key (scope_id)
 
 CREATE TABLE systemuser ( 
    -- Definition: A user of the system
-   systemuser_id bigint not null primary key auto_increment,
+   systemuser_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    username varchar(255) not null,  
    password_hash varchar(900) not null default '', -- cryptographic hash of the password for this user
    is_enabled boolean default TRUE,
@@ -54,7 +54,7 @@ create unique index idx_sysuser_u_username on systemuser (username);
 
 CREATE TABLE systemuserprincipal (
    -- Definition: Participation of a system user in principles (associative entity relating systemusers to principals).
-   systemuserprincipal_id bigint not null primary key auto_increment,
+   systemuserprincipal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    systemuser_id bigint not null,
    principal_id bigint not null
 )
@@ -89,11 +89,11 @@ insert into systemuserprincipal (systemuser_id, principal_id) values (1,2);  -- 
 
 -- changeset chicoreus:2
 
--- picklist handling, picklist/ctpicklistitem handle bindings for specific fields, other ct (code tables) handle bindings for more generic attribute types.
+-- Picklist handling, picklist/picklistitem handle bindings for specific fields, other ct (code tables) handle bindings for more generic attribute types. Includes internationalization - translations for picklist items.  
 
 CREATE TABLE picklist (
-  -- Definition: describes the binding of controled vocabularies (ctpicklistitem) to specific database fields 
-  picklist_id bigint not null primary key auto_increment,
+  -- Definition: describes the binding of controled vocabularies (picklistitem) to specific database fields.
+  picklist_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,  -- a name for the picklist 
   table_name varchar(64) not null,  -- the table to which this picklist applies
   field_name varchar(64) not null,  -- the field name in table to which this picklist applies
@@ -113,7 +113,7 @@ CREATE UNIQUE INDEX idx_picklist_u_tablefield ON picklist (table_name,field_name
 
 CREATE TABLE picklistitem (
   -- Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
-  picklist_item_id bigint not null primary key auto_increment,
+  picklist_item_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   picklist_id bigint not null,  -- the picklist to which this picklist item belongs
   scope_id bigint default null,  -- if not null, only show this picklist item in this context (e.g. limit 'egg' as an age class to ornithology).
   ordinal int(11) default null,  -- sort order for picklist items
@@ -132,11 +132,9 @@ ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_i
 
 
 CREATE TABLE picklistitemint (
-    -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides
-    -- translations of that key and definitions for that key in an arbitrary number of languages.  Can apply to any ct (codetable)
-    -- in addition to ctpicklistitem.
-    codetableintid bigint not null primary key auto_increment,
-    picklist_item_id varchar(255) not null, -- name/key in code table.
+    -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
+    codetableintid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    picklist_item_id bigint not null, -- the picklistitem which for which this is an internationalization
     lang varchar(10) not null default 'en-gb',  -- language for this record
     title_lang varchar(255),  -- translation of value to be shown to users into lang
     definition text  -- definition of name in lang
@@ -173,7 +171,7 @@ CREATE TABLE unit (
   unit_field_number varchar(255),  -- number assigned by the collector to this collection at the collecting event, see also collectingevent.event_field_number
   materialsample_id bigint,
   verbatim_collection_description text,
-  collectingevent_id bigint,
+  collectingevent_id bigint not null,
   unit_remarks text
 )
 ENGINE=InnoDB
@@ -193,7 +191,7 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:4
 CREATE TABLE identifiableitem (
   -- Definition: a component of a unit for which a scientific identification can be made.
-  identifiableitem_id bigint not null primary key auto_increment,
+  identifiableitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   occurrence_guid varchar(900),  -- dwc:occurrenceId
   unit_id bigint not null,  -- the unit in which this identifiable item was collected,
   catalogeditem_id bigint,
@@ -210,19 +208,19 @@ DEFAULT CHARSET=utf8;
 -- To apply a pick list to a field, first define a picklist
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
 -- then define the items which comprise that pick list.
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (2,110,2,'+','+'); 
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (3,110,3,'ca.','ca.');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (2,110,2,'+','+'); 
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (3,110,3,'ca.','ca.');
 
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (1,'en_gb','?','count is uncertain.') ;
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (2,'en_gb','+','and more, count is at least the specified number.') ;
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (3,'en_gb','circa','count is approximate.') ;
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (120, 'count units','identifiableitem','individual_count_units');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (120,1,'individuals','individuals');  -- for lot based collections 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (120,2,'valves','valves');  -- could restrict to malacology and invertebrate paleontology
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'fragments','fragments');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'eggs','eggs');  -- could restrict to ornithology 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,1,'individuals','individuals');  -- for lot based collections 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,2,'valves','valves');  -- could restrict to malacology and invertebrate paleontology
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'fragments','fragments');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'eggs','eggs');  -- could restrict to ornithology 
 
 -- changeset chicoreus:5
 
@@ -258,6 +256,7 @@ CREATE TABLE preparation (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+
 -- Each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
 -- Each preparation has zero or one parent preparation from which it was derived.
 
@@ -282,10 +281,11 @@ ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id)
 -- Each preparation may be a preparation of zero or one identifiable item.
 -- Each identifiable item may be prepared into zero to many preparations.
 
+
 -- changeset chicoreus:6
 CREATE TABLE identification (
    -- Definition: the application of a scientific name by some agent at some point in time to an identifiable item.  Includes both non-type and type identifications and metadata about validation of type status.
-   identification_id bigint not null primary key auto_increment,
+   identification_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    identifiableitem_id bigint not null,  -- the identifiable item to which this identification applies
    taxon_id bigint not null,  -- the taxon applied to the identifiable item in this identification
    verbatim_scientific_name_string varchar(900), -- the verbatim scientific name string used in the identification (allows, for example, for recording of formulations that embed a qualifier such as 'Aus cf. bus', and cases where generic epithet has been inferred e.g. 'alba' or 'P. alba').
@@ -322,13 +322,13 @@ create unique index idx_ident_u_dateverifid on identification(date_verified_even
 -- Each agent is the verifier for zero to many identifications.
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (130, 'identification qualifier','identification','qualifier');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (10,130,1,'?','?');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (11,130,2,'aff.','aff.');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (12,130,3,'cf.','cf.');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (13,130,4,'near','near');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (14,130,6,'(group)','(group)');
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (15,130,6,'sp. nov.','sp. nov.');  -- place holder for to be described species in a genus, taxon_id should have rank of genus. 
-INSERT INTO ctpicklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (16,130,7,'ssp. nov.','ssp. nov.');  -- place holder for to be described subspecies in a species, taxon_id should have rank of species. 
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (10,130,1,'?','?');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (11,130,2,'aff.','aff.');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (12,130,3,'cf.','cf.');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (13,130,4,'near','near');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (14,130,6,'(group)','(group)');
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (15,130,6,'sp. nov.','sp. nov.');  -- place holder for to be described species in a genus, taxon_id should have rank of genus. 
+INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (16,130,7,'ssp. nov.','ssp. nov.');  -- place holder for to be described subspecies in a species, taxon_id should have rank of species. 
 
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (15,'en_gb','sp. nov.','place holder for types of soon to be described species where the name is not yet available.  the taxon used in the identification should be a genus, the assertion in the identification is that this is a new species in that genus.');
 INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (16,'en_gb','ssp. nov.','place holder for types of soon to be described subspecies where the name is not yet available.  the taxon used in the identification should be a species, the assertion in the identification is that this is a new subspecies in that species.');
@@ -346,7 +346,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'los
 
 CREATE TABLE taxon (
    -- Definition: A scientific name string that may be curated to be linked to a nomeclatural act or to an authoriative record of a name usage.
-   taxon_id bigint not null primary key auto_increment,
+   taxon_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    scientific_name varchar(900) not null,   -- the complete scientific name for the taxon, without the authorship string
    trivial_epithet varchar(64) not null,    -- the lowest rank epithet of this scientific name (e.g. the subspecific eptithet for a subspecies).
    cultivar_name varchar(32) default null,  
@@ -415,15 +415,15 @@ alter table taxon add constraint fk_taxon_acceptedid foreign key (accepted_taxon
 alter table taxon add constraint fk_taxon_parentid foreign key (parent_id) references taxon (taxon_id) on update cascade;
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5000, 'Cites Status','taxon','cites_status');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5000,1,'none','none');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5000,2,'CITES I','CITES I');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5000,3,'CITES II','CITES II');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5000,5,'CITES III','CITES III');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,1,'none','none');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,2,'CITES I','CITES I');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,3,'CITES II','CITES II');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,5,'CITES III','CITES III');
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5001, 'Nomenclatural Code','taxon','nomenclatural_code');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5001,3,'noncompliant','noncompliant');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5001,1,'ICZN','ICZN');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5001,2,'ICNafp','ICNafp');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,3,'noncompliant','noncompliant');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,1,'ICZN','ICZN');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,2,'ICNafp','ICNafp');
 
 
 CREATE TABLE taxontreedef (
@@ -463,9 +463,9 @@ alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedef
 -- Each taxontreedefitem is a node in one and only one taxontreedef.
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5005, 'Nomenclatural Code','taxontreedefitem','nomenclatural_code');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'Any','Any');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5005,2,'ICZN','ICZN');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (5005,3,'ICNafp','ICNafp');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'Any','Any');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,2,'ICZN','ICZN');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,3,'ICNafp','ICNafp');
 
 insert into taxontreedefitem (taxontreedefitem_id, rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (1,0, 'Life', 1, 0,1);
 insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (10, 'Kingdom', 0, 0,1);
@@ -527,7 +527,7 @@ create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_even
 -- changeset chicoreus:9
 CREATE TABLE materialsample(
    -- Definition: see darwincore.
-   materialsample_id bigint not null primary key auto_increment,
+   materialsample_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    materialsample_guid varchar(255) not null,  -- dwc:materialSampleID
    sample_number varchar(255),  
    date_sampled_eventdate_id bigint,  -- the date the material sample was created
@@ -588,7 +588,7 @@ alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key
 
 CREATE TABLE collectingevent (
    -- Definition: an event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected, time at which a collector visited a locality and collected one or more collected units using a single sampling method.
-  collectingevent_id bigint not null primary key auto_increment,
+  collectingevent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   locality_id bigint default null,
   collector_id bigint not null, -- the collector who collected in this collecting event.
   sampling_method varchar(50) default null,  -- the sampling method that was applied in this collecting event
@@ -611,12 +611,14 @@ DEFAULT CHARSET=utf8;
 -- Each locality is the site of zero to many collecting events.
 
 create unique index idx_colev_u_datecollid on collectingevent(date_collected_eventdate_id);  --  Event dates should not be reused.
+alter table unit add constraint fk_unit_colleventid foreign key (collectingevent_id) references collectingevent(collectingevent_id) on update cascade;
+alter table unit add constraint fk_unit_matsampid foreign key (materialsample_id) references materialsample(materialsample_id) on update cascade;
 
 -- changeset chicoreus:12
 
 CREATE TABLE eventdate ( 
    -- Definition: a set of spans of time in which some event occurred.  NOTE: Cardinality is enforced as zero or one to one in each relation with unique indexes, and event dates should not be reused accross relations.
-   eventdate_id bigint not null primary key auto_increment,
+   eventdate_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    date_type varchar(50) not null default 'date',
    verbatim_date varchar(255) not null,  -- the event date in its original verbatim form
    iso_date varchar(255) not null default '',  -- The event date in ISO form, including date ranges.
@@ -632,11 +634,11 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (6001, 'Date Type','eventdate','date_type');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (6001,1,'date','date');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (6001,2,'interval','interval');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (6001,3,'year','year');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (6001,4,'year/month','year/month');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (6001,5,'date time','date time');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,1,'date','date');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,2,'interval','interval');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,3,'year','year');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,4,'year/month','year/month');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,5,'date time','date time');
 
 -- Each eventdate is the date collected for zero or one collectingevent.
 -- Each collectingevent has a date collected of zero or one eventdate.
@@ -664,7 +666,7 @@ ALTER TABLE identification add constraint fk_ident_verdate foreign key (date_ver
 
 CREATE TABLE locality (
   -- Definition: a location
-  locality_id bigint not null primary key auto_increment,
+  locality_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   verbatim_locality text not null, -- the complete verbatim description of the locality
   specificlocality text not null, -- a textual description of the locality
   locality_name varchar(255) not null default '',  -- a name given to this locality
@@ -702,7 +704,7 @@ ALTER TABLE collectingevent add constraint fk_locality foreign key (locality_id)
 -- changeset chicoreus:15
 CREATE TABLE othernumber (
    --  Definition: a number or code associated with a specimen that is not known to be its catalog number
-   othernumber_id bigint not null primary key auto_increment,
+   othernumber_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    target_table varchar(255) not null,  -- the table to which pk refers to the primary key.
    pk bigint not null,                 -- the surrogate numeric primary key of a row in target_table.
    number_type varchar(255) not null,  -- the type of other number (which may be unknown)
@@ -735,9 +737,9 @@ CREATE TABLE transactionitem (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-CREATE TABLE ctransaction (
+CREATE TABLE transactionc (
    -- Definition: a record of the movement of a set of specimens in or out of a collection, e.g. loan, outgoing gift, deaccession, borrow.
-   ctransaction_id bigint not null primary key auto_increment,
+   transactionc_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    trans_number varchar(50) not null, -- The number for the transaction
    trans_number_series varchar(50) not null, -- The number series for the transaction number 
    trans_type enum ('loan','gift','borrow','deaccession'), -- enmerated subtype tables
@@ -751,19 +753,19 @@ CREATE TABLE ctransaction (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-create unique index idx_coltra_u_numserscope on ctransaction (trans_number, trans_number_series, scope_id);  
+create unique index idx_coltra_u_numserscope on transactionc (trans_number, trans_number_series, scope_id);  
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name,read_only) VALUES (150, 'transaction type','coll_transaction','trans_type',1);  -- ennumerated subtypes of transactions corresponding to subtype tables.
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (150,1,'Loan','loan'); 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (150,2,'Gift','gift'); 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (150,3,'Borrow','borrow'); 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (150,4,'Deaccession','deaccession'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,1,'Loan','loan'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,2,'Gift','gift'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,3,'Borrow','borrow'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,4,'Deaccession','deaccession'); 
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name,read_only) VALUES (170, 'transaction type','coll_transaction','status',0);  -- status for transactions
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (170,1,'in process','in process'); 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (170,2,'open','open'); 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (170,3,'open partial return','open partial return'); 
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (170,4,'closed','closed'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,1,'in process','in process'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,2,'open','open'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,3,'open partial return','open partial return'); 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,4,'closed','closed'); 
 
 -- Each transactionitem is zero or one preparation.
 -- Each preparation is zero to many transactionitems.
@@ -777,7 +779,7 @@ ALTER TABLE transactionitem add constraint fk_transid foreign key (transactionc_
 CREATE TABLE loan (
   -- Definition: A record of a returnable movement of a set of specimens out of a collection 
   loan_id bigint NOT NULL primary key AUTO_INCREMENT,
-  ctransaction_id bigint not null,
+  transactionc_id bigint not null,
   loan_type varchar(50) not null DEFAULT 'returnable',  
   loan_date  date, -- the date on which the loan was made 
   original_due_date date DEFAULT NULL,
@@ -809,7 +811,7 @@ ALTER TABLE loan add constraint fk_loantransid foreign key (transactionc_id) ref
 CREATE TABLE gift (
   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to another insitution
   gift_id bigint not null primary key AUTO_INCREMENT,
-  ctransaction_id bigint not null,
+  transactionc_id bigint not null,
   summary_description varchar(255) not null, -- brief description of the material involved in the gift.
   sent_date  date, -- the date on which the loan was made 
   destination_country_code varchar(3) not null,  -- The country code to which this gift is being sent.
@@ -827,7 +829,7 @@ ALTER TABLE gift add constraint fk_gifttransid foreign key (transactionc_id) ref
 CREATE TABLE borrow (
   -- Definition: Loan records kept by this insititution for material borrowed from other insititutions. 
   borrow_id bigint not null primary key AUTO_INCREMENT,
-  ctransaction_id bigint not null,  -- transaction id for this borrow.
+  transactionc_id bigint not null,  -- transaction id for this borrow.
   borrow_type varchar(50) not null DEFAULT 'returnable',  
   borrow_date  date, -- the date on which the loan was made by the loaning institution 
   original_due_date date DEFAULT NULL, -- the original date on which the borrow was due to be returned to the loaning institution
@@ -862,7 +864,7 @@ ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id)
 CREATE TABLE deaccession (
   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to outside of institutional care
   deaccession_id bigint not null primary key AUTO_INCREMENT,
-  ctransaction_id bigint not null,
+  transactionc_id bigint not null,
   summary_description varchar(255) not null, -- brief description of the material involved in the deaccesison.
   deaccession_date  date, -- the date on which the material was deaccessioned.
   deaccession_reason text -- reason why this material was deaccessioned
@@ -877,20 +879,20 @@ create unique index idx_deaccession_transid on deaccession (transactionc_id);
 ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (160, 'loan type','loan','loan_type');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (160,1,'returnable','returnable');  -- returnable in whole or in part
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (160,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (160,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,1,'returnable','returnable');  -- returnable in whole or in part
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (180, 'borrow type','borrow','borrow_type');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (180,1,'returnable','returnable');  -- returnable in whole or in part
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (180,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (180,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,1,'returnable','returnable');  -- returnable in whole or in part
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
 
 CREATE TABLE transactionagent (
   -- Definition: the participation of an agent in a transaction in some defined role (e.g. the agent who gave approval for some loan).
   transactionagent_id bigint NOT NULL primary key AUTO_INCREMENT,
   agent_id bigint not null,  -- the agent involved in this transaction 
-  ctransaction_id bigint not null, -- the transaction the agent is involved in
+  transactionc_id bigint not null, -- the transaction the agent is involved in
   role varchar(50) not null,  -- the role of the agent in the transaction
   remarks text
 )
@@ -905,11 +907,12 @@ DEFAULT CHARSET=utf8;
 
 create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
 
+
 -- changeset chicoreus:17
 
 CREATE TABLE agent (
     -- Definition: a person or organization with some role related to natural science collections.
-    agent_id bigint not null primary key auto_increment,
+    agent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     agent_type enum ('individual','team','organization','software agent') default 'individual',  --  foaf:person,group,organization
     curated boolean not null default false, -- has this agent record been curated 
     preferred_name_string text,     -- foaf:name xml:lang=en, only name for teams, organizations, and software agents combined parts of names for individuals, name for organizations and teams.
@@ -941,15 +944,15 @@ DEFAULT CHARSET=utf8;
 
 -- when a picklist applies to a field defined with an enum, specify read_only=1 for the picklist.
 INSERT INTO picklist (picklist_id, name, table_name, field_name, read_only) VALUES (100, 'agent type','agent','agent_type',1);
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (100,1,'individual','individual');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (100,2,'team','team');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (100,3,'organization','organization');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (100,4,'software agent','software agent');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,1,'individual','individual');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,2,'team','team');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,3,'organization','organization');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,4,'software agent','software agent');
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name, read_only) VALUES (101, 'agent living','agent','living',1);
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (101,1,'Yes','Yes');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (101,2,'No','No');
-INSERT INTO ctpicklistitem (picklist_id, ordinal, title, value) VALUES (101,3,'?','?');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,1,'Yes','Yes');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,2,'No','No');
+INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,3,'?','?');
 
 -- changeset chicoreus:18
 -- catching up on agent relations 
@@ -964,7 +967,7 @@ ALTER TABLE taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_a
 ALTER TABLE taxon add constraint foreign key fk_citauthagent (cited_in_agent_id) references agent (agent_id) on update cascade;
 
 alter table transactionagent add constraint fk_ta_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
-alter table transactionagent add constraint fk_ta_coltransid foreign key (ctransaction_id) references agent(agent_id) on update cascade;
+alter table transactionagent add constraint fk_ta_coltransid foreign key (transactionc_id) references agent(agent_id) on update cascade;
 
 -- Each catalogeditem has zero or one cataloging agent.
 -- Each agent cataloged zero to many catalogeditems.
@@ -975,7 +978,7 @@ alter table transactionagent add constraint fk_ta_coltransid foreign key (ctrans
 
 CREATE TABLE ctrelationshiptype (
    -- Definition: types of relationships between pairs of agents.
-   relationship varchar(50) not null primary key,
+   relationship varchar(255) not null primary key,
    inverse varchar(50),
    collective varchar(50)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -991,7 +994,7 @@ INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('succ
 
 CREATE TABLE agentteam (
    --  Definition: Composition of agents into teams of individuals, such that both the team and the members can be agents.
-   agentteam_id bigint not null primary key auto_increment,
+   agentteam_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    team_agent_id bigint not null, 
    member_agent_id bigint not null, 
    ordinal int
@@ -1009,7 +1012,7 @@ create unique index idx_agentteam_u_teammember on agentteam(team_agent_id, membe
 
 CREATE TABLE agentnumberpattern (
    -- Definition: machine and human redable descriptions of collector number patterns
-   agentnumber_pattern_id bigint not null primary key auto_increment,
+   agentnumber_pattern_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    agent_id bigint not null,  -- the agent to whom this number pattern applies
    number_type varchar(50) default 'collector number',
    number_pattern varchar(255),  --  regular expression for numbers that conform with this pattern
@@ -1029,7 +1032,7 @@ alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent
 
 CREATE TABLE agentreference (
    --  Definition: Links to published references the content of which is about collectors/agents (e.g. obituaries, biographies).
-   agentreference_id bigint not null primary key auto_increment,
+   agentreference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    refid int not null,
    agent_id int not null
 )
@@ -1045,7 +1048,7 @@ create index idx_refagentlks_refagent on agentreference (refid, agent_id);
 
 CREATE TABLE agentlink (
    -- Definition: supporting hyperlinks out to external sources of information about collectors/agents.
-   agentlink_id bigint primary key not null auto_increment, 
+   agentlink_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
    agent_id int not null, 
    type varchar(50), 
    link varchar(900), 
@@ -1061,7 +1064,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE agentname (
    --  Definition:  multiple variant forms of names and names for a collector/agent
-   agentname_id bigint primary key not null auto_increment, 
+   agentname_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
    agent_id int not null,  
    type varchar(35) not null default 'full name', 
    name  varchar(255),  
@@ -1101,7 +1104,7 @@ INSERT INTO ctagentnametype (type, ordinal) values ('first last',5);
 
 CREATE TABLE agentrelation (
    -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
-   agentrelation_id bigint not null primary key auto_increment, 
+   agentrelation_id bigint not null primary key auto_increment, -- surrogate numeric primary key 
    from_agent_id bigint not null,  --  parent agent in this relationship 
    to_agent_id bigint not null,    --  child agent in this relationship 
    relationship varchar(50) not null,  -- nature of relationship from ctrelationshiptype 
@@ -1143,22 +1146,10 @@ alter table agentspeciality add constraint fk_agentspeci_taxonid foreign key (ta
 
 -- changeset chicoreus:20
 
-CREATE TABLE codetableint ( 
-    -- Definition: internationalization for code tables, allows use of a single language key in code tables, provides
-    -- translations of that key and definitions for that key in an arbitrary number of languages.
-    codetableintid bigint not null primary key auto_increment,
-    name varchar(255) not null, -- name/key in code table.
-    codetable varchar(255) not null, -- code table (table name prefixed ct) in which name is found.
-    lang varchar(10) not null default 'en-gb',  -- language for this record
-    name_lang varchar(255),  -- translation of name into lang
-    definition text  -- definition of name in lang
-)
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 CREATE TABLE cttextattributetype (
     -- Definition: types of text attributes
-    name varchar(255) not null primary key,  -- the name of the attribute type
+    key_name varchar(255) not null primary key,  -- the name of the attribute type
     scope varchar(900)  -- list of tables to which this attribute type applies
 )
 ENGINE=InnoDB 
@@ -1166,11 +1157,11 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE textattribute (
     -- Definition: a generic typed text attribute that can be added to any table.
-    textattributeid bigint not null primary key auto_increment,
-    name varchar(255) not null,   -- the type of attribute
+    textattributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    key_name varchar(255) not null,   -- the type of attribute
     value varchar(900) not null,  -- the value of the attribute
     for_table varchar(255) not null,  -- table to which this attribute is applied 
-    primarykeyvalue bigint not null  -- row in for_table to which this attribute is applied
+    primary_key_value bigint not null  -- row in for_table to which this attribute is applied
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1185,13 +1176,13 @@ ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_n
 
 CREATE TABLE inference (
     -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
-    inferenceid bigint not null primary key auto_increment,
+    inferenceid bigint not null primary key auto_increment, -- surrogate numeric primary key
     inference text not null,  -- the interpreter's description of the inference tha was made
     by_agent_id bigint not null, -- who (most recently) made the inference
     ondate timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
     for_table varchar(255) not null,  -- table to which this interpretation was applied
     for_field varchar(255) not null,  -- field in the table to which this intepretation was applied
-    primarykeyvalue bigint not null  -- row in for_table to which this interpretation was applied
+    primary_key_value bigint not null  -- row in for_table to which this interpretation was applied
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1213,12 +1204,12 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE numericattribute (
     -- Definition: a generic typed numeric attribute that can be added to any table.
-    attributeid bigint not null primary key auto_increment,
+    attributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
     name varchar(255) not null,   -- the type of attribute
     value float(20,10) not null,  -- the value of the attribute
     units varchar(255),           -- units, if any to be ascribed to the attribute
     for_table varchar(255) not null,
-    primarykeyvalue bigint not null
+    primary_key_value bigint not null
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1233,18 +1224,14 @@ ALTER TABLE numericattribute add constraint fk_numericattributetype foreign key 
 -- definitions for pick lists associated with biological attributes and generic attributes.  Table picklist's table/field binding can't be used for these.
 
 CREATE TABLE ctbiologicalattributetype (
-    -- Definition: types of biological attributes, by discipline (scope). 
-    ctbiologicalattributeid bigint not null primary key auto_increment,
-    name varchar(255) not null,  -- the name of the attribute type
-    scope_id varchar(255),  -- discipline to which this attribute type applies
+    -- Definition: types of biological attributes 
+    name varchar(255) not null primary key,   -- the name of the attribute type 
     valuecodetable varchar(60),  -- code table to use to restrict allowed values 
     unitscodetable varchar(60),   -- code table to use to restrict allowed units 
     methodcodetable varchar(60)   -- code table to use to restrict allowed determination methods
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
-
-CREATE UNIQUE INDEX idx_ctbiolatt_u_namescope ON ctbiologicalattributetype(name,scope_id);
 
 CREATE TABLE ctlengthunit (
   -- Definition: controled vocabulary for units of length.
@@ -1309,12 +1296,18 @@ alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) ref
 INSERT INTO ctageclass (ageclass) VALUES ('unknown');
 INSERT INTO ctageclass (ageclass) VALUES ('adult');
 INSERT INTO ctageclass (ageclass) VALUES ('juvenile');
-INSERT INTO ctageclass (ageclass,scope_id) VALUES ('pup',4);
-INSERT INTO ctageclass (ageclass,scope_id) VALUES ('chick',6);
-INSERT INTO ctageclass (ageclass,scope_id) VALUES ('nestling',6);
-INSERT INTO ctageclass (ageclass,scope_id) VALUES ('subadult',6);
-INSERT INTO ctageclass (ageclass,scope_id) VALUES ('immature',6);
-INSERT INTO ctageclass (ageclass,scope_id) VALUES ('egg',6);
+INSERT INTO ctageclass (ageclass) VALUES ('pup');
+INSERT INTO ctageclass (ageclass) VALUES ('chick');
+INSERT INTO ctageclass (ageclass) VALUES ('nestling');
+INSERT INTO ctageclass (ageclass) VALUES ('subadult');
+INSERT INTO ctageclass (ageclass) VALUES ('immature');
+INSERT INTO ctageclass (ageclass) VALUES ('egg');
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','pup',4);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','chick',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','nestling',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','subadult',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','immature',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','egg',5);
 
 INSERT INTO ctbiologicalattributetype (name) VALUES ('sex');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('age');
@@ -1324,42 +1317,71 @@ INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('weight','ct
 INSERT INTO ctbiologicalattributetype (name) VALUES ('stomach contents');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('reproductive condition');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('reproductive data');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('standard length',4,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('body length',4,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('disk length',4,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('fork length',4,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('head length',4,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('axillary girth',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('crown-rump length',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('curvilinear length',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('ear from crown',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('ear from notch',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('forearm length',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('hind foot with claw',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('hind foot without claw',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('tail length',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('total length',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('total length',4,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('total length',5,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('tragus length',3,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('wing chord',5,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('eggshell thickness',5,'ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('bare parts coloration',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('colors',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('egg content weight',5,'ctmassunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id,unitscodetable) VALUES ('embryo weight',5,'ctmassunit');
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('extent',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('fat deposition',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('incubation',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('molt condition',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('ossification',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('plumage coloration',5);
-INSERT INTO ctbiologicalattributetype (name,scope_id) VALUES ('plumage description',5);
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('standard length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('body length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('disk length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('fork length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('head length','ctlengthunit');
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','standard length',4);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','body length',4);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','disk length',4);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','fork length',4);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','head length',4);
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('axillary girth','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('crown-rump length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('curvilinear length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('ear from crown','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('ear from notch','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('forearm length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('hind foot with claw','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('hind foot without claw','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('tail length','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('tragus length','ctlengthunit');
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','axillary girth',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','crown-rump length',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','curvilinear length',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ear from crown',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ear from notch',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','forearm length',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','hind foot with claw',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','hind foot without claw',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','tail length',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','tragus length',3);
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('total length','ctlengthunit');
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',3);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',4);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',5);
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('wing chord','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('eggshell thickness','ctlengthunit');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('bare parts coloration');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('colors');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('egg content weight','ctmassunit');
+INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('embryo weight','ctmassunit');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('extent');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('fat deposition');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('incubation');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('molt condition');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('ossification');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('plumage coloration');
+INSERT INTO ctbiologicalattributetype (name) VALUES ('plumage description');
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','wing chord',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','eggshell thickness',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','bare parts coloration',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','colors',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','egg content weight',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','embryo weight',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','extent',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','fat deposition',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','incubation',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','molt condition',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ossification',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage coloration',5);
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage description',5);
 
 CREATE TABLE biologicalattribute (
     -- Definition: a generic typed attribute for biological characteristics of organisms, 
     --  including metadata about who determined the attribute value when.
-    attributeid bigint not null primary key auto_increment,
+    attributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
     name varchar(255) not null,  -- restricted by ctbiologicalattributetype
     value varchar(900) not null, -- value for attribute, may be restricted by value code table specified in ctbiologicalattributetype
     units varchar(255) not null, -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
@@ -1385,13 +1407,13 @@ ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreig
 
 CREATE TABLE auditlog ( 
     -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  NOTE: Maintain with triggers on each table.
-    auditlogid bigint not null primary key auto_increment,
+    auditlogid bigint not null primary key auto_increment, -- surrogate numeric primary key
     action varchar(50),  -- action carried out, insert, delete, update 
     timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
     username varchar(255) not null,   -- username of current logged in user, retained even if agent record is edited
     agent_id bigint default null,      -- agent_id of the user who made the change
-    for_table varchar(255) not null,   -- table in which primarykeyvalue is found
-    primarykeyvalue bigint not null  
+    for_table varchar(255) not null,   -- table in which primary_key_value is found
+    primary_key_value bigint not null  
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1421,7 +1443,7 @@ INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record and rela
 
 CREATE TABLE encumberance (
    --  Definition: a description of the limitations on the visiblity of some data to the public.  All public presentations of data must observe the encumberance associated with that data.  
-   encumberance_id bigint not null primary key auto_increment,
+   encumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    explanation text,   -- the reason for the encumberance 
    encumberance_type varchar(50) not null,   
    createdby_agent_id bigint not null,
@@ -1447,7 +1469,7 @@ ALTER TABLE encumberance add constraint fk_encvisiblescope foreign key (visible_
 
 CREATE TABLE catitemencumberance ( 
    -- Definition: relationship between encumberances and cataloged items
-   catitemencumberance_id bigint not null primary key auto_increment,
+   catitemencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
    catalogeditemid bigint not null,
    tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
@@ -1461,7 +1483,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE attachmentencumberance ( 
    -- Definition: relationship between encumberances and attachment (metadata records), encumberance of actual media objects needs to be handleed by a digital asset management system.
-   attachmentencumberance_id bigint not null primary key auto_increment,
+   attachmentencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
    attachment_id bigint not null,
    tablescope varchar(900) default 'attachment'  -- tables this encumberance is expected to extend to.
@@ -1475,7 +1497,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE localityencumberance ( 
    -- Definition: relationship between encumberances and localities (e.g. for fossil localities where not publicizing the locality was a condition of collecting at that locality).   
-   localityencumberance_id bigint not null primary key auto_increment,
+   localityencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
    locality_id bigint not null,
    tablescope varchar(900) default 'locality,coordinate,georeference,collectingevent,catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
@@ -1489,7 +1511,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE taxonencumberance ( 
    -- Definition: relationship between encumberances and taxa (e.g. for soon-to-be-described species, or for taxa which are controled substances).   
-   taxonencumberance_id bigint not null primary key auto_increment,
+   taxonencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null, -- The encumberance that applies to a taxon
    taxon_id bigint not null, -- The taxon to which an encumberance applies 
    tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
@@ -1505,7 +1527,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE address (
   -- Definition: an address for an agent
-  address_id bigint not null primary key auto_increment,
+  address_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   address_for_agent_id bigint not null,  -- agent for which this is an address
   address_line_1 varchar(255) not null,
   address_line_2 varchar(255) default null,
@@ -1583,7 +1605,7 @@ create unique index idx_eaddress_u_agentprimary on electronicaddress(address_for
 
 CREATE TABLE addressofrecord (
   -- Definition: an address to which something was sent, which must be preserved even as an agent changes their current address.
-  addressofrecord_id bigint not null primary key auto_increment,
+  addressofrecord_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   address_for_agent_id bigint default null,  -- agent for which this is an address of record for some shipment.
   adressee_agent_name varchar(244) not null,   -- name of agent at time address became address of record.
   address_line_1 varchar(255) not null,
@@ -1624,7 +1646,7 @@ CREATE TABLE accession (
   --  forms a record of the legal ownership of the material, unless the material is being held for another organization
   --  under a repository agreement, where legal ownership is retained by the other organization, but the accepting institution
   --  agrees to be a repository for the material.
-  accession_id bigint not null primary key auto_increment,
+  accession_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   accessionnumber varchar(255) not null,
   date_accessioned_eventdate_id bigint default null, -- date of this accession
   date_acknowledged_eventdate_id bigint default null,  -- date on which this accession was acknowledged
@@ -1659,7 +1681,7 @@ alter table accession add constraint fk_acc_scope_id foreign key (scope_id) refe
 
 CREATE TABLE repositoryagreement (
   -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
-  repositoryagreementid bigint not null primary key auto_increment,
+  repositoryagreementid bigint not null primary key auto_increment, -- surrogate numeric primary key
   datereceived date default null,  -- date at which the repository agreement document was received.
   enddate date default null,  -- date at which this repository agreement ends.
   remarks text,
@@ -1697,7 +1719,7 @@ ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key
 
 CREATE TABLE accessionagent (
   -- Definition: The participation of an agent in an accession in some defined role (e.g. the agent who approved some accession).
-  accessionagent_id bigint not null primary key auto_increment,
+  accessionagent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   role varchar(50) not null,
   accession_id bigint not null,
   agent_id bigint not null,
@@ -1723,7 +1745,7 @@ CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role,
 
 CREATE TABLE attachment (
   -- Definition: Metadata concerning a media object that can be attached to a data object
-  attachment_id bigint not null primary key auto_increment,
+  attachment_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   title varchar(255) default null,  
   iri varchar(2000) default null,  -- iri from which the attachment can be retrieved (e.g. from a digital asset management system).
   copyrightdate varchar(64) default null,
@@ -1743,10 +1765,10 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE attachmentrelation (
   -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
-  attachmentrelationid bigint not null primary key auto_increment,
+  attachmentrelationid bigint not null primary key auto_increment, -- surrogate numeric primary key
   attachment_id bigint not null,
   for_table varchar(255) not null,
-  primarykeyvalue bigint not null,
+  primary_key_value bigint not null,
   ordinal int(11) not null,
   remarks text
 ) 
@@ -1924,7 +1946,7 @@ ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeferen
 
 CREATE TABLE geography (
   -- Definition: heriarchically nested higher geographical entities 
-  geography_id bigint not null primary key auto_increment,
+  geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(255) not null,
   fullname varchar(900) default null,
   rank_id int(11) not null,
@@ -1960,7 +1982,7 @@ alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id
 
 CREATE TABLE geographytreedef (
   -- Definition: Definition of a geography tree
-  geographytreedef_id bigint not null primary key auto_increment,
+  geographytreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   fullname_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
   name varchar(64) not null,  -- name of the geographic tree
   remarks text  
@@ -1972,7 +1994,7 @@ INSERT INTO geographytreedef (geographytreedef_id,fullname_direction,name) VALUE
 
 CREATE TABLE geographytreedefitem (
   -- Definition: Definition of a node in a geography tree
-  geographytreedefitem_id bigint not null primary key auto_increment,
+  geographytreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   full_name_separator varchar(32) default null,
   is_enforced boolean default null,
   is_in_fullname boolean default null,
@@ -2071,7 +2093,7 @@ ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (co
 -- storage and changes to preparation
 CREATE TABLE storagetreedef (
   -- Definition: Definitions for storage trees 
-  storagetreedef_id bigint not null primary key auto_increment,
+  storagetreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   fullname_direction int(11) default null,
   name varchar(64) not null,
   remarks text,
@@ -2082,7 +2104,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE TABLE storagetreedefitem (
   -- Definition: definition of ranks within a storage heirarchy 
-  storagetreedefitem_id bigint not null primary key auto_increment,
+  storagetreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   storagetreedef_id bigint not null,  -- tree for which this is a node
   name varchar(64) not null,
   full_name_separator varchar(32) default null,
@@ -2103,7 +2125,7 @@ ALTER TABLE storagetreedefitem add constraint fk_stdi_treeid foreign key (storag
 
 CREATE TABLE storage (
   -- Definition: location where zero or more preparations are stored 
-  storage_id bigint not null primary key auto_increment,
+  storage_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,  -- the name of this storage location
   barcode varchar(900) not null,  -- barcoded identifier of this storage location
   abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
@@ -2145,7 +2167,7 @@ ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_i
 
 CREATE TABLE geologictimeperiod (
   -- Definition: a geological time, rock, or rock/time unit.
-  geologictimeperiod_id bigint not null primary key auto_increment,
+  geologictimeperiod_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,
   rank_id int(11) not null,  -- the rank 
   parent_id bigint default null,  -- the immediate parent of this node, null for root.
@@ -2168,7 +2190,7 @@ alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key 
 
 CREATE TABLE geologictimeperiodtreedef (
   -- Definition: geologic rock/time unit trees
-  geologictimeperiodtreedef_id bigint not null primary key auto_increment,
+  geologictimeperiodtreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   fullname_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
   name varchar(64) not null,  -- name 
   remarks text
@@ -2184,7 +2206,7 @@ INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_dir
 
 CREATE TABLE geologictimeperiodtreedefitem (
   -- Definition: a definition of a rank in a geologic rock/time unit tree
-  geologictimeperiodtreedefitem_id bigint not null primary key auto_increment,
+  geologictimeperiodtreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,  -- name for this rank 
   rank_id int(11) not null, -- rank for this name in the tree, larger numbers are lower ranks.
   full_name_separator varchar(32) not null default ':',
@@ -2238,6 +2260,7 @@ CREATE TABLE paleocontext (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
 alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
 alter table paleocontext add constraint fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
 alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
@@ -2261,7 +2284,6 @@ alter table collectingevent add constraint fk_colev_paleoid foreign key (paleoco
 -- Each geologictimeperiod is the upper bound for zero to many paleocontexts.
 
 -- changeset chicoreus:34
-
 -- additional accumulated foreign key constraints
 
 alter table collectingevent add constraint fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
