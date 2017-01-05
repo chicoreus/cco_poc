@@ -40,7 +40,7 @@
                     <execution>
                         <phase>process-resources</phase>
                         <configuration>
-                            <propertyFile>edu/harvard/huh/specify/datamodel/cco_full/db/liquibase.properties</propertyFile>
+                            <propertyFile>config/liquibase_cco_full.properties</propertyFile>
                         </configuration>
                         <goals>
                             <goal>update</goal>

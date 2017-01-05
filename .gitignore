@@ -1,3 +1,4 @@
+config/liquibase_cco_full.properties
 /target
 .project
 .settings/
