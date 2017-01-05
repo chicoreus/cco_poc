@@ -1,7 +1,7 @@
 changeLogFile=edu/harvard/huh/specify/datamodel/cco_poc/db/master.xml
 driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://localhost/cco
-username=root
-password=ingimar
+url=jdbc:mysql://localhost/cco_poc
+username=
+password=
 verbose=true 
 dropFirst=false

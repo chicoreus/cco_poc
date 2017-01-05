@@ -1,6 +1,6 @@
 changeLogFile=edu/harvard/huh/specify/datamodel/cco_full/db/db.changelog-master.xml
-driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://localhost/cco_full
+driver=org.postgresql.Driver
+url=jdbc:postgresql://localhost/cco_full
 username=
 password=
 verbose=true 
