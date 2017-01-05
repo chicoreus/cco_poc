@@ -225,7 +225,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'egg
 -- changeset chicoreus:5
 
 CREATE TABLE part ( 
-  -- Defintion:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
+  -- Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
   part_id bigint not null primary key auto_increment,  -- surrogae numeric primary key 
   identifiableitem_id bigint not null,  -- the identification of the organism that this part is of
   preparation_id bigint not null, -- the preparation this part is in/on/is

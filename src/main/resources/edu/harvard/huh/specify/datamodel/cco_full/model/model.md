@@ -1,11 +1,15 @@
 # Information Model for CCO_FULL
 
+Work in progress, entities, their definitions, and cardinality descriptions are present.
+
 # Entities
 
 * scope 
-  * Definition: Institutions and departments for which access control limitations may be applicable for some data.  NOTE: Serves to support the functionality provided with virtual private databases in Arctos.  
+  * Definition: Institutions and departments for which access control limitations may be applicable for some data.  
+  * Remarks: Serves to support the functionality provided with virtual private databases in Arctos.  
 * principal 
-  * Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
+  * Definition: An entity to which some set of access rights may apply, typically a group. 
+  * Remarks: For example,  a principal may be "data entry", a group having some set of access rights for data entry, which rights exist and how they are implemented is not specified here.
 * systemuser 
   * Definition: A user of the system
 * systemuserprincipal 
@@ -15,14 +19,17 @@
 * picklistitem 
   * Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
 * picklistitemint 
-  * Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
+  * Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  
+  * Remarks: Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
 * codetableint 
-  * Definition: internationalization for code tables (where , allows use of a single language key in code tables, provides
+  * Definition: internationalization for code tables.
+  * Remarks: Allows use of a single language key in code tables, provides translations of that key and definitions for that key in an arbitrary number of languages.  Applies to code tables.
 * unit 
   * Definition: logical unit that was collected or observed in a collecting event.
 * identifiableitem 
   * Definition: a component of a unit for which a scientific identification can be made.
 * part 
+  * Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
 * preparation 
   * Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts.
 * identification 
