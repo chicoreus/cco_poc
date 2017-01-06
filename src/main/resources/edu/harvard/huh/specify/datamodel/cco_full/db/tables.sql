@@ -113,7 +113,7 @@ CREATE UNIQUE INDEX idx_picklist_u_tablefield ON picklist (table_name,field_name
 
 CREATE TABLE picklistitem (
   -- Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
-  picklist_item_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  picklistitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   picklist_id bigint not null,  -- the picklist to which this picklist item belongs
   scope_id bigint default null,  -- if not null, only show this picklist item in this context (e.g. limit 'egg' as an age class to ornithology).
   ordinal int(11) default null,  -- sort order for picklist items
@@ -134,7 +134,7 @@ ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_i
 CREATE TABLE picklistitemint (
     -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
     codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    picklist_item_id bigint not null, -- the picklistitem which for which this is an internationalization
+    picklistitem_id bigint not null, -- the picklistitem which for which this is an internationalization
     lang varchar(10) not null default 'en-gb',  -- language for this record
     title_lang varchar(255),  -- translation of value to be shown to users into lang
     definition text  -- definition of name in lang
@@ -142,7 +142,7 @@ CREATE TABLE picklistitemint (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (picklist_item_id) references picklistitem(picklist_item_id) on update cascade;  
+ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (picklistitem_id) references picklistitem(picklistitem_id) on update cascade;  
 -- Each picklistitem has zero to many translations in picklistitemint
 -- Each picklistitemint is a translation for one and only one picklistitem 
 
@@ -202,19 +202,20 @@ CREATE TABLE identifiableitem (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
 -- Each identifiable item comes from one and only one unit
 -- Each unit has zero to many identifiable items
 
 -- To apply a pick list to a field, first define a picklist
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
 -- then define the items which comprise that pick list.
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (2,110,2,'+','+'); 
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (3,110,3,'ca.','ca.');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (2,110,2,'+','+'); 
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (3,110,3,'ca.','ca.');
 
-INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (1,'en_gb','?','count is uncertain.') ;
-INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (2,'en_gb','+','and more, count is at least the specified number.') ;
-INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (3,'en_gb','circa','count is approximate.') ;
+INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (1,'en_gb','?','count is uncertain.') ;
+INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (2,'en_gb','+','and more, count is at least the specified number.') ;
+INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (3,'en_gb','circa','count is approximate.') ;
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (120, 'count units','identifiableitem','individual_count_units');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,1,'individuals','individuals');  -- for lot based collections 
@@ -312,6 +313,7 @@ DEFAULT CHARSET=utf8;
 create unique index idx_ident_u_dateidentid on identification(date_determined_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_ident_u_dateverifid on identification(date_verified_eventdate_id);  --  Event dates should not be reused.
 
+ALTER TABLE identification add constraint fk_ident_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
 -- Each identifiableitem has zero to many identifications.
 -- Each identification is of one and only one identifiable item. 
 
@@ -322,16 +324,16 @@ create unique index idx_ident_u_dateverifid on identification(date_verified_even
 -- Each agent is the verifier for zero to many identifications.
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (130, 'identification qualifier','identification','qualifier');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (10,130,1,'?','?');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (11,130,2,'aff.','aff.');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (12,130,3,'cf.','cf.');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (13,130,4,'near','near');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (14,130,6,'(group)','(group)');
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (15,130,6,'sp. nov.','sp. nov.');  -- place holder for to be described species in a genus, taxon_id should have rank of genus. 
-INSERT INTO picklistitem (picklist_item_id, picklist_id, ordinal, title, value) VALUES (16,130,7,'ssp. nov.','ssp. nov.');  -- place holder for to be described subspecies in a species, taxon_id should have rank of species. 
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (10,130,1,'?','?');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (11,130,2,'aff.','aff.');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (12,130,3,'cf.','cf.');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (13,130,4,'near','near');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (14,130,6,'(group)','(group)');
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (15,130,6,'sp. nov.','sp. nov.');  -- place holder for to be described species in a genus, taxon_id should have rank of genus. 
+INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (16,130,7,'ssp. nov.','ssp. nov.');  -- place holder for to be described subspecies in a species, taxon_id should have rank of species. 
 
-INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (15,'en_gb','sp. nov.','place holder for types of soon to be described species where the name is not yet available.  the taxon used in the identification should be a genus, the assertion in the identification is that this is a new species in that genus.');
-INSERT INTO picklistitemint (picklist_item_id, lang, title_lang, definition) VALUES (16,'en_gb','ssp. nov.','place holder for types of soon to be described subspecies where the name is not yet available.  the taxon used in the identification should be a species, the assertion in the identification is that this is a new subspecies in that species.');
+INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (15,'en_gb','sp. nov.','place holder for types of soon to be described species where the name is not yet available.  the taxon used in the identification should be a genus, the assertion in the identification is that this is a new species in that genus.');
+INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (16,'en_gb','ssp. nov.','place holder for types of soon to be described subspecies where the name is not yet available.  the taxon used in the identification should be a species, the assertion in the identification is that this is a new subspecies in that species.');
 
 --  picklist for preparation types
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (190, 'preparation status','preparation','status');
@@ -812,8 +814,6 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,5,'da
 
 -- changeset chicoreus:13
 
-ALTER TABLE unit add constraint fk_colevent foreign key (collectingevent_id) references collectingevent (collectingevent_id) on update cascade;
-
 ALTER TABLE collectingevent add constraint fk_colevent_cdate foreign key (date_collected_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE materialsample add constraint fk_matsamp_samdate foreign key (date_sampled_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE catalogeditem add constraint fk_catitem_catdate foreign key (date_cataloged_eventdate_id) references eventdate (eventdate_id) on update cascade;
@@ -856,8 +856,6 @@ create index idx_local_num on locality(locality_number);
 create index idx_local_shortname on locality(short_name);
 create index idx_local_namedplace on locality(named_place);
 create index idx_local_namedplacerel on locality(relation_to_named_place);
-
-ALTER TABLE collectingevent add constraint fk_locality foreign key (locality_id) references locality (locality_id) on update cascade;
 
 -- changeset chicoreus:15
 CREATE TABLE othernumber (
