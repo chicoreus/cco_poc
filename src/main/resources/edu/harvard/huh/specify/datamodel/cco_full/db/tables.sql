@@ -525,7 +525,7 @@ alter table journal add constraint fk_journal_succeedingid foreign key (succeedi
 
 CREATE TABLE journaltitle (
   -- Definition: Titles of serial works.
-  journaltitle_id bigint not null primary key auto_increment -- Surrogate numeric primary key
+  journaltitle_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
   journal_id bigint not null,  -- The serial work for which this is a title.
   title text,  --  The title of the work.
   title_type varchar(50) not null  -- The kind of title.
@@ -545,7 +545,7 @@ CREATE TABLE ctjournaltitletype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table journaltitle add constraint fk_journaltitletype foreign key (title_type) refererences ctjournaltitletype (title_type) on update cascade;
+alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title_type) references ctjournaltitletype (title_type) on update cascade;
 
 
 insert into ctjournaltitletype (title_type) values ('title');
@@ -556,11 +556,13 @@ insert into ctjournaltitletype (title_type) values ('title variant(3)');
 
 CREATE TABLE journalidentifier (
   -- Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
-  journalidentifier_id bigint not null primary key auto_increment -- Surrogate numeric primary key
+  journalidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
   journal_id bigint not null,  -- The serial work to which this identifier applies
   identifier varchar(255),     -- the identifier for this 
   identifier_type varchar(50) not null
 )
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
 
 alter table journalidentifier add constraint fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
@@ -574,13 +576,13 @@ DEFAULT CHARSET=utf8;
 insert into ctjournalidentifiertype (identifier_type) values ('ISSN');
 insert into ctjournalidentifiertype (identifier_type) values ('OCLC');  
 insert into ctjournalidentifiertype (identifier_type) values ('TL2');   -- For botanical journals
-insert into ctjournaldentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
+insert into ctjournalidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 
-alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) refererences ctjournalidentifiertype (identifier_type) on update cascade;
+alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) references ctjournalidentifiertype (identifier_type) on update cascade;
 
 CREATE TABLE publication (
   -- Definition: A published work (e.g. a journal article, monograph, or book).
-  publication_id bigint not null AUTO_INCREMENT, -- Surrogate numeric primary key
+  publication_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
   publication_type varchar(50) not null,
   first_page_url_in_bhl varchar(900),  -- The location for the first page of this work in BHL.
   guid varchar(128) default null,    -- The guid for this publication record
@@ -601,7 +603,7 @@ CREATE TABLE publication (
   pages varchar(50) default null,  -- Pages, front matter, plates, figures, maps, etc. for inclusion in a citation.
   remarks text,
   journal_id bigint default null,  -- The journal of which this publication is a part
-  contained_in_publication_id bigint default null,  -- A publication within which this publication is contained "In".
+  contained_in_publication_id bigint default null  -- A publication within which this publication is contained "In".
 ) 
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -620,13 +622,15 @@ alter table publication add constraint fk_publicationtype foreign key (journal_i
 
 CREATE TABLE publicationidentifier (
   -- Definition: A unique identifier for a publication.
-  publicationidentifier_id bigint not null primary key auto_increment -- Surrogate numeric primary key
+  publicationidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
   publication_id bigint not null,  -- The serial work to which this identifier applies
   identifier varchar(255),     -- the identifier for this 
   identifier_type varchar(50) not null
 )
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
 
-alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_type) refererences publicationtype (publication_type) on update cascade;
+alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_id) references publication (publication_id) on update cascade;
 
 CREATE TABLE ctpublicationidentifiertype (
   -- Definition: controlled vocabulary for publication identifier types.
@@ -638,7 +642,7 @@ DEFAULT CHARSET=utf8;
 insert into ctpublicationidentifiertype (identifier_type) values ('ISBN');
 insert into ctpublicationidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 
-alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) refererences ctpublicationidentifiertype (identifier_type) on update cascade;
+alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) references ctpublicationidentifiertype (identifier_type) on update cascade;
 
 CREATE TABLE author (
   -- Definition: Names of authors and editors of publications.
@@ -648,14 +652,11 @@ CREATE TABLE author (
   publication_id bigint not null,  -- The publication for which this is an author.
   agentname_id bigint not null,  -- The name of the author/editor
   remarks text
-  CONSTRAINT `FKAC2D218B384B3622` FOREIGN KEY (`AgentID`) REFERENCES `agent` (`AgentID`),
-  CONSTRAINT `FKAC2D218B69734F30` FOREIGN KEY (`ReferenceWorkID`) REFERENCES `referencework` (`ReferenceWorkID`),
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 alter table author add constraint fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
-alter table author add constraint fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
 
 create unique index idx_u_author_puborderrole on author(publication_id, ordinal, role);
 
@@ -1189,23 +1190,30 @@ alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent
 CREATE TABLE agentreference (
    --  Definition: Links to published references the content of which is about collectors/agents (e.g. obituaries, biographies).
    agentreference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   publication_id int not null,
-   agent_id int not null
+   publication_id bigint not null,  -- The publication in which the agent is mentioned.
+   agent_id bigint not null,   -- The agent mentioned in the publication.
+   reference_type varchar(50) -- The nature of the reference (e.g. obituary).
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+create index idx_refagentlks_refagent on agentreference (publication_id, agent_id);
+
 -- Each agentreference is about one and only one agent.
 -- Each agent has zero to many agentreferences.
 
--- Each agentreference is in 
+alter table agentreference add constraint fk_aref_agent_id foreign key (agent_id) references agent (agent_id) on delete cascade on update cascade;
 
-create index idx_refagentlks_refagent on agentreference (refid, agent_id);
+-- Each agentreference is in one and only one publication.
+-- Each publication has zero to many agentreferences.
+
+alter table agentreference add constraint fk_aref_pubid_id foreign key (publication_id) references publication (publication_id) on delete cascade on update cascade;
+
 
 CREATE TABLE agentlink (
    -- Definition: supporting hyperlinks out to external sources of information about collectors/agents.
    agentlink_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
-   agent_id int not null, 
+   agent_id bigint not null, 
    type varchar(50), 
    link varchar(900), 
    isprimarytopicof boolean not null default true,  --  link can be represented as foaf:primarytopicof
@@ -1217,11 +1225,12 @@ DEFAULT CHARSET=utf8;
 -- Each agent has zero to many agentlinks.
 -- Each agentlink is for one and only one agent.
 
+alter table agentlink add constraint fk_alink_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 CREATE TABLE agentname (
    --  Definition:  multiple variant forms of names and names for a collector/agent
    agentname_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
-   agent_id int not null,  
+   agent_id bigint not null,  
    type varchar(35) not null default 'full name', 
    name  varchar(255),  
    language varchar(6) default 'en_us', 
@@ -1233,11 +1242,19 @@ DEFAULT CHARSET=utf8;
 
 create unique index idx_agentname_u_idtypename on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
 
+-- Can't create this foreign key relation, as agentname uses the myisam index for access to full text indexing.
+-- alter table author add constraint fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
+
+alter table agentname add constraint fk_aname_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
+
 -- Each agent has zero to many agentnames.
 -- Each agentname is for one and only one agent.
 
 -- Each agentname has one and only one name type (ctnametypes.type).
 -- Each ctnametype is the type for zero to many agentnames.
+
+-- Each author has one and only one agentname.
+-- Each agentname is the name for zero to many authors.
 
 create fulltext index ft_collectorname on agentname(name);
 
@@ -1248,6 +1265,8 @@ CREATE TABLE ctagentnametype (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table agentname add constraint fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
 
 INSERT INTO ctagentnametype (type, ordinal) values ('full name',1);
 INSERT INTO ctagentnametype (type, ordinal) values ('standard abbreviation',2);
@@ -2119,8 +2138,8 @@ CREATE TABLE geography (
   is_accepted boolean not null,  -- is a locally accepted value 
   accepted_id bigint default null,  -- if not accepted, which is the accepted geography entry to use instead.
   is_current boolean default null, -- is a current geopolitical entity 
-  geographytreedef_id int(11) not null,  -- which geography tree is this geography placed in 
-  geographytreedefitem_id int(11) not null -- which node definition applies to this node.
+  geographytreedef_id bigint not null,  -- which geography tree is this geography placed in    ??Redundant??
+  geographytreedefitem_id bigint not null -- which node definition applies to this node.
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2166,6 +2185,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 alter table geographytreedefitem add constraint fk_geogtrdi_treeid foreign key (geographytreedef_id) references geographytreedef(geographytreedef_id) on update cascade;
+
+alter table geography add constraint fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
 
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (1,', ',1,0,'root',0,null,null,null,'root',1);
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (2,', ',0,0,'continent',100,null,null,null,'continent',1);
@@ -2450,7 +2471,7 @@ alter table collectingevent add constraint fk_colev_eventdateid foreign key (dat
 insert into agent(agent_id, preferred_name_string) values (1,'Example User');
 insert into agentname(agent_id, type, name) values (2,'full name','Example User');
 
-insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath) values (2,'Linnaeus','https://viaf.org/viaf/34594730',1707,1778);
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath) values (2,'Linnaeus','https://viaf.org/viaf/34594730',1707,1778);
 insert into agentname(agent_id, type, name) values (2,'full name','Carl von Linné');
 insert into agentname(agent_id, type, name) values (2,'also known as','Carl Linnaeus');
 insert into agentname(agent_id, type, name) values (2,'standard botanical abbreviation','L.');

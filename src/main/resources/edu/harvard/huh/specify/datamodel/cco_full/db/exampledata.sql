@@ -2,27 +2,27 @@
 
 -- Real agents (authors, collectors) used in the example data.
 
-insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
        values (3,'Mason Ellsworth Hale, Jr.','https://viaf.org/viaf/310661352',1928,1990,'Hale','','Jr.','Mason','Ellsworth','Hale');
 insert into agentname(agent_id, type, name) values (3,'full name','Mason Ellsworth Hale, Jr.');
 insert into agentname(agent_id, type, name) values (3,'also known as','Mason Hale Jr.');
 insert into agentname(agent_id, type, name) values (3,'standard botanical abbreviation','Hale');
 insert into agentlink (agent_id, type, link, text) values (3,'wiki','https://en.wikipedia.org/wiki/Mason_Ellsworth_Hale','Wikipedia entry');
 
-insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
        values (4,'Jakob Friedrich Ehrhart','https://viaf.org/viaf/3221377',1742,1795,'Ehrh.','','','Jakob','Friedrich','Ehrhart');
 insert into agentname(agent_id, type, name) values (4,'full name','Jakob Friedrich Ehrhart');
 insert into agentname(agent_id, type, name) values (4,'also known as','Friedrich Ehrhart');
 insert into agentname(agent_id, type, name) values (4,'standard botanical abbreviation','Ehrh.');
 insert into agentlink (agent_id, type, link, text) values (4,'wiki','https://en.wikipedia.org/wiki/Ehrh.','Wikipedia entry');
 
-insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
        values (5,'Erik Acharius','https://viaf.org/viaf/51806870',1757,1819,'Ach.','','','Erik','','Acharius');
 insert into agentname(agent_id, type, name) values (5,'full name','Erik Acharius');
 insert into agentname(agent_id, type, name) values (5,'standard botanical abbreviation','Ach.');
 insert into agentlink (agent_id, type, link, text) values (5,'wiki','https://en.wikipedia.org/wiki/Ach.','Wikipedia entry');
 
-insert into agent(agent_id, preferred_name_string,guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
        values (6,'Edward Tuckerman','https://viaf.org/viaf/59861375',1817,1886,'Tuckerman','','','Edward','','Tuckerman');
 insert into agentname(agent_id, type, name) values (6,'full name','Edward Tuckerman');
 insert into agentname(agent_id, type, name) values (6,'standard botanical abbreviation','Tuckerman');
