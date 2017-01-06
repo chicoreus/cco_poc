@@ -133,7 +133,7 @@ ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_i
 
 CREATE TABLE picklistitemint (
     -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
-    codetableintid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     picklist_item_id bigint not null, -- the picklistitem which for which this is an internationalization
     lang varchar(10) not null default 'en-gb',  -- language for this record
     title_lang varchar(255),  -- translation of value to be shown to users into lang
@@ -151,7 +151,7 @@ ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (
 CREATE TABLE codetableint ( 
     -- Definition: internationalization for code tables (where , allows use of a single language key in code tables, provides
     -- translations of that key and definitions for that key in an arbitrary number of languages.  Applies to code tables 
-    codetableintid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     key_name varchar(255) not null, -- name/key in code table.  (e.g. miles in a length unit code table.
     codetable varchar(255) not null, -- code table (table name prefixed ct) in which name is found.
     lang varchar(10) not null default 'en-gb',  -- language for this record
@@ -501,6 +501,164 @@ ALTER TABLE taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) r
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id) values (1,'Life','','','<strong>Life</strong>',null,'/1',1,1);
 
+--  **** Needs definitions and cardinality.
+
+CREATE TABLE journal (
+  -- Definition: A serial work.
+  journal_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
+  bhl_record varchar(244),  -- The url for the bibliographic record for this journal in BHL e.g. http://www.biodiversitylibrary.org/bibliography/62169
+  publisher varchar(64) default null,
+  place_of_publication varchar(255) default null,
+  first_year_published int,  -- The first year in which this serial was published.
+  last_year_published int,  -- The last year in which this serial was published.
+  remarks text,
+  preceding_journal_id bigint default null,
+  succeeding_journal_id bigint default null
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
+
+alter table journal add constraint fk_journal_precedingid foreign key (preceding_journal_id) references journal (journal_id) on update cascade;
+alter table journal add constraint fk_journal_succeedingid foreign key (succeeding_journal_id) references journal (journal_id) on update cascade;
+
+CREATE TABLE journaltitle (
+  -- Definition: Titles of serial works.
+  journaltitle_id bigint not null primary key auto_increment -- Surrogate numeric primary key
+  journal_id bigint not null,  -- The serial work for which this is a title.
+  title text,  --  The title of the work.
+  title_type varchar(50) not null  -- The kind of title.
+)
+ENGINE=myisam -- to ensure support for fulltext index
+DEFAULT CHARSET=utf8;
+
+create fulltext index ft_journaltitle on journaltitle(title);
+create unique index ft_journaltitlety on journaltitle(title_type,journal_id);
+
+alter table journaltitle add constraint fk_journaltitle_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
+
+CREATE TABLE ctjournaltitletype (
+  -- Definition: controlled vocabulary for journal title types
+  title_type varchar(50) not null primary key  -- Type of journal title.
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
+
+alter table journaltitle add constraint fk_journaltitletype foreign key (title_type) refererences ctjournaltitletype (title_type) on update cascade;
+
+
+insert into ctjournaltitletype (title_type) values ('title');
+insert into ctjournaltitletype (title_type) values ('title variant');
+insert into ctjournaltitletype (title_type) values ('abbreviation');
+insert into ctjournaltitletype (title_type) values ('title variant(2)');
+insert into ctjournaltitletype (title_type) values ('title variant(3)');
+
+CREATE TABLE journalidentifier (
+  -- Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
+  journalidentifier_id bigint not null primary key auto_increment -- Surrogate numeric primary key
+  journal_id bigint not null,  -- The serial work to which this identifier applies
+  identifier varchar(255),     -- the identifier for this 
+  identifier_type varchar(50) not null
+)
+
+alter table journalidentifier add constraint fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
+
+CREATE TABLE ctjournalidentifiertype (
+  -- Definition: controlled vocabulary for journal identifier types.
+  identifier_type varchar(50) not null primary key  -- Type of journal identifier.
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
+
+insert into ctjournalidentifiertype (identifier_type) values ('ISSN');
+insert into ctjournalidentifiertype (identifier_type) values ('OCLC');  
+insert into ctjournalidentifiertype (identifier_type) values ('TL2');   -- For botanical journals
+insert into ctjournaldentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
+
+alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) refererences ctjournalidentifiertype (identifier_type) on update cascade;
+
+CREATE TABLE publication (
+  -- Definition: A published work (e.g. a journal article, monograph, or book).
+  publication_id bigint not null AUTO_INCREMENT, -- Surrogate numeric primary key
+  publication_type varchar(50) not null,
+  first_page_url_in_bhl varchar(900),  -- The location for the first page of this work in BHL.
+  guid varchar(128) default null,    -- The guid for this publication record
+  is_published bit(1) default null,  -- Flag to indicate if this is a published work or an unpublished manuscript.
+  actual_year_of_publication int default null,  -- The year on which this work was published.
+  year_of_publication varchar(25) default null,  -- The year (or range of years, or purported and actual year) on which this work was published.
+  edition varchar(50) default null,
+  title varchar(900) default null,   -- The title of the work
+  place_of_publication varchar(255) default null,
+  publisher varchar(255) default null,
+  volume varchar(50) default null,
+  issue varchar(50) default null,
+  number varchar(50) default null,
+  series varchar(50) default null,
+  section varchar(50) default null,
+  start_page int default null,     -- The page number of the first page (for use with page turned objects).
+  end_page int default null,       -- The page number of the last page (for use with page turned objects).
+  pages varchar(50) default null,  -- Pages, front matter, plates, figures, maps, etc. for inclusion in a citation.
+  remarks text,
+  journal_id bigint default null,  -- The journal of which this publication is a part
+  contained_in_publication_id bigint default null,  -- A publication within which this publication is contained "In".
+) 
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
+
+alter table publication add constraint fk_publication_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
+alter table publication add constraint fk_publication_containid foreign key (contained_in_publication_id) references publication (publication_id) on update cascade;
+
+CREATE TABLE ctpublicationtype ( 
+   -- Definition: Controled vocabulary for publication types.
+   publication_type varchar(50) not null primary key
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
+
+alter table publication add constraint fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
+
+CREATE TABLE publicationidentifier (
+  -- Definition: A unique identifier for a publication.
+  publicationidentifier_id bigint not null primary key auto_increment -- Surrogate numeric primary key
+  publication_id bigint not null,  -- The serial work to which this identifier applies
+  identifier varchar(255),     -- the identifier for this 
+  identifier_type varchar(50) not null
+)
+
+alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_type) refererences publicationtype (publication_type) on update cascade;
+
+CREATE TABLE ctpublicationidentifiertype (
+  -- Definition: controlled vocabulary for publication identifier types.
+  identifier_type varchar(50) not null primary key  -- Type of publication identifier.
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
+
+insert into ctpublicationidentifiertype (identifier_type) values ('ISBN');
+insert into ctpublicationidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
+
+alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) refererences ctpublicationidentifiertype (identifier_type) on update cascade;
+
+CREATE TABLE author (
+  -- Definition: Names of authors and editors of publications.
+  author_id bigint not null primary key auto_increment, -- Surrogate numeric primary key 
+  ordinal int not null,  -- The order of the author in a list of authors.
+  role enum ('author','editor','in author'),  -- Whether the author's role is as author or editor.
+  publication_id bigint not null,  -- The publication for which this is an author.
+  agentname_id bigint not null,  -- The name of the author/editor
+  remarks text
+  CONSTRAINT `FKAC2D218B384B3622` FOREIGN KEY (`AgentID`) REFERENCES `agent` (`AgentID`),
+  CONSTRAINT `FKAC2D218B69734F30` FOREIGN KEY (`ReferenceWorkID`) REFERENCES `referencework` (`ReferenceWorkID`),
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
+
+alter table author add constraint fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
+alter table author add constraint fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
+
+create unique index idx_u_author_puborderrole on author(publication_id, ordinal, role);
+
+--  **** End: Needs definitions and cardinality.
+ 
 -- changeset chicoreus:8
 CREATE TABLE catalogeditem (
    -- Definition: the application of a catalog number out of some catalog number series.
@@ -923,7 +1081,7 @@ CREATE TABLE agent (
     first_name varchar(255),   -- name of the individual 
     middle_names varchar(255),  -- middle names of the individual
     family_names varchar(255),  -- matronymic and patronymic familial names 
-    guid varchar(900),  --  owl:sameas  external guid for this record.
+    sameas_guid varchar(900),  --  owl:sameas  external guid for this record.
     uuid char(43),         --  rdf:about   guid for this record
     biography text,        
     notes text,  -- remarks about this agent 
@@ -1033,7 +1191,7 @@ alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent
 CREATE TABLE agentreference (
    --  Definition: Links to published references the content of which is about collectors/agents (e.g. obituaries, biographies).
    agentreference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   refid int not null,
+   publication_id int not null,
    agent_id int not null
 )
 ENGINE=InnoDB 
@@ -1097,8 +1255,8 @@ INSERT INTO ctagentnametype (type, ordinal) values ('full name',1);
 INSERT INTO ctagentnametype (type, ordinal) values ('standard abbreviation',2);
 INSERT INTO ctagentnametype (type, ordinal) values ('standard botanical abbreviation',3);
 INSERT INTO ctagentnametype (type, ordinal) values ('also known as',4);
-INSERT INTO ctagentnametype (type, ordinal) values ('initials last name',5);
-INSERT INTO ctagentnametype (type, ordinal) values ('last name, initials',5);
+INSERT INTO ctagentnametype (type, ordinal) values ('initials last name',5);  -- expected form for second and subseqent authors.
+INSERT INTO ctagentnametype (type, ordinal) values ('last name, initials',5);  -- expected form for first author.
 INSERT INTO ctagentnametype (type, ordinal) values ('first initials last',5);
 INSERT INTO ctagentnametype (type, ordinal) values ('first last',5);
 
