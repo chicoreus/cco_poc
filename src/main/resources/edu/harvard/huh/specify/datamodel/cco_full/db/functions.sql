@@ -76,8 +76,109 @@ BEGIN
       select extractFromString('/',parentage,20) from taxon  where taxon_id = taxonid
       union  
       select extractFromString('/',parentage,21) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,22) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,23) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,24) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,25) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,26) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,27) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,28) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,29) from taxon  where taxon_id = taxonid
+      union  
+      select extractFromString('/',parentage,30) from taxon  where taxon_id = taxonid
    ) and rank_id = rankid limit 1;
    return sci_name;
+END |
+
+delimiter ;
+
+
+
+drop function if exists cco_full.getHigherGeographyAtRank;
+
+delimiter |
+-- Obtain the name of a higher geography at a particular rank from an entry in the geography tree.
+-- For example, obtain the family into which some species is placed.
+-- 
+-- @param geographyid the geography_id for the geography for which the higher geography is to be looked up.
+-- @param rankid the rank_id for the higher geography.
+--
+-- @return the scientific name of the higher geography, if one is defined in the parentage of the
+-- geography at the provided rank.
+--
+create function cco_full.getHigherGeographyAtRank(geographyid INT, rankid INT)
+returns VARCHAR(255)
+READS SQL DATA
+BEGIN
+   declare geog_name varchar(255);
+   select name into geog_name from geography  where geography_id in ( 
+      select extractFromString('/',parentage,2) from geography where geography_id = geographyid
+      union 
+      select extractFromString('/', parentage,3) from geography where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,4) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,5) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,6) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,7) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,8) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,9) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,10) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,11) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,12) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,13) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,14) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,15) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,16) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,17) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,18) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,19) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,20) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,21) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,22) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,23) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,24) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,25) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,26) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,27) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,28) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,29) from geography  where geography_id = geographyid
+      union  
+      select extractFromString('/',parentage,30) from geography  where geography_id = geographyid
+   ) and rank_id = rankid limit 1;
+   return geog_name;
 END |
 
 delimiter ;
