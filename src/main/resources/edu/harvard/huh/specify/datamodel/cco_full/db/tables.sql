@@ -523,6 +523,12 @@ DEFAULT CHARSET=utf8;
 alter table journal add constraint fk_journal_precedingid foreign key (preceding_journal_id) references journal (journal_id) on update cascade;
 alter table journal add constraint fk_journal_succeedingid foreign key (succeeding_journal_id) references journal (journal_id) on update cascade;
 
+-- Each journal is preceded by zero or one preceding journal.
+-- Each journal is the preceding journal for zero to many journals.
+
+-- Each journal is succeeded by zero or one succeeding journal.
+-- Each journal is the succeeding journal for zero to many journals.
+
 CREATE TABLE journaltitle (
   -- Definition: Titles of serial works.
   journaltitle_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -538,6 +544,9 @@ create unique index ft_journaltitlety on journaltitle(title_type,journal_id);
 
 alter table journaltitle add constraint fk_journaltitle_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
+-- Each journal has zero to many titles.
+-- Each title is for one and only one journal.
+
 CREATE TABLE ctjournaltitletype (
   -- Definition: controlled vocabulary for journal title types
   title_type varchar(50) not null primary key  -- Type of journal title.
@@ -547,6 +556,8 @@ DEFAULT CHARSET=utf8;
 
 alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title_type) references ctjournaltitletype (title_type) on update cascade;
 
+-- Each jouurnaltitle has one and only one (ct)journaltitletype.
+-- Each (ct)journaltitletype is for zero to many journalstitle.
 
 insert into ctjournaltitletype (title_type) values ('title');
 insert into ctjournaltitletype (title_type) values ('title variant');
@@ -566,6 +577,9 @@ DEFAULT CHARSET=utf8;
 
 alter table journalidentifier add constraint fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
+-- Each journal has zero to many journalidenitifers.
+-- Each journalidentifier is for one and only one journal.
+
 CREATE TABLE ctjournalidentifiertype (
   -- Definition: controlled vocabulary for journal identifier types.
   identifier_type varchar(50) not null primary key  -- Type of journal identifier.
@@ -579,6 +593,9 @@ insert into ctjournalidentifiertype (identifier_type) values ('TL2');   -- For b
 insert into ctjournalidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 
 alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) references ctjournalidentifiertype (identifier_type) on update cascade;
+
+-- Each journalidentifier has one and only one (ct)journalidentifiertype.
+-- Each (ct)journalidentifiertype is for zero to many journalsidentifiers.
 
 CREATE TABLE publication (
   -- Definition: A published work (e.g. a journal article, monograph, or book).
@@ -612,7 +629,7 @@ alter table publication add constraint fk_publication_jourid foreign key (journa
 alter table publication add constraint fk_publication_containid foreign key (contained_in_publication_id) references publication (publication_id) on update cascade;
 
 CREATE TABLE ctpublicationtype ( 
-   -- Definition: Controled vocabulary for publication types.
+   -- Definition: Controled vocabulary for publication types (e.g. books, journal articles, monographs, etc).  
    publication_type varchar(50) not null primary key
 )
 ENGINE=InnoDB
@@ -620,17 +637,23 @@ DEFAULT CHARSET=utf8;
 
 alter table publication add constraint fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
 
+-- Each publication has one and only one publicationtype.
+-- Each publicationtype is for zero to many publications.
+
 CREATE TABLE publicationidentifier (
   -- Definition: A unique identifier for a publication.
   publicationidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
-  publication_id bigint not null,  -- The serial work to which this identifier applies
-  identifier varchar(255),     -- the identifier for this 
-  identifier_type varchar(50) not null
+  publication_id bigint not null,  -- The work to which this identifier applies
+  identifier varchar(255),     -- The identifier for this work.
+  identifier_type varchar(50) not null  -- The type of identifier (e.g. ISBN).
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_id) references publication (publication_id) on update cascade;
+
+-- Each publication has zero to many publicationidenitifers.
+-- Each publicationidentifier is for one and only one publication.
 
 CREATE TABLE ctpublicationidentifiertype (
   -- Definition: controlled vocabulary for publication identifier types.
@@ -641,6 +664,9 @@ DEFAULT CHARSET=utf8;
 
 insert into ctpublicationidentifiertype (identifier_type) values ('ISBN');
 insert into ctpublicationidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
+
+-- Each publicationidentifier has one and only one (ct)publicationidentifiertype.
+-- Each (ct)publicationidentifiertype is for zero to many publicationsidentifiers.
 
 alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) references ctpublicationidentifiertype (identifier_type) on update cascade;
 
@@ -659,6 +685,9 @@ DEFAULT CHARSET=utf8;
 alter table author add constraint fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
 
 create unique index idx_u_author_puborderrole on author(publication_id, ordinal, role);
+
+-- Each publication has zero to many authors.
+-- Each author is for one and only one publication.
 
 --  **** End: Needs definitions and cardinality.
  

@@ -40,6 +40,26 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
   * Definition: Definition of a taxonomic tree
 * taxontreedefitem 
   * Definition: Definition of ranks within a taxon tree.  NOTE: Because Phylum is used for animals and Division for plants, and it is expected that both are defined in a single tree, the definitions form a map rather than a tree, so parentid and parentage are not used.  A sort on values for rank_id is needed to find the next higher or next lower rank definition.
+* journal  
+  * Definition: A serial work.
+* journaltitle  
+  * Definition: Titles of serial works.
+* ctjournaltitletype  
+  * Definition: controlled vocabulary for journal title types
+* journalidentifier  
+  * Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
+* ctjournalidentifiertype  
+  * Definition: controlled vocabulary for journal identifier types.
+* publication  
+  * Definition: A published work (e.g. a journal article, monograph, or book).
+* ctpublicationtype  
+   * Definition: Controled vocabulary for publication types (e.g. books, journal articles, monographs, etc).  
+* publicationidentifier  
+  * Definition: A unique identifier for a publication.
+* ctpublicationidentifiertype  
+  * Definition: controlled vocabulary for publication identifier types.
+* author  
+  * Definition: Names of authors and editors of publications.
 * catalogeditem 
   * Definition: the application of a catalog number out of some catalog number series.
 * materialsample
@@ -246,7 +266,27 @@ Each agent is the cited in author for zero to many taxa.
 Each taxon was created in a nomenclatural act published in zero or one publication.  
 Each publication contains zero to many nomenlcatural acts creating taxa.  
 Each taxontreedef is the tree for zero to many taxontreedefitem nodes.  
-Each taxontreedefitem is a node in one and only one taxontreedef.  
+Each taxontreedefitem is a node in one and only one taxontreedef.   
+Each journal is preceded by zero or one preceding journal.  
+Each journal is the preceding journal for zero to many journals.  
+Each journal is succeeded by zero or one succeeding journal.  
+Each journal is the succeeding journal for zero to many journals.  
+Each journal has zero to many titles.  
+Each title is for one and only one journal.  
+Each jouurnaltitle has one and only one (ct)journaltitletype.  
+Each (ct)journaltitletype is for zero to many journalstitle.  
+Each journal has zero to many journalidenitifers.  
+Each journalidentifier is for one and only one journal.  
+Each journalidentifier has one and only one (ct)journalidentifiertype.  
+Each (ct)journalidentifiertype is for zero to many journalsidentifiers.  
+Each publication has one and only one publicationtype.  
+Each publicationtype is for zero to many publications.  
+Each publication has zero to many publicationidenitifers.  
+Each publicationidentifier is for one and only one publication.  
+Each publicationidentifier has one and only one (ct)publicationidentifiertype.  
+Each (ct)publicationidentifiertype is for zero to many publicationsidentifiers.  
+Each publication has zero to many authors.  
+Each author is for one and only one publication.  
 Each catalogeditem is the catalog record for zero or one identifiableitem.  
 Each catalogeditem is the catalog record for zero or one preparation.  
 Each preparation is cataloged as zero or one catalogeditem.  
@@ -299,7 +339,8 @@ Each agent has zero to many agentnumberpatterns.
 Each agentnumberpattern is for one and only one agent.  
 Each agentreference is about one and only one agent.  
 Each agent has zero to many agentreferences.  
-Each agentreference is in.  
+Each agentreference is in one and only one publication.  
+Each publication has zero to many agentreferences.  
 Each agent has zero to many agentlinks.  
 Each agentlink is for one and only one agent.  
 Each agent has zero to many agentnames.  
