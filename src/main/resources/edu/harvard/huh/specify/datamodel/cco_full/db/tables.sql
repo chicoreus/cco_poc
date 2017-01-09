@@ -26,7 +26,7 @@ alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scop
 CREATE TABLE principal (
    -- Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
    principal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   principal_name varchar(255) not null,  
+   principal_name varchar(255) not null,  -- The name of this principal.
    is_active boolean not null default TRUE, -- does this principal have any currently active rights 
    scope_id bigint not null -- the scope to which this principal extends (e.g. principal may be data entry, scope limits that to data entry in some collection.
 ) 
@@ -39,13 +39,13 @@ alter table principal add constraint fk_principal_scopeid foreign key (scope_id)
 -- Each scope is for zero to many principals
 
 CREATE TABLE systemuser ( 
-   -- Definition: A user of the system
+   -- Definition: A user of the system.
    systemuser_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   username varchar(255) not null,  
+   username varchar(255) not null,  -- The login username for this system user.
    password_hash varchar(900) not null default '', -- cryptographic hash of the password for this user
-   is_enabled boolean default TRUE,
-   last_login date, 
-   user_agent_id bigint not null -- The agent record for this user
+   is_enabled boolean default TRUE, -- Is login enabled for this user, user interfaces must prevent login unless this is true.
+   last_login date,  -- Date of last login. 
+   user_agent_id bigint not null -- The agent record for this user.  All users must also have agent records.
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -53,10 +53,10 @@ DEFAULT CHARSET=utf8;
 create unique index idx_sysuser_u_username on systemuser (username);
 
 CREATE TABLE systemuserprincipal (
-   -- Definition: Participation of a system user in principles (associative entity relating systemusers to principals).
+   -- Definition: Participation of a system user in principals (associative entity relating systemusers to principals).
    systemuserprincipal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   systemuser_id bigint not null,
-   principal_id bigint not null
+   systemuser_id bigint not null,  -- The system user that is some principal.
+   principal_id bigint not null  -- The principal that is some system user.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -146,7 +146,7 @@ ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (
 -- Each picklistitem has zero to many translations in picklistitemint
 -- Each picklistitemint is a translation for one and only one picklistitem 
 
--- code tables (tables prefixed by ct and keyed on varchar(255)) have different bindings and are internationalized separately from picklistitems (which key on a surrogate numeric primary key).
+-- code tables (tables prefixed by ct and keyed on a varchar(255)) have different bindings and are internationalized separately from picklistitems (which key on a surrogate numeric primary key).
 
 CREATE TABLE codetableint ( 
     -- Definition: internationalization for code tables (where , allows use of a single language key in code tables, provides
@@ -503,8 +503,6 @@ ALTER TABLE taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) r
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id) values (1,'Life','','','<strong>Life</strong>',null,'/1',1,1);
 
---  **** Needs definitions and cardinality.
-
 CREATE TABLE journal (
   -- Definition: A serial work.
   journal_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -689,8 +687,6 @@ create unique index idx_u_author_puborderrole on author(publication_id, ordinal,
 -- Each publication has zero to many authors.
 -- Each author is for one and only one publication.
 
---  **** End: Needs definitions and cardinality.
- 
 -- changeset chicoreus:8
 CREATE TABLE catalogeditem (
    -- Definition: the application of a catalog number out of some catalog number series.
@@ -1164,9 +1160,9 @@ alter table transactionagent add constraint fk_ta_coltransid foreign key (transa
 
 CREATE TABLE ctrelationshiptype (
    -- Definition: types of relationships between pairs of agents.
-   relationship varchar(255) not null primary key,
-   inverse varchar(50),
-   collective varchar(50)
+   relationship varchar(255) not null primary key,  -- The relationship read in the stored direction (e.g. child of)
+   inverse varchar(50),  -- The inverse of the relationship (e.g. parent of).
+   collective varchar(50)  -- The collective term for a set of participants in the relationship (e.g. children), suitable for use as a header for a list of relationhsips.
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('child of', 'parent of', 'children');
@@ -1181,9 +1177,9 @@ INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('succ
 CREATE TABLE agentteam (
    --  Definition: Composition of agents into teams of individuals, such that both the team and the members can be agents.
    agentteam_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   team_agent_id bigint not null, 
-   member_agent_id bigint not null, 
-   ordinal int
+   team_agent_id bigint not null,  -- The agent which is the team.
+   member_agent_id bigint not null,  -- The agent which is a member in the team.
+   ordinal int  -- The position of the agent if the team represents an ordered list of agents.
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table agentteam add constraint fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
@@ -1200,7 +1196,7 @@ CREATE TABLE agentnumberpattern (
    -- Definition: machine and human redable descriptions of collector number patterns
    agentnumber_pattern_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    agent_id bigint not null,  -- the agent to whom this number pattern applies
-   number_type varchar(50) default 'collector number',
+   number_type varchar(50) default 'collector number',  -- The type of number pattern
    number_pattern varchar(255),  --  regular expression for numbers that conform with this pattern
    number_pattern_description varchar(900),  -- human readable description of the number pattern
    startyear int, --  year for first known occurrence of this number pattern
@@ -1242,11 +1238,11 @@ alter table agentreference add constraint fk_aref_pubid_id foreign key (publicat
 CREATE TABLE agentlink (
    -- Definition: supporting hyperlinks out to external sources of information about collectors/agents.
    agentlink_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
-   agent_id bigint not null, 
-   type varchar(50), 
-   link varchar(900), 
+   agent_id bigint not null, -- The agent for which information can be found at the link.
+   type varchar(50),   -- The type of link.
+   link varchar(900),  -- An IRI to some source of information aobut and agent.
    isprimarytopicof boolean not null default true,  --  link can be represented as foaf:primarytopicof
-   text varchar(50)
+   text varchar(50)  -- The text to display for the link.
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1259,10 +1255,10 @@ alter table agentlink add constraint fk_alink_agentid_id foreign key (agent_id) 
 CREATE TABLE agentname (
    --  Definition:  multiple variant forms of names and names for a collector/agent
    agentname_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
-   agent_id bigint not null,  
-   type varchar(35) not null default 'full name', 
-   name  varchar(255),  
-   language varchar(6) default 'en_us', 
+   agent_id bigint not null,  -- The agent for which this is a name of.
+   type varchar(35) not null default 'full name',  -- The type of agent name. 
+   name  varchar(255),  -- The name of the agent.
+   language varchar(6) default 'en_us',  -- The language for this name.
    foreign key (type) references ctnametypes(type) on delete no action on update cascade,
    foreign key (agent_id)  references agent(agent_id)  on delete cascade  on update cascade
 )
@@ -1289,8 +1285,8 @@ create fulltext index ft_collectorname on agentname(name);
 
 CREATE TABLE ctagentnametype (
    -- Definition: controled vocabulary for agent name types.
-   type varchar(35) not null,
-   ordinal int
+   type varchar(35) not null,  -- The type of agent name (e.g. full name).
+   ordinal int  -- An order which can be used to present this name type in a picklist or by which a name can be selected.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1312,7 +1308,7 @@ CREATE TABLE agentrelation (
    from_agent_id bigint not null,  --  parent agent in this relationship 
    to_agent_id bigint not null,    --  child agent in this relationship 
    relationship varchar(50) not null,  -- nature of relationship from ctrelationshiptype 
-   notes varchar(900),
+   notes varchar(900),  -- Remarks concerning the relationship.
    foreign key (from_agent_id) references agent(agent_id) on delete cascade on update cascade,
    foreign key (to_agent_id) references agent(agent_id) on delete cascade on update cascade,
    foreign key (relationship) references ctrelationshiptype(relationship) on delete no action on update cascade

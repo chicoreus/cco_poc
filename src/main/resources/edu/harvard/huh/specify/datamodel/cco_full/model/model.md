@@ -16,6 +16,7 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
   * Definition: Participation of a system user in principles (associative entity relating systemusers to principals).
 * picklist 
   * Definition: describes the binding of controled vocabularies (picklistitem) to specific database fields.
+  * Remarks: picklists and codetables are implementations of controlled vocabularies.  Internationalization is provided for both.  Picklists do not support database level enforcement as foreign keys, codetables do.  The entities picklist and picklist item have built in support for varying the available controlled vocaubulary for an entity by scope (for example, different sets of appropriate values for life stage could be presented for botanical or ornithological material).  It is possible to add such support to a code table, but that would be a special case implementation per code table.
 * picklistitem 
   * Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
 * picklistitemint 
