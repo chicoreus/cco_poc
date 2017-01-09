@@ -197,6 +197,11 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
 * paleocontext 
   * Definition: a geological context from which some material was collected.
 
+# Entity Relationship Diagrams
+
+## Core (complex object) tables
+
+![E-R Diagram of core tables][erDiagramCore]
 
 # Cardinality Descriptions 
 
@@ -492,3 +497,4 @@ Each systemuser is one and only one agent.
 Each agent is also zero or one systemuser.  
 
 
+[erDiagramCore]: https://raw.githubusercontent.com/chicoreus/cco_poc/master/src/main/resources/edu/harvard/huh/specify/datamodel/cco_full/model/core_er_diagram.png "E-R Diagram of core tables."
