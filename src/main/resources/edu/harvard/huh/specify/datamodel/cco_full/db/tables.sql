@@ -2509,3 +2509,6 @@ insert into agentlink (agent_id, type, link, text) values (2,'wiki','https://en.
 -- Each agent is also zero or one systemuser
 create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
 alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
+
+--  Last liquibase changeset in this document was number 34.
+

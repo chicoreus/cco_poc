@@ -1,3 +1,5 @@
+-- changeset chicoreus:35 
+
 drop function if exists cco_full.extractFromString;
 
 -- Extract on element from a string that contains a delimited list of strings.  Limited to a 
@@ -182,4 +184,7 @@ BEGIN
 END |
 
 delimiter ;
+
+--  The last liquibase changeset in this document was number 35
+
 

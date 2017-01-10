@@ -57,7 +57,7 @@ config/liquibase_cco_full.properties is in .gitignore and should not be put unde
 
 #### For MariaDB/MySQL
 
-You must copy the config/liquibase_cco_full.properties.mysqltemplate to config/liquibase_cco_full.properties, and then add your credentials to the file.
+You *must* copy the config/liquibase_cco_full.properties.mysqltemplate to config/liquibase_cco_full.properties, and then add your credentials to the file.
 
     $ cp config/liquibase_cco_full.properties.mysqltemplate config/liquibase_cco_full.properties
     $ vim config/liquibase_cco_full.properties
@@ -73,7 +73,7 @@ You must copy the config/liquibase_cco_full.properties.mysqltemplate to config/l
 
 ## To build the database with Liquibase
 
-To run the project type '**mvn  clean install**' in the same directory that the pom.xml-file resides
+To run the project type '**mvn  clean install**' in the same directory that the pom.xml-file resides.  You must have first met the prerequisites listed above, including creating the database schema and having copied a template to config/liquibase_cco_full.properties and added your database credentials to that file.
 
     mvn clean install
 
