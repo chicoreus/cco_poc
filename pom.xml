@@ -25,9 +25,9 @@
     	<version>5.1.37</version>
     </dependency>
     <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.1-901-1.jdbc4</version>
     </dependency>
   </dependencies>
   <build>
@@ -35,7 +35,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                 <version>3.0.5</version> 	
+                 <version>3.5.3</version> 	
                 <executions>
                     <execution>
                         <phase>process-resources</phase>
@@ -50,4 +50,25 @@
             </plugin>
         </plugins>
   </build>
+ <developers>
+        <developer>
+            <id>ingierli</id>
+            <name>Ingimar Erlingsson</name>
+            <email>ingimar.erlingsson@nrm.se</email>
+            <organization>@nrm.se</organization>
+            <roles>
+              <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>ingierli</id>
+            <name>Paul J. Morris</name>
+            <email>mole@morris.net</email>
+            <organization>-</organization>
+            <roles>
+              <role>architect</role>
+              <role>developer</role>
+            </roles>
+        </developer> 
+ </developers>
 </project>

@@ -4,7 +4,7 @@
 -- General conventions: table and field names in all lower case, with underscore separators for names composed from multiple words.
 -- @author Paul J. Morris
 
--- changeset chicoreus:1
+-- changeset chicoreus:001
 -- Framework for access control.
 
 CREATE TABLE scope ( 
@@ -13,9 +13,8 @@ CREATE TABLE scope (
    name varchar(255) not null,  -- the name for the scope, that is the name of the 
    parent_scope_id bigint default null -- Normally expected that there might be two levels of scope limitations, institutions and departments.
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:002
 -- Force combination of name and parent to be unique.
 create unique index idx_scope_u_scopeparname on scope(name, parent_scope_id);
 alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
@@ -23,6 +22,7 @@ alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scop
 -- Each scope has zero to one parent scope
 -- Each scope is the parent for zero to many scopes
 
+-- changeset chicoreus:003
 CREATE TABLE principal (
    -- Definition: An entity to which some set of access rights may apply, typically a group. (e.g. a principal may be "data entry", a group having some set of access rights for data entry, which rights and how they are implemented is not specified here).
    principal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -30,14 +30,14 @@ CREATE TABLE principal (
    is_active boolean not null default TRUE, -- does this principal have any currently active rights 
    scope_id bigint not null -- the scope to which this principal extends (e.g. principal may be data entry, scope limits that to data entry in some collection.
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:004
 create unique index idx_principal_u_scopename on principal(principal_name, scope_id);
 alter table principal add constraint fk_principal_scopeid foreign key (scope_id) references scope(scope_id) on update cascade;
 -- Each principal has one and only one scope
 -- Each scope is for zero to many principals
 
+-- changeset chicoreus:005
 CREATE TABLE systemuser ( 
    -- Definition: A user of the system.
    systemuser_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -46,23 +46,23 @@ CREATE TABLE systemuser (
    is_enabled boolean default TRUE, -- Is login enabled for this user, user interfaces must prevent login unless this is true.
    last_login date,  -- Date of last login. 
    user_agent_id bigint not null -- The agent record for this user.  All users must also have agent records.
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:006
 create unique index idx_sysuser_u_username on systemuser (username);
 
+-- changeset chicoreus:007
 CREATE TABLE systemuserprincipal (
    -- Definition: Participation of a system user in principals (associative entity relating systemusers to principals).
    systemuserprincipal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    systemuser_id bigint not null,  -- The system user that is some principal.
    principal_id bigint not null  -- The principal that is some system user.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:008
 create unique index idx_syuspr_u_sysuserprincipal on systemuserprincipal(systemuser_id, principal_id);
 
+-- changeset chicoreus:009
 alter table systemuserprincipal add constraint fk_supr_sysuserid foreign key (systemuser_id) references systemuser(systemuser_id) on update cascade;
 alter table systemuserprincipal add constraint fk_supr_principalid foreign key (principal_id) references principal(principal_id) on update cascade;
 -- Each systemuser has zero to many principals
@@ -72,6 +72,7 @@ alter table systemuserprincipal add constraint fk_supr_principalid foreign key (
 -- Each systemuserprincipal is for one and only one systemuser
 -- Each systemuser has zero to many systemuserprincipals
 
+-- changeset chicoreus:010
 -- Example of composition of scope, principal, and systemuser to define permissions for users.
 insert into scope (scope_id, name) values (1,'Example Institution');
 insert into scope (scope_id, name,parent_scope_id) values (2,'Example Malacology Department',1);
@@ -87,8 +88,7 @@ insert into systemuser (systemuser_id, username, is_enabled,user_agent_id) value
 insert into systemuserprincipal (systemuser_id, principal_id) values (1,1);  -- example user has user permissions in example institution
 insert into systemuserprincipal (systemuser_id, principal_id) values (1,2);  -- example user has data entry permissions in example collection
 
--- changeset chicoreus:2
-
+-- changeset chicoreus:011
 -- Picklist handling, picklist/picklistitem handle bindings for specific fields, other ct (code tables) handle bindings for more generic attribute types. Includes internationalization - translations for picklist items.  
 
 CREATE TABLE picklist (
@@ -102,15 +102,15 @@ CREATE TABLE picklist (
   picklist_order_hint enum('ordinal','alphabetic','numeric') not null default 'ordinal', -- hint to the UI on what order to apply for the items in the picklist.
   picklist_type_hint enum('select','filtering','radio') not null default 'select' -- hint to the UI of what sort of control to use to render the picklist.
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:012
 CREATE INDEX idx_picklist_name ON picklist(name); 
 CREATE UNIQUE INDEX idx_picklist_u_tablefield ON picklist (table_name,field_name); -- one picklist for a field in a table, scope is per item.
 
 -- Each picklist applies to one and only one table and field 
 -- Each table and field may have zero to one picklist
 
+-- changeset chicoreus:013
 CREATE TABLE picklistitem (
   -- Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
   picklistitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -120,9 +120,8 @@ CREATE TABLE picklistitem (
   title varchar(64) not null,  -- option to show to users (e.g. 'yes', 'no', 'juvenile')
   value varchar(64) default null -- value to store in database (e.g. 1, 0, 'juvenile'), should be different from title only if field type is numeric (e.g. yes=1).
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:014
 ALTER TABLE picklistitem add constraint fk_pklstit_picklist_id foreign key (picklist_id) references picklist(picklist_id) on update cascade on delete cascade;  
 ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_id) references scope(scope_id) on update cascade;  
 -- Each picklist has zero to many picklistitems
@@ -130,7 +129,7 @@ ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_i
 -- Each ctpiclistitem is in zero to one scope (where zero scopes means the picklistitem applies in any scope)
 -- Each scope may apply to zero to many picklistitems
 
-
+-- changeset chicoreus:015
 CREATE TABLE picklistitemint (
     -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
     codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -139,15 +138,15 @@ CREATE TABLE picklistitemint (
     title_lang varchar(255),  -- translation of value to be shown to users into lang
     definition text  -- definition of name in lang
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:016
 ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (picklistitem_id) references picklistitem(picklistitem_id) on update cascade;  
 -- Each picklistitem has zero to many translations in picklistitemint
 -- Each picklistitemint is a translation for one and only one picklistitem 
 
 -- code tables (tables prefixed by ct and keyed on a varchar(255)) have different bindings and are internationalized separately from picklistitems (which key on a surrogate numeric primary key).
 
+-- changeset chicoreus:017
 CREATE TABLE codetableint ( 
     -- Definition: internationalization for code tables (where , allows use of a single language key in code tables, provides
     -- translations of that key and definitions for that key in an arbitrary number of languages.  Applies to code tables 
@@ -158,11 +157,8 @@ CREATE TABLE codetableint (
     key_name_lang varchar(255),  -- translation of name into lang
     definition_lang text  -- definition of key_name in lang
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
--- changeset chicoreus:3
-
+-- changeset chicoreus:018
 -- unit, identifiableitem, preparation, part, and catalogeditem are the core tables of the cco model.
 
 CREATE TABLE unit (
@@ -174,8 +170,6 @@ CREATE TABLE unit (
   collectingevent_id bigint not null,
   unit_remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
 -- Each unit was collected in one and only one collectingevent.
 -- Each collectingevent had zero to many units collected in it.
@@ -188,7 +182,7 @@ DEFAULT CHARSET=utf8;
 -- Each unit is composed of zero to many preparations (many to many unit-preparation relation with identifiable item as an associative entity)
 -- Each preparation is a physical preparation of one to many units 
 
--- changeset chicoreus:4
+-- changeset chicoreus:019
 CREATE TABLE identifiableitem (
   -- Definition: a component of a unit for which a scientific identification can be made.
   identifiableitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -199,13 +193,13 @@ CREATE TABLE identifiableitem (
   individual_count_modifier varchar(50),  -- e.g. +
   individual_count_units varchar(50)      -- e.g. valves
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:020
 ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
 -- Each identifiable item comes from one and only one unit
 -- Each unit has zero to many identifiable items
 
+-- changeset chicoreus:021
 -- To apply a pick list to a field, first define a picklist
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
 -- then define the items which comprise that pick list.
@@ -223,8 +217,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,2,'val
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'fragments','fragments');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'eggs','eggs');  -- could restrict to ornithology 
 
--- changeset chicoreus:5
-
+-- changeset chicoreus:022
 CREATE TABLE part ( 
   -- Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
   part_id bigint not null primary key auto_increment,  -- surrogae numeric primary key 
@@ -235,9 +228,8 @@ CREATE TABLE part (
   lotcount_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:023
 CREATE TABLE preparation (
   -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts.
   -- note: does not specify preparation history or conservation history, additional entities are needed for these.
@@ -254,9 +246,6 @@ CREATE TABLE preparation (
   storage_id bigint default null,  -- The current storage location for this preparation, if any.
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
-
 
 -- Each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
 -- Each preparation has zero or one parent preparation from which it was derived.
@@ -267,7 +256,7 @@ DEFAULT CHARSET=utf8;
 -- Each part is prepared as as one and only one preparation.
 -- Each preparation is composed of one to many parts
 
-
+-- changeset chicoreus:024
 ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
 
 --  aleternative relations not used:
@@ -282,8 +271,7 @@ ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id)
 -- Each preparation may be a preparation of zero or one identifiable item.
 -- Each identifiable item may be prepared into zero to many preparations.
 
-
--- changeset chicoreus:6
+-- changeset chicoreus:025
 CREATE TABLE identification (
    -- Definition: the application of a scientific name by some agent at some point in time to an identifiable item.  Includes both non-type and type identifications and metadata about validation of type status.
    identification_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -307,9 +295,8 @@ CREATE TABLE identification (
    taxon_concept_identifier varchar(900) default null,  -- a species number or other identifier of the taxon concept used in the identification
    remarks text  -- remarks concerning the identification 
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:026
 create unique index idx_ident_u_dateidentid on identification(date_determined_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_ident_u_dateverifid on identification(date_verified_eventdate_id);  --  Event dates should not be reused.
 
@@ -343,9 +330,8 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'on 
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'destroyed','destroyed'); -- preparation known to have been destroyed
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'lost','lost'); -- preparation lost
 
--- changeset chicoreus:7
+-- changeset chicoreus:027
 -- scientific name strings and taxonomic placement therof
-
 CREATE TABLE taxon (
    -- Definition: A scientific name string that may be curated to be linked to a nomeclatural act or to an authoriative record of a name usage.
    taxon_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -378,9 +364,8 @@ CREATE TABLE taxon (
    cites_status varchar(32) not null default 'none',  -- CITES listing for this taxon.
    remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:028
 -- Each identification involves one and only one taxon.
 -- Each taxon is used in zero to many identifications.
 
@@ -427,7 +412,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,3,'no
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,1,'ICZN','ICZN');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,2,'ICNafp','ICNafp');
 
-
+-- changeset chicoreus:029
 CREATE TABLE taxontreedef (
   -- Definition: Definition of a taxonomic tree
   taxontreedef_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -435,11 +420,11 @@ CREATE TABLE taxontreedef (
   name varchar(64) NOT NULL, -- name of the taxon tree
   remarks varchar(255) DEFAULT NULL
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:030
 insert into taxontreedef(taxontreedef_id, name) values (1,'Taxonomic Tree');
 
+-- changeset chicoreus:031
 CREATE TABLE taxontreedefitem (
   -- Definition: Definition of ranks within a taxon tree.  NOTE: Because Phylum is used for animals and Division for plants, and it is expected that both are defined in a single tree, the definitions form a map rather than a tree, so parentid and parentage aren't used.  A sort on values for rank_id is needed to find the next higher or next lower rank definition.
   taxontreedefitem_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -454,16 +439,15 @@ CREATE TABLE taxontreedefitem (
   taxontreedef_id bigint NOT NULL,  -- The taxon tree to which this rank definition applies
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:032
 alter table taxontreedefitem add constraint fk_ttdefitem_ttreedef foreign key (taxontreedef_id) references taxontreedef (taxontreedef_id) on update cascade;
-
 alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedefitem_id)  references taxontreedefitem (taxontreedefitem_id) on update cascade;
 
 -- Each taxontreedef is the tree for zero to many taxontreedefitem nodes.
 -- Each taxontreedefitem is a node in one and only one taxontreedef.
 
+-- changeset chicoreus:033
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5005, 'Nomenclatural Code','taxontreedefitem','nomenclatural_code');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'Any','Any');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,2,'ICZN','ICZN');
@@ -503,6 +487,7 @@ ALTER TABLE taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) r
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id) values (1,'Life','','','<strong>Life</strong>',null,'/1',1,1);
 
+-- changeset chicoreus:034
 CREATE TABLE journal (
   -- Definition: A serial work.
   journal_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -515,9 +500,8 @@ CREATE TABLE journal (
   preceding_journal_id bigint default null,
   succeeding_journal_id bigint default null
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:035
 alter table journal add constraint fk_journal_precedingid foreign key (preceding_journal_id) references journal (journal_id) on update cascade;
 alter table journal add constraint fk_journal_succeedingid foreign key (succeeding_journal_id) references journal (journal_id) on update cascade;
 
@@ -527,6 +511,7 @@ alter table journal add constraint fk_journal_succeedingid foreign key (succeedi
 -- Each journal is succeeded by zero or one succeeding journal.
 -- Each journal is the succeeding journal for zero to many journals.
 
+-- changeset chicoreus:036
 CREATE TABLE journaltitle (
   -- Definition: Titles of serial works.
   journaltitle_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -535,8 +520,8 @@ CREATE TABLE journaltitle (
   title_type varchar(50) not null  -- The kind of title.
 )
 ENGINE=myisam -- to ensure support for fulltext index
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:037
 create fulltext index ft_journaltitle on journaltitle(title);
 create unique index ft_journaltitlety on journaltitle(title_type,journal_id);
 
@@ -545,13 +530,13 @@ alter table journaltitle add constraint fk_journaltitle_jourid foreign key (jour
 -- Each journal has zero to many titles.
 -- Each title is for one and only one journal.
 
+-- changeset chicoreus:038
 CREATE TABLE ctjournaltitletype (
   -- Definition: controlled vocabulary for journal title types
   title_type varchar(50) not null primary key  -- Type of journal title.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:039
 alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title_type) references ctjournaltitletype (title_type) on update cascade;
 
 -- Each jouurnaltitle has one and only one (ct)journaltitletype.
@@ -563,6 +548,7 @@ insert into ctjournaltitletype (title_type) values ('abbreviation');
 insert into ctjournaltitletype (title_type) values ('title variant(2)');
 insert into ctjournaltitletype (title_type) values ('title variant(3)');
 
+-- changeset chicoreus:040
 CREATE TABLE journalidentifier (
   -- Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
   journalidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -570,21 +556,20 @@ CREATE TABLE journalidentifier (
   identifier varchar(255),     -- the identifier for this 
   identifier_type varchar(50) not null
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:041
 alter table journalidentifier add constraint fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
 -- Each journal has zero to many journalidenitifers.
--- Each journalidentifier is for one and only one journal.
+-- Each journalidentifier is for one and only one journal
 
+-- changeset chicoreus:042
 CREATE TABLE ctjournalidentifiertype (
   -- Definition: controlled vocabulary for journal identifier types.
   identifier_type varchar(50) not null primary key  -- Type of journal identifier.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:043
 insert into ctjournalidentifiertype (identifier_type) values ('ISSN');
 insert into ctjournalidentifiertype (identifier_type) values ('OCLC');  
 insert into ctjournalidentifiertype (identifier_type) values ('TL2');   -- For botanical journals
@@ -595,6 +580,7 @@ alter table journalidentifier add constraint fk_journalidentifiertype foreign ke
 -- Each journalidentifier has one and only one (ct)journalidentifiertype.
 -- Each (ct)journalidentifiertype is for zero to many journalsidentifiers.
 
+-- changeset chicoreus:044
 CREATE TABLE publication (
   -- Definition: A published work (e.g. a journal article, monograph, or book).
   publication_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -619,25 +605,25 @@ CREATE TABLE publication (
   remarks text,
   journal_id bigint default null,  -- The journal of which this publication is a part
   contained_in_publication_id bigint default null  -- A publication within which this publication is contained "In".
-) 
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:045
 alter table publication add constraint fk_publication_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 alter table publication add constraint fk_publication_containid foreign key (contained_in_publication_id) references publication (publication_id) on update cascade;
 
+-- changeset chicoreus:046
 CREATE TABLE ctpublicationtype ( 
    -- Definition: Controled vocabulary for publication types (e.g. books, journal articles, monographs, etc).  
    publication_type varchar(50) not null primary key
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:047
 alter table publication add constraint fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
 
 -- Each publication has one and only one publicationtype.
 -- Each publicationtype is for zero to many publications.
 
+-- changeset chicoreus:048
 CREATE TABLE publicationidentifier (
   -- Definition: A unique identifier for a publication.
   publicationidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
@@ -645,21 +631,20 @@ CREATE TABLE publicationidentifier (
   identifier varchar(255),     -- The identifier for this work.
   identifier_type varchar(50) not null  -- The type of identifier (e.g. ISBN).
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:049
 alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_id) references publication (publication_id) on update cascade;
 
 -- Each publication has zero to many publicationidenitifers.
 -- Each publicationidentifier is for one and only one publication.
 
+-- changeset chicoreus:050
 CREATE TABLE ctpublicationidentifiertype (
   -- Definition: controlled vocabulary for publication identifier types.
   identifier_type varchar(50) not null primary key  -- Type of publication identifier.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:051
 insert into ctpublicationidentifiertype (identifier_type) values ('ISBN');
 insert into ctpublicationidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 
@@ -668,6 +653,7 @@ insert into ctpublicationidentifiertype (identifier_type) values ('LC Control Nu
 
 alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) references ctpublicationidentifiertype (identifier_type) on update cascade;
 
+-- changeset chicoreus:052
 CREATE TABLE author (
   -- Definition: Names of authors and editors of publications.
   author_id bigint not null primary key auto_increment, -- Surrogate numeric primary key 
@@ -677,17 +663,15 @@ CREATE TABLE author (
   agentname_id bigint not null,  -- The name of the author/editor
   remarks text
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:053
 alter table author add constraint fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
-
 create unique index idx_u_author_puborderrole on author(publication_id, ordinal, role);
 
 -- Each publication has zero to many authors.
 -- Each author is for one and only one publication.
 
--- changeset chicoreus:8
+-- changeset chicoreus:054
 CREATE TABLE catalogeditem (
    -- Definition: the application of a catalog number out of some catalog number series.
    catalogeditem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -698,19 +682,16 @@ CREATE TABLE catalogeditem (
    accession_id bigint not null,  -- The accession in which ownership of this cataloged item was taken
    collection_id bigint not null  -- The collection within which this item is cataloged (catalog number series doesn't uniquely idenitify collections).
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:055
 create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_eventdate_id);  --  Event dates should not be reused.
-
-
 -- Each catalogeditem is the catalog record for zero or one identifiableitem.
 -- Each catalogeditem is the catalog record for zero or one preparation.
 
 -- Each preparation is cataloged as zero or one catalogeditem.
 -- Each identifiableitem is cataloged as zero or one catalogeditem.
 
--- changeset chicoreus:9
+-- changeset chicoreus:056
 CREATE TABLE materialsample(
    -- Definition: see darwincore.
    materialsample_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -719,12 +700,11 @@ CREATE TABLE materialsample(
    date_sampled_eventdate_id bigint,  -- the date the material sample was created
    sampled_by_agent_id bigint -- the agent who created the material sample
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:057
 create unique index idx_matsamp_u_datesampid on materialsample(date_sampled_eventdate_id);  --  Event dates should not be reused.
 
--- changeset chicoreus:10
+-- changeset chicoreus:058
 CREATE TABLE catalognumberseries ( 
    -- Definition: a sequence of numbers of codes assigned as catalog numbers to material held in a natural science collection.
    catalognumberseries_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -736,15 +716,13 @@ CREATE TABLE catalognumberseries (
    dataset_guid varchar(900), -- dwc:datasetId
    remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:059
 CREATE TABLE ctcatnumseriespolicy (
    policy varchar(50) not null primary key
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:060
 INSERT INTO ctcatnumseriespolicy (policy) values ('inactive, complete');  -- All known numbers in this series have been assigned and databased, issue no new numbers.
 INSERT INTO ctcatnumseriespolicy (policy) values ('inactive, manual');  -- Retrospective capture of existing cataloged items only, don't autoassign numbers.
 INSERT INTO ctcatnumseriespolicy (policy) values ('active, manual');  -- Active, assigning numbers for new material, allow users to provide the number.
@@ -755,14 +733,14 @@ ALTER TABLE catalognumberseries add constraint fk_cns_policy foreign key (policy
 -- Each catalogeditem is cataloged in one and only one catalognumberseries.
 -- Each catalognumberseries is used for zero to many catalogeditems.
 
+-- changeset chicoreus:061
 CREATE TABLE catnumseriescollection ( 
    catnumberseriescollection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    catalognumberseries_id bigint not null, 
    collection_id bigint not null -- the collection to which this catalog number series belongs
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:062
 create unique index idx_cnsc_u_catnumsercollid on catnumseriescollection(catalognumberseries_id, collection_id); 
 
 alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key (catalognumberseries_id) references catalognumberseries(catalognumberseries_id) on update cascade;
@@ -770,8 +748,7 @@ alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key
 -- Each catalognumberseries is used in zero to many collections (a catalog number series can span more than one collection).
 -- Each collection uses zero to many catalognumberseries.
 
--- changeset chicoreus:11
-
+-- changeset chicoreus:063
 CREATE TABLE collectingevent (
    -- Definition: an event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected, time at which a collector visited a locality and collected one or more collected units using a single sampling method.
   collectingevent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -788,20 +765,18 @@ CREATE TABLE collectingevent (
   platform varchar(900) default null, -- submersible, ROV, or other platform that this collecting event was made from
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
 -- Each unit was gathered in one and only one collectingevent.
 -- Each collectingevent results in the gathering of one to many units.
 -- Each collectingevent is at one and only one locality.
 -- Each locality is the site of zero to many collecting events.
 
+-- changeset chicoreus:064
 create unique index idx_colev_u_datecollid on collectingevent(date_collected_eventdate_id);  --  Event dates should not be reused.
 alter table unit add constraint fk_unit_colleventid foreign key (collectingevent_id) references collectingevent(collectingevent_id) on update cascade;
 alter table unit add constraint fk_unit_matsampid foreign key (materialsample_id) references materialsample(materialsample_id) on update cascade;
 
--- changeset chicoreus:12
-
+-- changeset chicoreus:065
 CREATE TABLE eventdate ( 
    -- Definition: a set of spans of time in which some event occurred.  NOTE: Cardinality is enforced as zero or one to one in each relation with unique indexes, and event dates should not be reused accross relations.
    eventdate_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -816,9 +791,8 @@ CREATE TABLE eventdate (
    end_datetime datetime default null, -- if start or end times are known
    start_end_fully_specifies boolean default true -- true if a single date or a continuous range.
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:066
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (6001, 'Date Type','eventdate','date_type');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,1,'date','date');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,2,'interval','interval');
@@ -838,16 +812,15 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,5,'da
 -- Each eventdate is the date verified for zero or one identification.
 -- Each identification has a date verified of zero or one eventdate.
 
--- changeset chicoreus:13
-
+-- changeset chicoreus:067
 ALTER TABLE collectingevent add constraint fk_colevent_cdate foreign key (date_collected_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE materialsample add constraint fk_matsamp_samdate foreign key (date_sampled_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE catalogeditem add constraint fk_catitem_catdate foreign key (date_cataloged_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE identification add constraint fk_ident_detdate foreign key (date_determined_eventdate_id) references eventdate (eventdate_id) on update cascade;
 ALTER TABLE identification add constraint fk_ident_verdate foreign key (date_verified_eventdate_id) references eventdate (eventdate_id) on update cascade;
 
--- changeset chicoreus:14
 
+-- changeset chicoreus:068
 CREATE TABLE locality (
   -- Definition: a location
   locality_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -873,17 +846,16 @@ CREATE TABLE locality (
   paleocontext_id bigint default null,  -- a geological context for this locality
   geopolitical_geography_id bigint default null,  -- the political context for this locality (country/primary division/secondary division/municipality)
   geographic_geography_id bigint default null -- the geographic context  for this locality (ocean, ocean region, ocean subregion, sea, continent, etc.),
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:069
 create index idx_local_name on locality(locality_name);
 create index idx_local_num on locality(locality_number);
 create index idx_local_shortname on locality(short_name);
 create index idx_local_namedplace on locality(named_place);
 create index idx_local_namedplacerel on locality(relation_to_named_place);
 
--- changeset chicoreus:15
+-- changeset chicoreus:070
 CREATE TABLE othernumber (
    --  Definition: a number or code associated with a specimen that is not known to be its catalog number
    othernumber_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -892,17 +864,15 @@ CREATE TABLE othernumber (
    number_type varchar(255) not null,  -- the type of other number (which may be unknown)
    number_value varchar(255) not null  -- the value of the other number
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
- 
+
 -- Each [arbitrary table (unit, identifieableitem, part, preparation)] has zero to many othernumbers.
 -- Each othernumber is for one and ony one [arbitrary table].
 
+-- changeset chicoreus:071
 CREATE UNIQUE INDEX idx_tablepk on othernumber(target_table, pk);
 
--- changeset chicoreus:16
+-- changeset chicoreus:072
 -- tables supporting transactions 
-
 CREATE TABLE transactionitem (
    -- Definition:  the participation of a preparation in a transaction (e.g. a loan).
    -- note: table is only minimally specified.
@@ -916,9 +886,8 @@ CREATE TABLE transactionitem (
    item_conditions text,  -- conditions applied to this item in this transaction, e.g. no destructive sampling
    disposition varchar(50)
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:073
 CREATE TABLE transactionc (
    -- Definition: a record of the movement of a set of specimens in or out of a collection, e.g. loan, outgoing gift, deaccession, borrow.
    transactionc_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -932,9 +901,8 @@ CREATE TABLE transactionc (
    conditions text,  -- any conditions upon the transaction 
    remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:074
 create unique index idx_coltra_u_numserscope on transactionc (trans_number, trans_number_series, scope_id);  
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name,read_only) VALUES (150, 'transaction type','coll_transaction','trans_type',1);  -- ennumerated subtypes of transactions corresponding to subtype tables.
@@ -957,7 +925,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,4,'clo
 
 ALTER TABLE transactionitem add constraint fk_transid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
-
+-- changeset chicoreus:075
 CREATE TABLE loan (
   -- Definition: A record of a returnable movement of a set of specimens out of a collection 
   loan_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -981,15 +949,15 @@ CREATE TABLE loan (
   destination_country_code varchar(3) not null,  -- The country code to which this loan is being sent.
   recipient_addressofrecord_id bigint DEFAULT NULL  -- address to which this loan was sent 
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each transaction(c) is zero or one loan.
 -- Each loan is one and only one transaction(c).
 
+-- changeset chicoreus:076
 create unique index idx_loan_transid on loan (transactionc_id);  
 ALTER TABLE loan add constraint fk_loantransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
+-- changeset chicoreus:077
 CREATE TABLE gift (
   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to another insitution
   gift_id bigint not null primary key AUTO_INCREMENT,
@@ -999,15 +967,15 @@ CREATE TABLE gift (
   destination_country_code varchar(3) not null,  -- The country code to which this gift is being sent.
   recipient_addressofrecord_id bigint DEFAULT NULL  -- address to which this gift was sent 
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each transaction(c) is zero or one gift.
 -- Each gift is one and only one transaction(c).
 
+-- changeset chicoreus:078
 create unique index idx_gift_transid on gift (transactionc_id);  
 ALTER TABLE gift add constraint fk_gifttransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
+-- changeset chicoreus:079
 CREATE TABLE borrow (
   -- Definition: Loan records kept by this insititution for material borrowed from other insititutions. 
   borrow_id bigint not null primary key AUTO_INCREMENT,
@@ -1034,15 +1002,15 @@ CREATE TABLE borrow (
   source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.
   sender_addressofrecord_id bigint DEFAULT NULL  -- address to which this borrow was expected to be returned.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each transaction(c) is zero or one borrow.
 -- Each borrow is one and only one transaction(c).
 
+-- changeset chicoreus:080
 create unique index idx_borrow_transid on borrow (transactionc_id);  
-ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade
 
+-- changeset chicoreus:081
 CREATE TABLE deaccession (
   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to outside of institutional care
   deaccession_id bigint not null primary key AUTO_INCREMENT,
@@ -1051,12 +1019,11 @@ CREATE TABLE deaccession (
   deaccession_date  date, -- the date on which the material was deaccessioned.
   deaccession_reason text -- reason why this material was deaccessioned
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each transaction(c) is zero or one deaccession.
 -- Each deacession is one and only one transaction(c).
 
+-- changeset chicoreus:082
 create unique index idx_deaccession_transid on deaccession (transactionc_id);  
 ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
@@ -1070,6 +1037,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,1,'ret
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
 
+-- changeset chicoreus:083
 CREATE TABLE transactionagent (
   -- Definition: the participation of an agent in a transaction in some defined role (e.g. the agent who gave approval for some loan).
   transactionagent_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -1078,8 +1046,6 @@ CREATE TABLE transactionagent (
   role varchar(50) not null,  -- the role of the agent in the transaction
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
 -- Each transactionagent participates in one and only one transaction(c).
 -- Each transaction(c) has zero to many marticipating transactionagents.
@@ -1087,11 +1053,10 @@ DEFAULT CHARSET=utf8;
 -- Each transactionagent is one and only one agent.
 -- Each agent may be zero to many transactionagents.
 
+-- changeset chicoreus:084
 create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
 
-
--- changeset chicoreus:17
-
+-- changeset chicoreus:085
 CREATE TABLE agent (
     -- Definition: a person or organization with some role related to natural science collections.
     agent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1121,9 +1086,8 @@ CREATE TABLE agent (
     endyearactive int,    -- Last year for a team, organization, or software agent. 
     living enum('Yes','No','?') not null default '?'
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:086
 -- when a picklist applies to a field defined with an enum, specify read_only=1 for the picklist.
 INSERT INTO picklist (picklist_id, name, table_name, field_name, read_only) VALUES (100, 'agent type','agent','agent_type',1);
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,1,'individual','individual');
@@ -1136,9 +1100,8 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,1,'Yes
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,2,'No','No');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,3,'?','?');
 
--- changeset chicoreus:18
+-- changeset chicoreus:087
 -- catching up on agent relations 
-
 ALTER TABLE catalogeditem add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
 ALTER TABLE taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
 ALTER TABLE taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
@@ -1154,17 +1117,16 @@ alter table transactionagent add constraint fk_ta_coltransid foreign key (transa
 -- Each catalogeditem has zero or one cataloging agent.
 -- Each agent cataloged zero to many catalogeditems.
 
--- changeset chicoreus:19
-
+-- changeset chicoreus:088
 -- add additional tables to support agents
-
 CREATE TABLE ctrelationshiptype (
    -- Definition: types of relationships between pairs of agents.
    relationship varchar(255) not null primary key,  -- The relationship read in the stored direction (e.g. child of)
    inverse varchar(50),  -- The inverse of the relationship (e.g. parent of).
    collective varchar(50)  -- The collective term for a set of participants in the relationship (e.g. children), suitable for use as a header for a list of relationhsips.
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:089
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('child of', 'parent of', 'children');
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('student of', 'teacher of', 'students');
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('spouse of', 'spouse of', 'married to');
@@ -1174,14 +1136,16 @@ INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('succ
 -- Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
 -- Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
 
+-- changeset chicoreus:090
 CREATE TABLE agentteam (
    --  Definition: Composition of agents into teams of individuals, such that both the team and the members can be agents.
    agentteam_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    team_agent_id bigint not null,  -- The agent which is the team.
    member_agent_id bigint not null,  -- The agent which is a member in the team.
    ordinal int  -- The position of the agent if the team represents an ordered list of agents.
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:091
 alter table agentteam add constraint fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
 alter table agentteam add constraint fk_agentt_membid foreign key (member_agent_id) references agent(agent_id) on delete no action on update cascade;
 
@@ -1192,6 +1156,7 @@ alter table agentteam add constraint fk_agentt_membid foreign key (member_agent_
 
 create unique index idx_agentteam_u_teammember on agentteam(team_agent_id, member_agent_id);
 
+-- changeset chicoreus:092
 CREATE TABLE agentnumberpattern (
    -- Definition: machine and human redable descriptions of collector number patterns
    agentnumber_pattern_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1204,14 +1169,14 @@ CREATE TABLE agentnumberpattern (
    integerincrement int, -- does number have an integer increment 
    notes text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:093
 alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent_id) references agent(agent_id) on delete cascade on update cascade;
 
 -- Each agent has zero to many agentnumberpatterns.
 -- Each agentnumberpattern is for one and only one agent.
 
+-- changeset chicoreus:094
 CREATE TABLE agentreference (
    --  Definition: Links to published references the content of which is about collectors/agents (e.g. obituaries, biographies).
    agentreference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1219,9 +1184,8 @@ CREATE TABLE agentreference (
    agent_id bigint not null,   -- The agent mentioned in the publication.
    reference_type varchar(50) -- The nature of the reference (e.g. obituary).
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:095
 create index idx_refagentlks_refagent on agentreference (publication_id, agent_id);
 
 -- Each agentreference is about one and only one agent.
@@ -1234,7 +1198,7 @@ alter table agentreference add constraint fk_aref_agent_id foreign key (agent_id
 
 alter table agentreference add constraint fk_aref_pubid_id foreign key (publication_id) references publication (publication_id) on delete cascade on update cascade;
 
-
+-- changeset chicoreus:096
 CREATE TABLE agentlink (
    -- Definition: supporting hyperlinks out to external sources of information about collectors/agents.
    agentlink_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
@@ -1243,15 +1207,15 @@ CREATE TABLE agentlink (
    link varchar(900),  -- An IRI to some source of information aobut and agent.
    isprimarytopicof boolean not null default true,  --  link can be represented as foaf:primarytopicof
    text varchar(50)  -- The text to display for the link.
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
 -- Each agent has zero to many agentlinks.
 -- Each agentlink is for one and only one agent.
 
+-- changeset chicoreus:097
 alter table agentlink add constraint fk_alink_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
+-- changeset chicoreus:098
 CREATE TABLE agentname (
    --  Definition:  multiple variant forms of names and names for a collector/agent
    agentname_id bigint primary key not null auto_increment, -- surrogate numeric primary key 
@@ -1263,8 +1227,8 @@ CREATE TABLE agentname (
    foreign key (agent_id)  references agent(agent_id)  on delete cascade  on update cascade
 )
 ENGINE=myisam -- to ensure support for fulltext index
-DEFAULT CHARSET=utf8;  
 
+-- changeset chicoreus:099
 create unique index idx_agentname_u_idtypename on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
 
 -- Can't create this foreign key relation, as agentname uses the myisam index for access to full text indexing.
@@ -1283,14 +1247,14 @@ alter table agentname add constraint fk_aname_agentid_id foreign key (agent_id) 
 
 create fulltext index ft_collectorname on agentname(name);
 
+-- changeset chicoreus:100
 CREATE TABLE ctagentnametype (
    -- Definition: controled vocabulary for agent name types.
    type varchar(35) not null,  -- The type of agent name (e.g. full name).
    ordinal int  -- An order which can be used to present this name type in a picklist or by which a name can be selected.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:101
 alter table agentname add constraint fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
 
 INSERT INTO ctagentnametype (type, ordinal) values ('full name',1);
@@ -1302,6 +1266,7 @@ INSERT INTO ctagentnametype (type, ordinal) values ('last name, initials',5);  -
 INSERT INTO ctagentnametype (type, ordinal) values ('first initials last',5);
 INSERT INTO ctagentnametype (type, ordinal) values ('first last',5);
 
+-- changeset chicoreus:102
 CREATE TABLE agentrelation (
    -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
    agentrelation_id bigint not null primary key auto_increment, -- surrogate numeric primary key 
@@ -1313,22 +1278,21 @@ CREATE TABLE agentrelation (
    foreign key (to_agent_id) references agent(agent_id) on delete cascade on update cascade,
    foreign key (relationship) references ctrelationshiptype(relationship) on delete no action on update cascade
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:103
 CREATE TABLE agentgeography (
   -- Definition:  relationships of agents with geographies (as collector, author, etc).
   agentgeography_id bigint NOT NULL primary key AUTO_INCREMENT,
   role varchar(64) DEFAULT NULL,  -- the role of the agent with respect to the geography (e.g. author on, collector in).
-  agent_id bigint NOT NULL,  -- the agent with a relattion to geography
+  agent_id bigint NOT NULL,  -- the agent with a relation to geography
   geography_id bigint NOT NULL,  -- the geography the agent has a relationship to.
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:104
 alter table agentgeography add constraint fk_agentgeog_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
 
+-- changeset chicoreus:105
 CREATE TABLE agentspeciality (
   -- Definition: Knowledge of particular agents in particular taxa.
   agentspeciality_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -1338,23 +1302,19 @@ CREATE TABLE agentspeciality (
   taxon_id bigint not null, -- the taxon that the agent has a speciality in.
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:106
 alter table agentspeciality add constraint fk_agentspeci_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
 alter table agentspeciality add constraint fk_agentspeci_taxonid foreign key (taxon_id) references taxon(taxon_id) on update cascade;
 
--- changeset chicoreus:20
-
-
+-- changeset chicoreus:107
 CREATE TABLE cttextattributetype (
     -- Definition: types of text attributes
     key_name varchar(255) not null primary key,  -- the name of the attribute type
     scope varchar(900)  -- list of tables to which this attribute type applies
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:108
 CREATE TABLE textattribute (
     -- Definition: a generic typed text attribute that can be added to any table.
     textattributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1363,9 +1323,7 @@ CREATE TABLE textattribute (
     for_table varchar(255) not null,  -- table to which this attribute is applied 
     primary_key_value bigint not null  -- row in for_table to which this attribute is applied
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
-
+-- changeset chicoreus:109
 ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
 
 -- Each cttextattribute type is the key for zero to many textattributes.
@@ -1374,6 +1332,7 @@ ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_n
 -- Each textattribute applies to one and only one row in a table (keyed on for_table and primary_key_value).
 -- Each row in a table has zero to many textattributes (keyed on for_table and primary_key_value).
 
+-- changeset chicoreus:110
 CREATE TABLE inference (
     -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
     inferenceid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1384,24 +1343,21 @@ CREATE TABLE inference (
     for_field varchar(255) not null,  -- field in the table to which this intepretation was applied
     primary_key_value bigint not null  -- row in for_table to which this interpretation was applied
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:111
 CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,primary_key_value); -- allow zero or one inferences for one field in one table.
 
 -- Each inference applies to one and only one tuple (keyed on for_table, for_field, and primary_key_value)
 -- Each tuple has zero or one inference (keyed on for_table, for_field, and primary_key_value)
 
--- changeset chicoreus:21
-
+-- changeset chicoreus:112
 CREATE TABLE ctnumericattributetype (
     -- Definition: types of numeric attributes
     name varchar(255) not null primary key,  -- the name of the attribute type
     scope varchar(900)  -- list of tables to which this attribute type applies
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:113
 CREATE TABLE numericattribute (
     -- Definition: a generic typed numeric attribute that can be added to any table.
     attributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1411,18 +1367,15 @@ CREATE TABLE numericattribute (
     for_table varchar(255) not null,
     primary_key_value bigint not null
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each numericattribute is of one and only one numericattrubutetype (ctnumericattributetype).
 -- Each ctnumericattributetype is the type of zero to many numeric attribtues.
 
+-- changeset chicoreus:114
 ALTER TABLE numericattribute add constraint fk_numericattributetype foreign key (name) references ctnumericattributetype (name) on update cascade; 
 
--- changeset chicoreus:22
-
+-- changeset chicoreus:115
 -- definitions for pick lists associated with biological attributes and generic attributes.  Table picklist's table/field binding can't be used for these.
-
 CREATE TABLE ctbiologicalattributetype (
     -- Definition: types of biological attributes 
     name varchar(255) not null primary key,   -- the name of the attribute type 
@@ -1430,48 +1383,46 @@ CREATE TABLE ctbiologicalattributetype (
     unitscodetable varchar(60),   -- code table to use to restrict allowed units 
     methodcodetable varchar(60)   -- code table to use to restrict allowed determination methods
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:116
 CREATE TABLE ctlengthunit (
   -- Definition: controled vocabulary for units of length.
   lengthunit varchar(255) not null primary key
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each ctbiologicalattributetype has zero or one length unit in ctlengthunit.
 -- Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.
 
+-- changeset chicoreus:117
 INSERT INTO ctlengthunit (lengthunit) VALUES ('meters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('centimeters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('milimeters');
 
+-- changeset chicoreus:118
 CREATE TABLE ctmassunit (
   -- Definition: controled vocabulary for units of mass.
   massunit varchar(255) not null primary key
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each ctbiologicalattributetype has zero or one mass unit in ctmassunit.
 -- Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.
 
+-- changeset chicoreus:119
 INSERT INTO ctmassunit (massunit) VALUES ('grams');
 INSERT INTO ctmassunit (massunit) VALUES ('kilograms');
 INSERT INTO ctmassunit (massunit) VALUES ('miligrams');
 
+-- changeset chicoreus:120
 CREATE TABLE ctageclass (
   -- Definition: controled vocabulary for age classes.
   ageclassid bigint not null primary key auto_increment, -- surrogate numeric primary key
   ageclass varchar(255) not null
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each ctbiologicalattributetype is an age class in ctageclass.
 -- Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.
 
+-- changeset chicoreus:121
 CREATE TABLE scopect (
   -- Definition: relationship between a key in a code table and a scope, the scope within which a code table applies.
   scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1479,20 +1430,23 @@ CREATE TABLE scopect (
   ct_table_name varchar(255) not null,  -- table in which key is found
   scope_id bigint not null  -- scope for the key 
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each {code table} has zero to many scopes in scopect.
 -- Each scopect provides the scope for zero to many {code table}.
 
+-- changeset chicoreus:122
 create unique index idx_scopect_u_keytable on scopect (key_name, ct_table_name, scope_id);
 
+-- changeset chicoreus:123
 alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) references scope (scope_id) on update cascade;
+
+
 -- Each scopect has one and only one scope
 -- Each scope applies to zero to many scope_id
 -- Each scopect is for one and only one key name in a code table
 -- Each key name in a code table has zero to many scope-codetable relations in codect
 
+-- changeset chicoreus:124
 INSERT INTO ctageclass (ageclass) VALUES ('unknown');
 INSERT INTO ctageclass (ageclass) VALUES ('adult');
 INSERT INTO ctageclass (ageclass) VALUES ('juvenile');
@@ -1578,6 +1532,7 @@ INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattri
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage coloration',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage description',5);
 
+-- changeset chicoreus:125
 CREATE TABLE biologicalattribute (
     -- Definition: a generic typed attribute for biological characteristics of organisms, 
     --  including metadata about who determined the attribute value when.
@@ -1591,20 +1546,17 @@ CREATE TABLE biologicalattribute (
     datedetermined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
     identifiableitem_id bigint not null  -- the identifiableitem to which this biological attribute applies
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:126
 ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
 
--- Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).
--- Each ctbiologicalattributetype is the type of zero to many biological attribtues.
+-- Each biologicalattribute is of one and only one biologicalattribute (ctbiologicalattributetype).
+-- Each ctbiologicalattributetype is the type of zero to many biological attributes.
 
--- changeset chicoreus:23
-
+-- changeset chicoreus:127
 -- Minimal audit log of who applied changes to what tables when, does not record the query that was fired.
 -- Significant change from Specify, replaces the createdByAgentId/modifiedByAgentId timestampCreated/timestampLastModified fields in each table.
 -- For more detailed audit logs, use a mechanism intrinsic to the database or a plugin.
-
 CREATE TABLE auditlog ( 
     -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  NOTE: Maintain with triggers on each table.
     auditlogid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1615,32 +1567,29 @@ CREATE TABLE auditlog (
     for_table varchar(255) not null,   -- table in which primary_key_value is found
     primary_key_value bigint not null  
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each {table} has zero to many auditlogs.
 -- Each audit log is for one and only one {table}.
-
+-- changeset chicoreus:128
 ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- Each auditlog records an action by one and noly one agent.
 -- Each agent made a change recorded in zero to many auditlogs.
 
--- changeset chicoreus:24
 
 -- Encumberances: means for masking visiblity of data, generalized from mechainism in Arctos.
-
+-- changeset chicoreus:129
 CREATE TABLE ctencumberancetype ( 
    -- Definition: controled vocabulary of encumberance types.
    encumberance_type varchar(50) not null primary key
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:130
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record'); -- Do not show the encumbered record (e.g. hide a media record).
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('redact locality');  -- Redact coordinate, georeference, elevation, and detailed locality information associated with this record.  
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record and relations'); -- Do not show the encumbered record or related data object (e.g. for a taxon, hide units that use this taxon in an identificaiton; or for a media record hide the meida record and associated unit data).
 
+-- changeset chicoreus:131
 CREATE TABLE encumberance (
    --  Definition: a description of the limitations on the visiblity of some data to the public.  All public presentations of data must observe the encumberance associated with that data.  
    encumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1651,8 +1600,6 @@ CREATE TABLE encumberance (
    make_visible_criteria text, -- description of criteria under which encumberance expires 
    visible_to_scope_id bigint -- scope to which the encumbered data should be visible
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each encumberance is of one and only one encumberancetype (ctencumberancetype).
 -- Each ctencumberancetype is the type of zero to many encumberances.
@@ -1663,10 +1610,12 @@ DEFAULT CHARSET=utf8;
 -- Each encumberance is visible to one and only one scope.
 -- Each scope provides the visiblility for zero to many encumberances.
 
+-- changeset chicoreus:132
 ALTER TABLE encumberance add constraint fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 ALTER TABLE encumberance add constraint fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
 ALTER TABLE encumberance add constraint fk_encvisiblescope foreign key (visible_to_scope_id) references scope (scope_id) on update cascade;
 
+-- changeset chicoreus:133
 CREATE TABLE catitemencumberance ( 
    -- Definition: relationship between encumberances and cataloged items
    catitemencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1674,13 +1623,12 @@ CREATE TABLE catitemencumberance (
    catalogeditemid bigint not null,
    tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each encumberance is zero to many catitemencumberances.
 -- Each catitemencumberance is one and only one encumberance.
 -- Each catitemencumberance is for one and only one catalogeditem.
 
+-- changeset chicoreus:134
 CREATE TABLE attachmentencumberance ( 
    -- Definition: relationship between encumberances and attachment (metadata records), encumberance of actual media objects needs to be handleed by a digital asset management system.
    attachmentencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1688,13 +1636,12 @@ CREATE TABLE attachmentencumberance (
    attachment_id bigint not null,
    tablescope varchar(900) default 'attachment'  -- tables this encumberance is expected to extend to.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each encumberance is zero to many attachmentencumberances.
 -- Each attachmentencumberance is one and only one encumberance.
 -- Each attachmentencumberance is for one and only one attachment.
 
+-- changeset chicoreus:135
 CREATE TABLE localityencumberance ( 
    -- Definition: relationship between encumberances and localities (e.g. for fossil localities where not publicizing the locality was a condition of collecting at that locality).   
    localityencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1702,13 +1649,12 @@ CREATE TABLE localityencumberance (
    locality_id bigint not null,
    tablescope varchar(900) default 'locality,coordinate,georeference,collectingevent,catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each encumberance is zero to many localityencumberances.
 -- Each localityencumberance is one and only one encumberance.
 -- Each localityencumberance is for one and only one locality.
 
+-- changeset chicoreus:136
 CREATE TABLE taxonencumberance ( 
    -- Definition: relationship between encumberances and taxa (e.g. for soon-to-be-described species, or for taxa which are controled substances).   
    taxonencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1716,15 +1662,12 @@ CREATE TABLE taxonencumberance (
    taxon_id bigint not null, -- The taxon to which an encumberance applies 
    tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each encumberance is zero to many taxonencumberances.
 -- Each taxonencumberance is one and only one encumberance.
 -- Each taxonencumberance is for one and only one taxon.
 
--- changeset chicoreus:25 
-
+-- changeset chicoreus:137
 CREATE TABLE address (
   -- Definition: an address for an agent
   address_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1746,14 +1689,13 @@ CREATE TABLE address (
   end_eventdate_id bigint default null,  -- date on which this address ceased to be used
   remarks text
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:138
 create unique index idx_address_u_startdateid on address(start_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_address_u_enddateid on address(end_eventdate_id);  --  Event dates should not be reused.
-
 CREATE INDEX idx_address_addagent_id on address(address_for_agent_id);
 
+-- changeset chicoreus:139
 ALTER TABLE address add constraint fk_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
 ALTER TABLE address add constraint fk_add_startevdate foreign key (start_eventdate_id) references eventdate (eventdate_id) on update cascade; 
 ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_id) references eventdate (eventdate_id) on update cascade; 
@@ -1767,17 +1709,18 @@ ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_i
 -- Each address ends use at zero or one eventdate.
 -- Each eventdate is the end for one and only one address.
 
+-- changeset chicoreus:140
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
    typename varchar(255) not null primary key 
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:141
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('phone');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('fax');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
 
+-- changeset chicoreus:142
 CREATE TABLE electronicaddress ( 
    -- Definition: email, phone, fax, or other electronic contact address for an agent
    electronicaddress_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1789,9 +1732,8 @@ CREATE TABLE electronicaddress (
    is_primary boolean default null,  -- true if this is the primary contact number/email for this agent 
    ordinal int(11) default null   -- sort order for electronic addresses
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:143
 ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (typename) references ctelectronicaddresstype (typename) on update cascade;
 ALTER TABLE electronicaddress add constraint fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
 
@@ -1803,6 +1745,7 @@ create unique index idx_eaddress_u_agentprimary on electronicaddress(address_for
 -- Each electronicaddress is for one and only one agent.
 -- Each agent has zero to many electronicaddresses.
 
+-- changeset chicoreus:144
 CREATE TABLE addressofrecord (
   -- Definition: an address to which something was sent, which must be preserved even as an agent changes their current address.
   addressofrecord_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1819,14 +1762,8 @@ CREATE TABLE addressofrecord (
   country varchar(255) default null, 
   remarks text
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
-ALTER TABLE addressofrecord add constraint fk_aor_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade ; 
-
--- Each addressofrecord is a preserved address for one and only one agent.
--- Each agent has zero to many preserved addressesofrecord.
-
+-- changeset chicoreus:145
 ALTER TABLE loan add constraint fk_loan_loanaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
 ALTER TABLE gift add constraint fk_gift_giftaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
 ALTER TABLE borrow add constraint fk_borrow_senderaddress foreign key (sender_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
@@ -1837,10 +1774,9 @@ ALTER TABLE borrow add constraint fk_borrow_senderaddress foreign key (sender_ad
 -- Each addressofrecord is the recipient address for zero to many gifts.
 -- Each borrow has zero or one sender addressofrecord.
 -- Each addressofrecord is the sender address for zero to many borrows.
-
--- changeset chicoreus:26 
+ 
 -- accession and closely related tables
-
+-- changeset chicoreus:146
 CREATE TABLE accession (
   -- Definition: a record of the acceptance of a set of collection objects into the care of an institution.
   --  forms a record of the legal ownership of the material, unless the material is being held for another organization
@@ -1859,10 +1795,9 @@ CREATE TABLE accession (
   addressofrecord_id bigint default null,  -- address from which this accession was recieved 
   repositoryagreementid bigint default null,  -- repository agreement which governs this accession
   scope_id bigint not null  -- the scope within which this accession record is visible
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:147
 create unique index idx_access_u_dateackid on accession(date_acknowledged_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_access_u_dateaccid on accession(date_accessioned_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_access_u_daterecid on accession(date_received_eventdate_id);  --  Event dates should not be reused.
@@ -1877,8 +1812,10 @@ create unique index idx_access_u_daterecid on accession(date_received_eventdate_
 -- Each accession is visible within one and only one scope.
 -- Each scope provides visibility for zero to many accessions.
 
+-- changeset chicoreus:148
 alter table accession add constraint fk_acc_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
 
+-- changeset chicoreus:149
 CREATE TABLE repositoryagreement (
   -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
   repositoryagreementid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1892,8 +1829,6 @@ CREATE TABLE repositoryagreement (
   scope_id bigint not null,  -- the scope within which this repository agreement record is visible
   addressofrecord_id bigint default null  -- address of record for the agent with whom this repository agreement is with at the time of the agreement.
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each accession is under zero to one repositoryagreement.
 -- Each repositoryagreement applies to zero to many accessions.
@@ -1901,6 +1836,7 @@ DEFAULT CHARSET=utf8;
 -- Each accession has zero to one source addressofrecord.
 -- Each addressofrecord is the source for zero or one accession.
 
+-- changeset chicoreus:150
 ALTER TABLE accession add constraint fk_acc_repositoryagreement foreign key (repositoryagreementid) references repositoryagreement (repositoryagreementid) on update cascade; 
 ALTER TABLE accession add constraint fk_acc_addresofrecrod foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
 
@@ -1917,6 +1853,7 @@ ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key
 -- Each repositoryagreement has zero to one addressofrecord.
 -- Each addressofrecord is for for zero or one repositoryagreeement.
 
+-- changeset chicoreus:151
 CREATE TABLE accessionagent (
   -- Definition: The participation of an agent in an accession in some defined role (e.g. the agent who approved some accession).
   accessionagent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1924,10 +1861,9 @@ CREATE TABLE accessionagent (
   accession_id bigint not null,
   agent_id bigint not null,
   remarks text
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:152
 ALTER TABLE accessionagent add constraint fk_accessionagent foreign key (agent_id) references agent (agent_id) on update cascade; 
 ALTER TABLE accessionagent add constraint fk_accessionforagent foreign key (accession_id) references accession (accession_id) on update cascade on delete cascade; 
 
@@ -1939,10 +1875,8 @@ CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role,
 -- Each accessionagent is one and only one agent.
 -- Each agent is zero to many accessionagents.
 
--- changeset chicoreus:27
-
+-- changeset chicoreus:153
 -- attachments
-
 CREATE TABLE attachment (
   -- Definition: Metadata concerning a media object that can be attached to a data object
   attachment_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1960,9 +1894,8 @@ CREATE TABLE attachment (
   origfilename text not null,
   remarks text
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:154
 CREATE TABLE attachmentrelation (
   -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
   attachmentrelationid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1971,10 +1904,9 @@ CREATE TABLE attachmentrelation (
   primary_key_value bigint not null,
   ordinal int(11) not null,
   remarks text
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:155
 alter table attachmentrelation add constraint fk_attrel_attid foreign key (attachment_id) references attachment (attachment_id) on update cascade;
 
 -- Each attachmentrelation involves one and only one attachment.
@@ -1983,9 +1915,7 @@ alter table attachmentrelation add constraint fk_attrel_attid foreign key (attac
 -- Each attachmentrelation involves one and only one {arbitrary table}.
 -- Each {aribtrary table} has zero to many attachmentrelations.
 
--- changeset chicoreus:28
-
-
+-- changeset chicoreus:156
 CREATE TABLE collector (
   -- Definition: The relation of an agent, possibly with additional un-named agents, to a collecting event (supports a workflow where collectors are transcribed verbatim and then subsequently parsed into known agent teams.
   collector_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1995,9 +1925,8 @@ CREATE TABLE collector (
   etal text, -- unnamed individuals and groups that were part of the collecting team.  examples: and students; and native guide.
   remarks text
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:157
 ALTER TABLE collector add constraint fk_col_collectoragent foreign key (agent_id) references agent (agent_id) on update cascade;
 ALTER TABLE collector add constraint fk_col_pricollectoragent foreign key (primary_collector_agent_id) references agent (agent_id) on update cascade;
 ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collector_id) references collector (collector_id) on update cascade;
@@ -2008,21 +1937,18 @@ ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collecto
 -- Each collector collected in zero to many collectingevents.
 -- Each collectingevent had one and only one collector (handle teams by verbatim collector and etal, then parse into collectoragent as a group with etal).
 
-
--- changeset chicoreus:29
 -- tables supporting coordinates and georeferences
-
+-- changeset chicoreus:158
 CREATE TABLE ctcoordinatetype ( 
    -- Definition: Controled vocabulary of vocabulary types.
    coordinatetype varchar(50) not null primary key,  -- allowed coordinate types for table coordinate
    fieldprefix varchar(5) not null  -- prefix for field names that apply for this coordinate type
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each coordinate is of one and only one (ct)coordinatetype.
 -- Each (ct)coordintetype is the type for zero to many coordinates.
 
+-- changeset chicoreus:159
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('utm/ups','utm');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('decimal degrees','ddg');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees minutes seconds','dms');
@@ -2033,6 +1959,7 @@ INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('rikets nät,
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('swiss grid','xy');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('public land survey system (township section range)','plss');
 
+-- changeset chicoreus:160
 CREATE TABLE coordinate ( 
    -- Definition: a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about original coordinates, separate from subsequent georeferences.
    coordinateid bigint not null primary key auto_increment, -- surrogate numeric primary key  
@@ -2075,14 +2002,14 @@ CREATE TABLE coordinate (
    plsssection int default null, -- plss section number
    plsssectionpart varchar(50) default null -- plss section subdivisions (e.g. sw 1/4; sw 1/4 ne 1/4).
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:161
 create unique index idx_coord_u_typelocalityid on coordinate(coordinatetype, locality_id);  --  Localities are limited to one coordinate of a given type.
 
 -- Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type]
 -- Each coordinate is for one and only one locality.
 
+-- changeset chicoreus:162
 CREATE TABLE georeference (
   -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined, interpreted from textual locality and coordinate information.
   georeferenceid bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2123,9 +2050,8 @@ CREATE TABLE georeference (
   verbatim_longitude varchar(50) default null,
   remarks text
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:163
 create unique index idx_georef_u_dategeorefid on georeference(georeference_eventdate_id);  --  Event dates should not be reused.
 
 ALTER TABLE georeference add constraint fk_gr_byagent foreign key (by_agent_id) references agent (agent_id) on update cascade;
@@ -2141,9 +2067,9 @@ ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeferen
 -- Each georeference was by one and only one agent.
 -- Each agent made zero to many georeferences.
 
--- changeset chicoreus:30
--- tables supporting geography
 
+-- tables supporting geography
+-- changeset chicoreus:164
 CREATE TABLE geography (
   -- Definition: heriarchically nested higher geographical entities 
   geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2165,10 +2091,9 @@ CREATE TABLE geography (
   is_current boolean default null, -- is a current geopolitical entity 
   geographytreedef_id bigint not null,  -- which geography tree is this geography placed in    ??Redundant??
   geographytreedefitem_id bigint not null -- which node definition applies to this node.
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
+)
 
+-- changeset chicoreus:165
 create index idx_geog_name on geography(name);
 create index idx_geog_fullname on geography(fullname(200));
 
@@ -2180,6 +2105,7 @@ alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id
 -- Each geography is the political container for zero to many localities.
 -- Each geography is the geographic container for zero to many localities.
 
+-- changeset chicoreus:166
 CREATE TABLE geographytreedef (
   -- Definition: Definition of a geography tree
   geographytreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2187,11 +2113,11 @@ CREATE TABLE geographytreedef (
   name varchar(64) not null,  -- name of the geographic tree
   remarks text  
 ) 
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:167
 INSERT INTO geographytreedef (geographytreedef_id,fullname_direction,name) VALUES (1,-1,'geopolitical heirarchy');
 
+-- changeset chicoreus:168
 CREATE TABLE geographytreedefitem (
   -- Definition: Definition of a node in a geography tree
   geographytreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2206,9 +2132,8 @@ CREATE TABLE geographytreedefitem (
   geographytreedef_id bigint not null,
   remarks text
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:169
 alter table geographytreedefitem add constraint fk_geogtrdi_treeid foreign key (geographytreedef_id) references geographytreedef(geographytreedef_id) on update cascade;
 
 alter table geography add constraint fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
@@ -2258,8 +2183,7 @@ alter table agentgeography add constraint fk_agentgeog_geogid foreign key (geogr
 -- Each geography is defined by one and only one geographytreedefitem.
 -- Each geographytreedefitem defines zero to many taxa.
 
--- changeset chicoreus:31
-
+-- changeset chicoreus:170
 CREATE TABLE collection (
   -- Definition: a managed set of collection objects that corresponds to an entity to which a dwc:collectionId is assigned.  Collection manages metadata about the collection, scope is for access control, and catalognumberseries links to sets of data within a collection.
   collection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2276,9 +2200,8 @@ CREATE TABLE collection (
   remarks text,
   website_iri varchar(255) default null  -- website providing more information about this collection
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:171
 create index idx_coll_name on collection(collection_name(200));
 
 ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (collection_id) references collection(collection_id);
@@ -2290,9 +2213,8 @@ ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (co
 -- Each collection falls into zero or one scope.
 -- Each scope convers zero to many collections.
 
--- changeset chicoreus:32
-
 -- storage and changes to preparation
+-- changeset chicoreus:172
 CREATE TABLE storagetreedef (
   -- Definition: Definitions for storage trees 
   storagetreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2301,9 +2223,8 @@ CREATE TABLE storagetreedef (
   remarks text,
   disciplineid bigint  -- scope of the tree
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:173
 CREATE TABLE storagetreedefitem (
   -- Definition: definition of ranks within a storage heirarchy 
   storagetreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2317,14 +2238,14 @@ CREATE TABLE storagetreedefitem (
   text_before varchar(64) default null,
   remarks text
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:174
 CREATE INDEX idx_stdi_name ON storagetreedefitem(name);
 CREATE INDEX idx_stdi_rank ON storagetreedefitem(rank_id);
 
 ALTER TABLE storagetreedefitem add constraint fk_stdi_treeid foreign key (storagetreedef_id) references storagetreedef(storagetreedef_id);
 
+-- changeset chicoreus:175
 CREATE TABLE storage (
   -- Definition: location where zero or more preparations are stored 
   storage_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2339,9 +2260,8 @@ CREATE TABLE storage (
   storagetreedefitem_id bigint not null,  -- node definition that applies to this storage 
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:176
 CREATE INDEX idx_storage_parentid ON storage(parent_id);
 CREATE INDEX idx_storage_name ON storage(name);
 ALTER TABLE storage add constraint fk_stor_parent_id foreign key (parent_id) references storage (storage_id) on update cascade;
@@ -2364,9 +2284,9 @@ ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_i
 -- Each storage has zero or one parent storage.
 -- Each storage is the parent for zero to many other storages.
 
--- changeset chicoreus:33
 -- a model for geological context 
 
+-- changeset chicoreus:177
 CREATE TABLE geologictimeperiod (
   -- Definition: a geological time, rock, or rock/time unit.
   geologictimeperiod_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2381,15 +2301,15 @@ CREATE TABLE geologictimeperiod (
   standard varchar(64) default null,
   geologictimeperiodtreedefitem_id int(11) not null  -- the definition for this node 
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:178
 alter table geologictimeperiod add constraint fk_geoltp_parent_id foreign key (parent_id) references geologictimeperiod (geologictimeperiod_id);
 alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key (accepted_id) references geologictimeperiod (geologictimeperiod_id);
 
 -- Each geologictimeperiod has zero or one parent geologictimeperiod. 
 -- Each geologictimeperiod is the parent for zero to many geologictimeperiods.
 
+-- changeset chicoreus:179
 CREATE TABLE geologictimeperiodtreedef (
   -- Definition: geologic rock/time unit trees
   geologictimeperiodtreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2397,15 +2317,15 @@ CREATE TABLE geologictimeperiodtreedef (
   name varchar(64) not null,  -- name 
   remarks text
 )
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:180
 CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON geologictimeperiodtreedef (name);
 
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_direction,name) VALUES (1,-1,"Geochronologic tree");
 
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
 
+-- changeset chicoreus:181
 CREATE TABLE geologictimeperiodtreedefitem (
   -- Definition: a definition of a rank in a geologic rock/time unit tree
   geologictimeperiodtreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2419,8 +2339,6 @@ CREATE TABLE geologictimeperiodtreedefitem (
   geologictimeperiodtreedef_id int(11) not null,
   remarks text  -- remarks concerning the item definition
 ) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
 -- Each geologictimeperiodtreedef is the tree for zero to many geologictimeperiodtreedefitem nodes.
 -- Each geologictimeperiodtreedefitem is a node in one and only one geologictimeperiodtreedef.
@@ -2428,7 +2346,8 @@ DEFAULT CHARSET=utf8;
 -- Each geologictimeperiod is defined by one and only one geologictimeperiodtreedefitem.
 -- Each geologictimeperiodtreedefitem defines zero to many taxa.
 
--- Ranks in geochronologic (geological time, rather than chronostratigraphic rock/time) heirarchy
+-- Ranks in geochronologic (geological time, rather than chronostratigraphic rock/time) hierarchy
+-- changeset chicoreus:182
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (1,1,':',0,'Eon',100);
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (2,1,':',1,'Era',200);
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (3,1,':',1,'Period',300);
@@ -2445,6 +2364,7 @@ insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geo
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (104, 2,':',0,'Bed',500);
 insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
+-- changeset chicoreus:183
 CREATE TABLE paleocontext (
   -- Definition: a geological context from which some material was collected.
   paleocontext_id bigint NOT NULL primary key AUTO_INCREMENT,
@@ -2460,14 +2380,13 @@ CREATE TABLE paleocontext (
   latest_geochronologic_unit_id bigint DEFAULT NULL,   -- latest geochronological unit for this paleocontext
   lithostratigraphic_unit_id bigint DEFAULT NULL  -- lithological unit for paleocontext 
 )
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:184
 alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
 alter table paleocontext add constraint fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
 alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
 
-
+-- changeset chicoreus:185
 alter table locality add constraint fk_local_paleocontext foreign key (paleocontext_id) references paleocontext (paleocontext_id) on update cascade;
 alter table collectingevent add constraint fk_colev_paleoid foreign key (paleocontext_id) references paleocontext(paleocontext_id) on update cascade;
 
@@ -2485,12 +2404,11 @@ alter table collectingevent add constraint fk_colev_paleoid foreign key (paleoco
 -- Each geologictimeperiod is the lower bound for zero to many paleocontexts.
 -- Each geologictimeperiod is the upper bound for zero to many paleocontexts.
 
--- changeset chicoreus:34
 -- additional accumulated foreign key constraints
 
+-- changeset chicoreus:186
 alter table collectingevent add constraint fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
 alter table collectingevent add constraint fk_colev_eventdateid foreign key (date_collected_eventdate_id) references eventdate(eventdate_id) on update cascade;
-
 
 -- Some core sample data: 
 insert into agent(agent_id, preferred_name_string) values (1,'Example User');
@@ -2504,11 +2422,8 @@ insert into agentname(agent_id, type, name) values (2,'standard abbreviation','L
 
 insert into agentlink (agent_id, type, link, text) values (2,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry');
 
-
 -- Each systemuser is one and only one agent
 -- Each agent is also zero or one systemuser
 create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
 alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
-
---  Last liquibase changeset in this document was number 34.
 
