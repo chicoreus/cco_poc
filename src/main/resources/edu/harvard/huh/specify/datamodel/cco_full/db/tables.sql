@@ -231,8 +231,8 @@ CREATE TABLE part (
   identifiableitem_id bigint not null,  -- the identification of the organism that this part is of
   preparation_id bigint not null, -- the preparation this part is in/on/is
   part_name varchar(50) not null, -- the name of this part
-  lotcount int(11) default 1,     -- the number of items comprising this part (e.g. number of specimens in a lot)
-  lotcount_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
+  lot_count int(11) default 1,     -- the number of items comprising this part (e.g. number of specimens in a lot)
+  lot_count_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
   remarks text
 )
 ENGINE=InnoDB
@@ -443,9 +443,9 @@ insert into taxontreedef(taxontreedef_id, name) values (1,'Taxonomic Tree');
 CREATE TABLE taxontreedefitem (
   -- Definition: Definition of ranks within a taxon tree.  NOTE: Because Phylum is used for animals and Division for plants, and it is expected that both are defined in a single tree, the definitions form a map rather than a tree, so parentid and parentage aren't used.  A sort on values for rank_id is needed to find the next higher or next lower rank definition.
   taxontreedefitem_id bigint NOT NULL primary key AUTO_INCREMENT,
-  fullname_separator varchar(32) not null default ' ', -- separator to use between this element and any lower rank taxon when assembling full name
+  full_name_separator varchar(32) not null default ' ', -- separator to use between this element and any lower rank taxon when assembling full name
   is_enforced boolean not null default FALSE, -- Must be included in tree for any node at this or lower (larger rank_id) rank
-  is_in_fullname boolean not null DEFAULT FALSE,  -- Must be included in full name for any node at this 
+  is_in_full_name boolean not null DEFAULT FALSE,  -- Must be included in full name for any node at this 
   name varchar(64) NOT NULL,  -- the name of this rank
   nomenclatural_code varchar(20) not null default 'Any',  -- the nomenclatural code in which this rank is used
   rank_id int(11) NOT NULL,  -- Root of tree is zero.  Numerically higher ranks are lower in the taxonomic tree.  
@@ -469,33 +469,33 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'An
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,2,'ICZN','ICZN');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,3,'ICNafp','ICNafp');
 
-insert into taxontreedefitem (taxontreedefitem_id, rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (1,0, 'Life', 1, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (10, 'Kingdom', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (20, 'Major Group', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,nomenclatural_code) values (30, 'Phylum', 0, 0,1,'ICZN');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,nomenclatural_code) values (30, 'Division', 0, 0,1,'ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (50, 'Superclass', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (60, 'Class', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (70, 'Subclass', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (90, 'Superorder', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (100, 'Order', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (110, 'Suborder', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (120, 'Infraorder', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (130, 'Superfamily', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (140, 'Family', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (150, 'Subfamily', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (160, 'Tribe', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (180, 'Genus', 1, 1,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before,text_after) values (190, 'Subgenus', 0, 0,1,'(',')');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (220, 'Species', 1, 1,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id) values (230, 'Subspecies', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before) values (240, 'Variety', 0, 0,1,'var.');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before,nomenclatural_code) values (250, 'Subvariety', 0, 0,1,'sub var.','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before) values (260, 'Forma', 0, 0,1,'f.');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before,nomenclatural_code) values (270, 'Subforma', 0, 0,1,'sub f.','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before,nomenclatural_code) values (280, 'Lusus', 0, 0,1,'lusus','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before,nomenclatural_code) values (290, 'Modification', 0, 0,1,'mod.','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_fullname,taxontreedef_id,text_before,nomenclatural_code) values (300, 'Prolus', 0, 0,1,'prolus','ICNafp');
+insert into taxontreedefitem (taxontreedefitem_id, rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (1,0, 'Life', 1, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (10, 'Kingdom', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (20, 'Major Group', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,nomenclatural_code) values (30, 'Phylum', 0, 0,1,'ICZN');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,nomenclatural_code) values (30, 'Division', 0, 0,1,'ICNafp');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (50, 'Superclass', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (60, 'Class', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (70, 'Subclass', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (90, 'Superorder', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (100, 'Order', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (110, 'Suborder', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (120, 'Infraorder', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (130, 'Superfamily', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (140, 'Family', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (150, 'Subfamily', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (160, 'Tribe', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (180, 'Genus', 1, 1,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,text_after) values (190, 'Subgenus', 0, 0,1,'(',')');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (220, 'Species', 1, 1,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (230, 'Subspecies', 0, 0,1);
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before) values (240, 'Variety', 0, 0,1,'var.');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (250, 'Subvariety', 0, 0,1,'sub var.','ICNafp');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before) values (260, 'Forma', 0, 0,1,'f.');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (270, 'Subforma', 0, 0,1,'sub f.','ICNafp');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (280, 'Lusus', 0, 0,1,'lusus','ICNafp');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (290, 'Modification', 0, 0,1,'mod.','ICNafp');
+insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (300, 'Prolus', 0, 0,1,'prolus','ICNafp');
 
 ALTER TABLE identification add constraint fk_idtaxon foreign key (taxon_id) references taxon (taxon_id) on update cascade;
 ALTER TABLE taxon add constraint fk_idparent foreign key (parent_id) references taxon (taxon_id) on update cascade;
@@ -2148,7 +2148,7 @@ CREATE TABLE geography (
   -- Definition: heriarchically nested higher geographical entities 
   geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(255) not null,
-  fullname varchar(900) default null,
+  full_name varchar(900) default null,
   rank_id int(11) not null,
   parent_id bigint default null,
   parentage varchar(2000) not null, -- the path from the root of the tree to this geography node
@@ -2170,7 +2170,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 create index idx_geog_name on geography(name);
-create index idx_geog_fullname on geography(fullname(200));
+create index idx_geog_full_name on geography(full_name(200));
 
 alter table geography add constraint fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
 alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
@@ -2183,21 +2183,21 @@ alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id
 CREATE TABLE geographytreedef (
   -- Definition: Definition of a geography tree
   geographytreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  fullname_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
+  full_name_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
   name varchar(64) not null,  -- name of the geographic tree
   remarks text  
 ) 
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-INSERT INTO geographytreedef (geographytreedef_id,fullname_direction,name) VALUES (1,-1,'geopolitical heirarchy');
+INSERT INTO geographytreedef (geographytreedef_id,full_name_direction,name) VALUES (1,-1,'geopolitical heirarchy');
 
 CREATE TABLE geographytreedefitem (
   -- Definition: Definition of a node in a geography tree
   geographytreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   full_name_separator varchar(32) default null,
   is_enforced boolean default null,
-  is_in_fullname boolean default null,
+  is_in_full_name boolean default null,
   name varchar(64) not null,
   rank_id int(11) not null,   
   text_after varchar(64) default null,
@@ -2213,39 +2213,39 @@ alter table geographytreedefitem add constraint fk_geogtrdi_treeid foreign key (
 
 alter table geography add constraint fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
 
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (1,', ',1,0,'root',0,null,null,null,'root',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (2,', ',0,0,'continent',100,null,null,null,'continent',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (3,', ',0,0,'region',150,null,null,null,'region',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (4,', ',0,0,'island group',160,null,null,null,'island group',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (5,', ',0,0,'island',170,null,null,null,'island',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (6,':' ,0,1,'country',200,null,null,null,'country',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (7,', ',0,0,'land',210,null,null,null,'land',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (8,', ',0,0,'territory',220,null,null,null,'territory',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (9,', ',0,0,'subcontinent island(s)',230,null,null,null,'subcontinent island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (10,', ',0,0,'continent subregion',250,null,null,null,'continent subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (11,', ',0,0,'country subregion',260,null,null,null,'country subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (12,', ',0,0,'straights',270,null,null,null,'straights',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (13,', ',0,0,'subcountry island(s)',280,null,null,null,'subcountry island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (14,':' ,0,1,'state/province',300,null,null,null,'state/province',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (15,', ',0,0,'peninsula',310,null,null,null,'peninsula',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (16,', ',0,0,'substate island(s)',320,null,null,null,'substate island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (19,', ',0,0,'state subregion',380,null,null,null,'state subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (20,', ',0,1,'county',400,null,null,null,'county',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (21,', ',0,0,'mountain(s)',410,null,null,null,'mountain(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (22,', ',0,0,'river',420,null,null,null,'river',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (23,', ',0,0,'forest',430,null,null,null,'forest',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (24,', ',0,0,'valley',440,null,null,null,'valley',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (25,', ',0,0,'island(s)',450,null,null,null,'island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (26,', ',0,0,'hill(s)',460,null,null,null,'hill(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (27,', ',0,0,'canyon',470,null,null,null,'canyon',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (28,', ',0,0,'lake',480,null,null,null,'lake',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (29,', ',0,1,'county subregion',490,null,null,null,'county subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (30,', ',0,1,'muncipality',500,null,null,null,'muncipality',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (31,', ',0,0,'city subregion',510,null,null,null,'city subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (32,':' ,0,1,'ocean',100,null,null,null,'ocean',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (33,':' ,0,1,'ocean region',150,null,null,null,'ocean region',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (34,', ',0,0,'ocean subregion',250,null,null,null,'ocean subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_fullname, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (35,', ',0,0,'exclusive economic zone',260,null,null,null,'maritime eez',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (1,', ',1,0,'root',0,null,null,null,'root',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (2,', ',0,0,'continent',100,null,null,null,'continent',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (3,', ',0,0,'region',150,null,null,null,'region',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (4,', ',0,0,'island group',160,null,null,null,'island group',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (5,', ',0,0,'island',170,null,null,null,'island',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (6,':' ,0,1,'country',200,null,null,null,'country',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (7,', ',0,0,'land',210,null,null,null,'land',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (8,', ',0,0,'territory',220,null,null,null,'territory',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (9,', ',0,0,'subcontinent island(s)',230,null,null,null,'subcontinent island(s)',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (10,', ',0,0,'continent subregion',250,null,null,null,'continent subregion',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (11,', ',0,0,'country subregion',260,null,null,null,'country subregion',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (12,', ',0,0,'straights',270,null,null,null,'straights',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (13,', ',0,0,'subcountry island(s)',280,null,null,null,'subcountry island(s)',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (14,':' ,0,1,'state/province',300,null,null,null,'state/province',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (15,', ',0,0,'peninsula',310,null,null,null,'peninsula',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (16,', ',0,0,'substate island(s)',320,null,null,null,'substate island(s)',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (19,', ',0,0,'state subregion',380,null,null,null,'state subregion',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (20,', ',0,1,'county',400,null,null,null,'county',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (21,', ',0,0,'mountain(s)',410,null,null,null,'mountain(s)',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (22,', ',0,0,'river',420,null,null,null,'river',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (23,', ',0,0,'forest',430,null,null,null,'forest',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (24,', ',0,0,'valley',440,null,null,null,'valley',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (25,', ',0,0,'island(s)',450,null,null,null,'island(s)',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (26,', ',0,0,'hill(s)',460,null,null,null,'hill(s)',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (27,', ',0,0,'canyon',470,null,null,null,'canyon',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (28,', ',0,0,'lake',480,null,null,null,'lake',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (29,', ',0,1,'county subregion',490,null,null,null,'county subregion',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (30,', ',0,1,'muncipality',500,null,null,null,'muncipality',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (31,', ',0,0,'city subregion',510,null,null,null,'city subregion',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (32,':' ,0,1,'ocean',100,null,null,null,'ocean',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (33,':' ,0,1,'ocean region',150,null,null,null,'ocean region',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (34,', ',0,0,'ocean subregion',250,null,null,null,'ocean subregion',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (35,', ',0,0,'exclusive economic zone',260,null,null,null,'maritime eez',1);
 
 alter table locality add constraint fk_local_polgeogid foreign key (geopolitical_geography_id) references geography (geography_id) on update cascade;
 alter table locality add constraint fk_local_geogeogid foreign key (geographic_geography_id) references geography (geography_id) on update cascade;
@@ -2296,7 +2296,7 @@ ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (co
 CREATE TABLE storagetreedef (
   -- Definition: Definitions for storage trees 
   storagetreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  fullname_direction int(11) default null,
+  full_name_direction int(11) default null,
   name varchar(64) not null,
   remarks text,
   disciplineid bigint  -- scope of the tree
@@ -2311,7 +2311,7 @@ CREATE TABLE storagetreedefitem (
   name varchar(64) not null,
   full_name_separator varchar(32) default null,
   is_enforced boolean default null,  -- if true, then must be present in the path to root for any child node
-  is_in_fullname boolean default null,
+  is_in_full_name boolean default null,
   rank_id int(11) not null,  -- container rank heirarchy, larger numbers are lower ranks, lower ranks nest in higher ranks
   text_after varchar(64) default null,
   text_before varchar(64) default null,
@@ -2332,7 +2332,7 @@ CREATE TABLE storage (
   barcode varchar(900) not null,  -- barcoded identifier of this storage location
   abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
   rank_id int(11) not null,    -- the rank of this storage.  ? redundant with node definition
-  fullname varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
+  full_name varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
   parent_id bigint default null, -- the parent node for this tree in the storage heirarchy
   parentage varchar(2000) not null,  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with storage_id of current node.  
   scope_id bigint not null,  
@@ -2375,7 +2375,7 @@ CREATE TABLE geologictimeperiod (
   parent_id bigint default null,  -- the immediate parent of this node, null for root.
   parentage varchar(2000) not null, -- path from the current node to root
   accepted_id bigint default null,
-  fullname varchar(255) default null,
+  full_name varchar(255) default null,
   guid varchar(128) default null,
   remarks text,
   standard varchar(64) default null,
@@ -2393,7 +2393,7 @@ alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key 
 CREATE TABLE geologictimeperiodtreedef (
   -- Definition: geologic rock/time unit trees
   geologictimeperiodtreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  fullname_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
+  full_name_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
   name varchar(64) not null,  -- name 
   remarks text
 )
@@ -2402,9 +2402,9 @@ DEFAULT CHARSET=utf8;
 
 CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON geologictimeperiodtreedef (name);
 
-INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_direction,name) VALUES (1,-1,"Geochronologic tree");
+INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (1,-1,"Geochronologic tree");
 
-INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,fullname_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
+INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
 
 CREATE TABLE geologictimeperiodtreedefitem (
   -- Definition: a definition of a rank in a geologic rock/time unit tree
@@ -2413,7 +2413,7 @@ CREATE TABLE geologictimeperiodtreedefitem (
   rank_id int(11) not null, -- rank for this name in the tree, larger numbers are lower ranks.
   full_name_separator varchar(32) not null default ':',
   is_enforced boolean not null default 0, -- if true, then this rank must be present in the path from any lower node to root.
-  is_in_fullname boolean not null default 1, -- include this element when assembling full name 
+  is_in_full_name boolean not null default 1, -- include this element when assembling full name 
   text_after varchar(64) default null,  -- text to place after the name of a node at this rank when assembling the name
   text_before varchar(64) default null, -- text to place before the name of a node at this rank when assembling the name
   geologictimeperiodtreedef_id int(11) not null,
@@ -2429,21 +2429,21 @@ DEFAULT CHARSET=utf8;
 -- Each geologictimeperiodtreedefitem defines zero to many taxa.
 
 -- Ranks in geochronologic (geological time, rather than chronostratigraphic rock/time) heirarchy
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (1,1,':',0,'Eon',100);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (2,1,':',1,'Era',200);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (3,1,':',1,'Period',300);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (4,1,':',1,'Epoch',400); -- e.g.  If not named (e.g. Llandovery), uses time related Early/Middle/Late divisions of Period, e.g.  Late Devonian (not position terms, e.g. not Upper Devonian).
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (5,1,':',1,'Age',500);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (6,1,':',1,'Subage',500);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (1,1,':',0,'Eon',100);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (2,1,':',1,'Era',200);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (3,1,':',1,'Period',300);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (4,1,':',1,'Epoch',400); -- e.g.  If not named (e.g. Llandovery), uses time related Early/Middle/Late divisions of Period, e.g.  Late Devonian (not position terms, e.g. not Upper Devonian).
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (5,1,':',1,'Age',500);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (6,1,':',1,'Subage',500);
 
 -- Ranks in Lithostratigraphic heirarchy
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (100, 2,':',0,'Supergroup',100);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (101, 2,':',0,'Group',200);  
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (100, 2,':',0,'Supergroup',100);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (101, 2,':',0,'Group',200);  
 -- Could include subgroup, but it is quite uncommon.
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (102, 2,':',0,'Formation',300);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (103, 2,':',0,'Member',400);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (104, 2,':',0,'Bed',500);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_fullname,name,rank_id) values (105, 2,':',0,'Flow',500);  -- for named volcanic flows
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (102, 2,':',0,'Formation',300);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (103, 2,':',0,'Member',400);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (104, 2,':',0,'Bed',500);
+insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
 CREATE TABLE paleocontext (
   -- Definition: a geological context from which some material was collected.
