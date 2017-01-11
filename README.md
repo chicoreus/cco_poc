@@ -59,7 +59,7 @@ config/liquibase_cco_full.properties is in .gitignore and should not be put unde
 
 You *must* copy the config/liquibase_cco_full.properties.mysqltemplate to config/liquibase_cco_full.properties, and then add your credentials to the file.
 
-    $ cp config/liquibase_cco_full.properties.mysqltemplate config/liquibase_cco_full.properties
+    $ make copy-mysql
     $ vim config/liquibase_cco_full.properties
 
 #### For Postgresql
@@ -68,14 +68,15 @@ You *must* copy the config/liquibase_cco_full.properties.mysqltemplate to config
 2. create the schema 'cco_full', check the credentials in the liquibase.postgresql.properties-file
 3. replace liquibase_cco_full.properties with the liquibase_cco_full.properties.postgrestemplate.
 
-    $ cp config/liquibase_cco_full.properties.postgresqltemplate config/liquibase_cco_full.properties
+    $ make copy-postgreSQL
     $ vim config/liquibase_cco_full.properties
 
 ## To build the database with Liquibase
 
-To run the project type '**mvn  clean install**' in the same directory that the pom.xml-file resides.  You must have first met the prerequisites listed above, including creating the database schema and having copied a template to config/liquibase_cco_full.properties and added your database credentials to that file.
+To run the project type '**make build**' in the same directory that the pom.xml-file resides.  You must have first met the prerequisites listed above, including creating the database schema and having copied a template to config/liquibase_cco_full.properties and added your database credentials to that file.
 
-    mvn clean install
+     $ make create_db DB_USER=my-user DB_PSW=my-password
+     $ make build
 
 ## Configuration Files 
 
