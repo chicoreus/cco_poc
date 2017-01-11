@@ -8,9 +8,13 @@ DB=cco_full
 DB_USER=xxx
 DB_PSW=yyy
 
-copy:
+copy-mysql:
 	@echo "remember to update the credentials in the file before running 'build' "
 	@cp config/liquibase_cco_full.properties.mysqltemplate config/liquibase_cco_full.properties
+
+copy-postgreSQL:
+	@echo "remember to update the credentials in the file before running 'build' "
+	@cp config/liquibase_cco_full.properties.postgresqltemplate config/liquibase_cco_full.properties
 
 build:
 	@echo "Running Liquibase ... " 
