@@ -73,19 +73,6 @@ alter table systemuserprincipal add constraint fk_supr_principalid foreign key (
 -- Each systemuser has zero to many systemuserprincipals
 
 -- Example of composition of scope, principal, and systemuser to define permissions for users.
-insert into scope (scope_id, name) values (1,'Example Institution');
-insert into scope (scope_id, name,parent_scope_id) values (2,'Example Malacology Department',1);
-insert into scope (scope_id, name,parent_scope_id) values (3,'Example Mammalogy Department',1);
-insert into scope (scope_id, name,parent_scope_id) values (4,'Example Icthyology Department',1);
-insert into scope (scope_id, name,parent_scope_id) values (5,'Example Ornithology Department',1);
-insert into scope (scope_id, name,parent_scope_id) values (6,'Example Paleontology Department',1);
-insert into scope (scope_id, name,parent_scope_id) values (7,'Example Botany Department',1);
-insert into principal (principal_id, principal_name,scope_id) values (1,'exampleuser',1);
-insert into principal (principal_id, principal_name,scope_id) values (2,'data entry',2);
-insert into principal (principal_id, principal_name,scope_id) values (3,'manage transactions',2);
-insert into systemuser (systemuser_id, username, is_enabled,user_agent_id) values (1,'example@example.com',FALSE,1);  
-insert into systemuserprincipal (systemuser_id, principal_id) values (1,1);  -- example user has user permissions in example institution
-insert into systemuserprincipal (systemuser_id, principal_id) values (1,2);  -- example user has data entry permissions in example collection
 
 -- changeset chicoreus:2
 
@@ -207,21 +194,9 @@ ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_i
 -- Each unit has zero to many identifiable items
 
 -- To apply a pick list to a field, first define a picklist
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
 -- then define the items which comprise that pick list.
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (2,110,2,'+','+'); 
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (3,110,3,'ca.','ca.');
 
-INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (1,'en_gb','?','count is uncertain.') ;
-INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (2,'en_gb','+','and more, count is at least the specified number.') ;
-INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (3,'en_gb','circa','count is approximate.') ;
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (120, 'count units','identifiableitem','individual_count_units');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,1,'individuals','individuals');  -- for lot based collections 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,2,'valves','valves');  -- could restrict to malacology and invertebrate paleontology
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'fragments','fragments');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (120,3,'eggs','eggs');  -- could restrict to ornithology 
 
 -- changeset chicoreus:5
 
@@ -323,25 +298,9 @@ ALTER TABLE identification add constraint fk_ident_itemid foreign key (identifia
 -- Each identification has zero or one verifying agent.
 -- Each agent is the verifier for zero to many identifications.
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (130, 'identification qualifier','identification','qualifier');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (10,130,1,'?','?');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (11,130,2,'aff.','aff.');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (12,130,3,'cf.','cf.');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (13,130,4,'near','near');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (14,130,6,'(group)','(group)');
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (15,130,6,'sp. nov.','sp. nov.');  -- place holder for to be described species in a genus, taxon_id should have rank of genus. 
-INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (16,130,7,'ssp. nov.','ssp. nov.');  -- place holder for to be described subspecies in a species, taxon_id should have rank of species. 
 
-INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (15,'en_gb','sp. nov.','place holder for types of soon to be described species where the name is not yet available.  the taxon used in the identification should be a genus, the assertion in the identification is that this is a new species in that genus.');
-INSERT INTO picklistitemint (picklistitem_id, lang, title_lang, definition) VALUES (16,'en_gb','ssp. nov.','place holder for types of soon to be described subspecies where the name is not yet available.  the taxon used in the identification should be a species, the assertion in the identification is that this is a new subspecies in that species.');
 
 --  picklist for preparation types
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (190, 'preparation status','preparation','status');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,1,'in collection','in collection');  -- verified in an inventory as in the collection
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,2,'unknown','unknown'); -- usual status for material entered from ledgers or other paper records. 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'on loan','on loan'); -- preparation is out on loan
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'destroyed','destroyed'); -- preparation known to have been destroyed
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (190,3,'lost','lost'); -- preparation lost
 
 -- changeset chicoreus:7
 -- scientific name strings and taxonomic placement therof
@@ -416,16 +375,7 @@ create index idx_taxon_acceptaxonid on taxon (accepted_taxon_id);
 alter table taxon add constraint fk_taxon_acceptedid foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
 alter table taxon add constraint fk_taxon_parentid foreign key (parent_id) references taxon (taxon_id) on update cascade;
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5000, 'Cites Status','taxon','cites_status');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,1,'none','none');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,2,'CITES I','CITES I');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,3,'CITES II','CITES II');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5000,5,'CITES III','CITES III');
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5001, 'Nomenclatural Code','taxon','nomenclatural_code');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,3,'noncompliant','noncompliant');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,1,'ICZN','ICZN');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5001,2,'ICNafp','ICNafp');
 
 
 CREATE TABLE taxontreedef (
@@ -438,7 +388,6 @@ CREATE TABLE taxontreedef (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-insert into taxontreedef(taxontreedef_id, name) values (1,'Taxonomic Tree');
 
 CREATE TABLE taxontreedefitem (
   -- Definition: Definition of ranks within a taxon tree.  NOTE: Because Phylum is used for animals and Division for plants, and it is expected that both are defined in a single tree, the definitions form a map rather than a tree, so parentid and parentage aren't used.  A sort on values for rank_id is needed to find the next higher or next lower rank definition.
@@ -464,44 +413,12 @@ alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedef
 -- Each taxontreedef is the tree for zero to many taxontreedefitem nodes.
 -- Each taxontreedefitem is a node in one and only one taxontreedef.
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (5005, 'Nomenclatural Code','taxontreedefitem','nomenclatural_code');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'Any','Any');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,2,'ICZN','ICZN');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,3,'ICNafp','ICNafp');
 
-insert into taxontreedefitem (taxontreedefitem_id, rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (1,0, 'Life', 1, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (10, 'Kingdom', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (20, 'Major Group', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,nomenclatural_code) values (30, 'Phylum', 0, 0,1,'ICZN');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,nomenclatural_code) values (30, 'Division', 0, 0,1,'ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (50, 'Superclass', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (60, 'Class', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (70, 'Subclass', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (90, 'Superorder', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (100, 'Order', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (110, 'Suborder', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (120, 'Infraorder', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (130, 'Superfamily', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (140, 'Family', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (150, 'Subfamily', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (160, 'Tribe', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (180, 'Genus', 1, 1,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,text_after) values (190, 'Subgenus', 0, 0,1,'(',')');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (220, 'Species', 1, 1,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) values (230, 'Subspecies', 0, 0,1);
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before) values (240, 'Variety', 0, 0,1,'var.');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (250, 'Subvariety', 0, 0,1,'sub var.','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before) values (260, 'Forma', 0, 0,1,'f.');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (270, 'Subforma', 0, 0,1,'sub f.','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (280, 'Lusus', 0, 0,1,'lusus','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (290, 'Modification', 0, 0,1,'mod.','ICNafp');
-insert into taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) values (300, 'Prolus', 0, 0,1,'prolus','ICNafp');
 
 ALTER TABLE identification add constraint fk_idtaxon foreign key (taxon_id) references taxon (taxon_id) on update cascade;
 ALTER TABLE taxon add constraint fk_idparent foreign key (parent_id) references taxon (taxon_id) on update cascade;
 ALTER TABLE taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
 
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id) values (1,'Life','','','<strong>Life</strong>',null,'/1',1,1);
 
 CREATE TABLE journal (
   -- Definition: A serial work.
@@ -557,11 +474,6 @@ alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title
 -- Each jouurnaltitle has one and only one (ct)journaltitletype.
 -- Each (ct)journaltitletype is for zero to many journalstitle.
 
-insert into ctjournaltitletype (title_type) values ('title');
-insert into ctjournaltitletype (title_type) values ('title variant');
-insert into ctjournaltitletype (title_type) values ('abbreviation');
-insert into ctjournaltitletype (title_type) values ('title variant(2)');
-insert into ctjournaltitletype (title_type) values ('title variant(3)');
 
 CREATE TABLE journalidentifier (
   -- Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
@@ -585,10 +497,6 @@ CREATE TABLE ctjournalidentifiertype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-insert into ctjournalidentifiertype (identifier_type) values ('ISSN');
-insert into ctjournalidentifiertype (identifier_type) values ('OCLC');  
-insert into ctjournalidentifiertype (identifier_type) values ('TL2');   -- For botanical journals
-insert into ctjournalidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 
 alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) references ctjournalidentifiertype (identifier_type) on update cascade;
 
@@ -660,8 +568,6 @@ CREATE TABLE ctpublicationidentifiertype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-insert into ctpublicationidentifiertype (identifier_type) values ('ISBN');
-insert into ctpublicationidentifiertype (identifier_type) values ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 
 -- Each publicationidentifier has one and only one (ct)publicationidentifiertype.
 -- Each (ct)publicationidentifiertype is for zero to many publicationsidentifiers.
@@ -745,10 +651,6 @@ CREATE TABLE ctcatnumseriespolicy (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-INSERT INTO ctcatnumseriespolicy (policy) values ('inactive, complete');  -- All known numbers in this series have been assigned and databased, issue no new numbers.
-INSERT INTO ctcatnumseriespolicy (policy) values ('inactive, manual');  -- Retrospective capture of existing cataloged items only, don't autoassign numbers.
-INSERT INTO ctcatnumseriespolicy (policy) values ('active, manual');  -- Active, assigning numbers for new material, allow users to provide the number.
-INSERT INTO ctcatnumseriespolicy (policy) values ('active, automatic');  -- Active, assigning numbers for new material, provide numbers for users.
 
 ALTER TABLE catalognumberseries add constraint fk_cns_policy foreign key (policy) references ctcatnumseriespolicy (policy) on update cascade;
 
@@ -819,12 +721,6 @@ CREATE TABLE eventdate (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (6001, 'Date Type','eventdate','date_type');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,1,'date','date');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,2,'interval','interval');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,3,'year','year');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,4,'year/month','year/month');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,5,'date time','date time');
 
 -- Each eventdate is the date collected for zero or one collectingevent.
 -- Each collectingevent has a date collected of zero or one eventdate.
@@ -937,17 +833,7 @@ DEFAULT CHARSET=utf8;
 
 create unique index idx_coltra_u_numserscope on transactionc (trans_number, trans_number_series, scope_id);  
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name,read_only) VALUES (150, 'transaction type','coll_transaction','trans_type',1);  -- ennumerated subtypes of transactions corresponding to subtype tables.
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,1,'Loan','loan'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,2,'Gift','gift'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,3,'Borrow','borrow'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (150,4,'Deaccession','deaccession'); 
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name,read_only) VALUES (170, 'transaction type','coll_transaction','status',0);  -- status for transactions
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,1,'in process','in process'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,2,'open','open'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,3,'open partial return','open partial return'); 
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (170,4,'closed','closed'); 
 
 -- Each transactionitem is zero or one preparation.
 -- Each preparation is zero to many transactionitems.
@@ -1060,15 +946,7 @@ DEFAULT CHARSET=utf8;
 create unique index idx_deaccession_transid on deaccession (transactionc_id);  
 ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (160, 'loan type','loan','loan_type');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,1,'returnable','returnable');  -- returnable in whole or in part
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (160,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (180, 'borrow type','borrow','borrow_type');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,1,'returnable','returnable');  -- returnable in whole or in part
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,2,'consumable','consumable'); -- entirely consumable, only data is expected to be returned.
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (180,3,'exhibition','exhibition'); -- loan of valuable material for exhibition with additional standard conditions 
 
 CREATE TABLE transactionagent (
   -- Definition: the participation of an agent in a transaction in some defined role (e.g. the agent who gave approval for some loan).
@@ -1125,16 +1003,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- when a picklist applies to a field defined with an enum, specify read_only=1 for the picklist.
-INSERT INTO picklist (picklist_id, name, table_name, field_name, read_only) VALUES (100, 'agent type','agent','agent_type',1);
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,1,'individual','individual');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,2,'team','team');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,3,'organization','organization');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (100,4,'software agent','software agent');
 
-INSERT INTO picklist (picklist_id, name, table_name, field_name, read_only) VALUES (101, 'agent living','agent','living',1);
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,1,'Yes','Yes');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,2,'No','No');
-INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,3,'?','?');
 
 -- changeset chicoreus:18
 -- catching up on agent relations 
@@ -1165,11 +1034,6 @@ CREATE TABLE ctrelationshiptype (
    collective varchar(50)  -- The collective term for a set of participants in the relationship (e.g. children), suitable for use as a header for a list of relationhsips.
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('child of', 'parent of', 'children');
-INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('student of', 'teacher of', 'students');
-INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('spouse of', 'spouse of', 'married to');
-INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('could be', 'confused with', 'confused with');  -- to accompany nototherwisespecified 
-INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('successor of', 'predecessor of', 'sucessors');  -- to relate organizations 
 
 -- Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
 -- Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
@@ -1293,14 +1157,6 @@ DEFAULT CHARSET=utf8;
 
 alter table agentname add constraint fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
 
-INSERT INTO ctagentnametype (type, ordinal) values ('full name',1);
-INSERT INTO ctagentnametype (type, ordinal) values ('standard abbreviation',2);
-INSERT INTO ctagentnametype (type, ordinal) values ('standard botanical abbreviation',3);
-INSERT INTO ctagentnametype (type, ordinal) values ('also known as',4);
-INSERT INTO ctagentnametype (type, ordinal) values ('initials last name',5);  -- expected form for second and subseqent authors.
-INSERT INTO ctagentnametype (type, ordinal) values ('last name, initials',5);  -- expected form for first author.
-INSERT INTO ctagentnametype (type, ordinal) values ('first initials last',5);
-INSERT INTO ctagentnametype (type, ordinal) values ('first last',5);
 
 CREATE TABLE agentrelation (
    -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
@@ -1443,9 +1299,6 @@ DEFAULT CHARSET=utf8;
 -- Each ctbiologicalattributetype has zero or one length unit in ctlengthunit.
 -- Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.
 
-INSERT INTO ctlengthunit (lengthunit) VALUES ('meters');
-INSERT INTO ctlengthunit (lengthunit) VALUES ('centimeters');
-INSERT INTO ctlengthunit (lengthunit) VALUES ('milimeters');
 
 CREATE TABLE ctmassunit (
   -- Definition: controled vocabulary for units of mass.
@@ -1457,9 +1310,6 @@ DEFAULT CHARSET=utf8;
 -- Each ctbiologicalattributetype has zero or one mass unit in ctmassunit.
 -- Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.
 
-INSERT INTO ctmassunit (massunit) VALUES ('grams');
-INSERT INTO ctmassunit (massunit) VALUES ('kilograms');
-INSERT INTO ctmassunit (massunit) VALUES ('miligrams');
 
 CREATE TABLE ctageclass (
   -- Definition: controled vocabulary for age classes.
@@ -1493,90 +1343,7 @@ alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) ref
 -- Each scopect is for one and only one key name in a code table
 -- Each key name in a code table has zero to many scope-codetable relations in codect
 
-INSERT INTO ctageclass (ageclass) VALUES ('unknown');
-INSERT INTO ctageclass (ageclass) VALUES ('adult');
-INSERT INTO ctageclass (ageclass) VALUES ('juvenile');
-INSERT INTO ctageclass (ageclass) VALUES ('pup');
-INSERT INTO ctageclass (ageclass) VALUES ('chick');
-INSERT INTO ctageclass (ageclass) VALUES ('nestling');
-INSERT INTO ctageclass (ageclass) VALUES ('subadult');
-INSERT INTO ctageclass (ageclass) VALUES ('immature');
-INSERT INTO ctageclass (ageclass) VALUES ('egg');
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','pup',4);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','chick',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','nestling',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','subadult',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','immature',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','egg',5);
 
-INSERT INTO ctbiologicalattributetype (name) VALUES ('sex');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('age');
-INSERT INTO ctbiologicalattributetype (name,valuecodetable) VALUES ('age class','ctageclass');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('numeric age');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('weight','ctmassunit');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('stomach contents');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('reproductive condition');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('reproductive data');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('standard length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('body length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('disk length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('fork length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('head length','ctlengthunit');
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','standard length',4);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','body length',4);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','disk length',4);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','fork length',4);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','head length',4);
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('axillary girth','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('crown-rump length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('curvilinear length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('ear from crown','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('ear from notch','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('forearm length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('hind foot with claw','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('hind foot without claw','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('tail length','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('tragus length','ctlengthunit');
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','axillary girth',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','crown-rump length',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','curvilinear length',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ear from crown',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ear from notch',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','forearm length',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','hind foot with claw',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','hind foot without claw',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','tail length',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','tragus length',3);
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('total length','ctlengthunit');
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',3);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',4);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',5);
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('wing chord','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('eggshell thickness','ctlengthunit');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('bare parts coloration');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('colors');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('egg content weight','ctmassunit');
-INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('embryo weight','ctmassunit');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('extent');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('fat deposition');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('incubation');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('molt condition');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('ossification');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('plumage coloration');
-INSERT INTO ctbiologicalattributetype (name) VALUES ('plumage description');
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','wing chord',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','eggshell thickness',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','bare parts coloration',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','colors',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','egg content weight',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','embryo weight',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','extent',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','fat deposition',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','incubation',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','molt condition',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ossification',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage coloration',5);
-INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage description',5);
 
 CREATE TABLE biologicalattribute (
     -- Definition: a generic typed attribute for biological characteristics of organisms, 
@@ -1637,9 +1404,6 @@ CREATE TABLE ctencumberancetype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record'); -- Do not show the encumbered record (e.g. hide a media record).
-INSERT INTO ctencumberancetype (encumberance_type) VALUES ('redact locality');  -- Redact coordinate, georeference, elevation, and detailed locality information associated with this record.  
-INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record and relations'); -- Do not show the encumbered record or related data object (e.g. for a taxon, hide units that use this taxon in an identificaiton; or for a media record hide the meida record and associated unit data).
 
 CREATE TABLE encumberance (
    --  Definition: a description of the limitations on the visiblity of some data to the public.  All public presentations of data must observe the encumberance associated with that data.  
@@ -1774,9 +1538,6 @@ CREATE TABLE ctelectronicaddresstype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-INSERT INTO ctelectronicaddresstype (typename) VALUES ('phone');
-INSERT INTO ctelectronicaddresstype (typename) VALUES ('fax');
-INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
 
 CREATE TABLE electronicaddress ( 
    -- Definition: email, phone, fax, or other electronic contact address for an agent
@@ -2023,15 +1784,6 @@ DEFAULT CHARSET=utf8;
 -- Each coordinate is of one and only one (ct)coordinatetype.
 -- Each (ct)coordintetype is the type for zero to many coordinates.
 
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('utm/ups','utm');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('decimal degrees','ddg');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees minutes seconds','dms');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees decimal minutes','ddm');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('mgrs','grid');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('osgb','grid');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('rikets nät, rt 90','xy');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('swiss grid','xy');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('public land survey system (township section range)','plss');
 
 CREATE TABLE coordinate ( 
    -- Definition: a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about original coordinates, separate from subsequent georeferences.
@@ -2190,7 +1942,6 @@ CREATE TABLE geographytreedef (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-INSERT INTO geographytreedef (geographytreedef_id,full_name_direction,name) VALUES (1,-1,'geopolitical heirarchy');
 
 CREATE TABLE geographytreedefitem (
   -- Definition: Definition of a node in a geography tree
@@ -2213,39 +1964,6 @@ alter table geographytreedefitem add constraint fk_geogtrdi_treeid foreign key (
 
 alter table geography add constraint fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
 
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (1,', ',1,0,'root',0,null,null,null,'root',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (2,', ',0,0,'continent',100,null,null,null,'continent',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (3,', ',0,0,'region',150,null,null,null,'region',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (4,', ',0,0,'island group',160,null,null,null,'island group',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (5,', ',0,0,'island',170,null,null,null,'island',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (6,':' ,0,1,'country',200,null,null,null,'country',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (7,', ',0,0,'land',210,null,null,null,'land',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (8,', ',0,0,'territory',220,null,null,null,'territory',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (9,', ',0,0,'subcontinent island(s)',230,null,null,null,'subcontinent island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (10,', ',0,0,'continent subregion',250,null,null,null,'continent subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (11,', ',0,0,'country subregion',260,null,null,null,'country subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (12,', ',0,0,'straights',270,null,null,null,'straights',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (13,', ',0,0,'subcountry island(s)',280,null,null,null,'subcountry island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (14,':' ,0,1,'state/province',300,null,null,null,'state/province',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (15,', ',0,0,'peninsula',310,null,null,null,'peninsula',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (16,', ',0,0,'substate island(s)',320,null,null,null,'substate island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (19,', ',0,0,'state subregion',380,null,null,null,'state subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (20,', ',0,1,'county',400,null,null,null,'county',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (21,', ',0,0,'mountain(s)',410,null,null,null,'mountain(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (22,', ',0,0,'river',420,null,null,null,'river',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (23,', ',0,0,'forest',430,null,null,null,'forest',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (24,', ',0,0,'valley',440,null,null,null,'valley',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (25,', ',0,0,'island(s)',450,null,null,null,'island(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (26,', ',0,0,'hill(s)',460,null,null,null,'hill(s)',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (27,', ',0,0,'canyon',470,null,null,null,'canyon',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (28,', ',0,0,'lake',480,null,null,null,'lake',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (29,', ',0,1,'county subregion',490,null,null,null,'county subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (30,', ',0,1,'muncipality',500,null,null,null,'muncipality',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (31,', ',0,0,'city subregion',510,null,null,null,'city subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (32,':' ,0,1,'ocean',100,null,null,null,'ocean',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (33,':' ,0,1,'ocean region',150,null,null,null,'ocean region',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (34,', ',0,0,'ocean subregion',250,null,null,null,'ocean subregion',1);
-INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (35,', ',0,0,'exclusive economic zone',260,null,null,null,'maritime eez',1);
 
 alter table locality add constraint fk_local_polgeogid foreign key (geopolitical_geography_id) references geography (geography_id) on update cascade;
 alter table locality add constraint fk_local_geogeogid foreign key (geographic_geography_id) references geography (geography_id) on update cascade;
@@ -2402,9 +2120,7 @@ DEFAULT CHARSET=utf8;
 
 CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON geologictimeperiodtreedef (name);
 
-INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (1,-1,"Geochronologic tree");
 
-INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
 
 CREATE TABLE geologictimeperiodtreedefitem (
   -- Definition: a definition of a rank in a geologic rock/time unit tree
@@ -2429,21 +2145,9 @@ DEFAULT CHARSET=utf8;
 -- Each geologictimeperiodtreedefitem defines zero to many taxa.
 
 -- Ranks in geochronologic (geological time, rather than chronostratigraphic rock/time) heirarchy
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (1,1,':',0,'Eon',100);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (2,1,':',1,'Era',200);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (3,1,':',1,'Period',300);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (4,1,':',1,'Epoch',400); -- e.g.  If not named (e.g. Llandovery), uses time related Early/Middle/Late divisions of Period, e.g.  Late Devonian (not position terms, e.g. not Upper Devonian).
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (5,1,':',1,'Age',500);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (6,1,':',1,'Subage',500);
 
 -- Ranks in Lithostratigraphic heirarchy
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (100, 2,':',0,'Supergroup',100);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (101, 2,':',0,'Group',200);  
 -- Could include subgroup, but it is quite uncommon.
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (102, 2,':',0,'Formation',300);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (103, 2,':',0,'Member',400);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (104, 2,':',0,'Bed',500);
-insert into geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) values (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
 CREATE TABLE paleocontext (
   -- Definition: a geological context from which some material was collected.
@@ -2493,16 +2197,8 @@ alter table collectingevent add constraint fk_colev_eventdateid foreign key (dat
 
 
 -- Some core sample data: 
-insert into agent(agent_id, preferred_name_string) values (1,'Example User');
-insert into agentname(agent_id, type, name) values (2,'full name','Example User');
 
-insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath) values (2,'Linnaeus','https://viaf.org/viaf/34594730',1707,1778);
-insert into agentname(agent_id, type, name) values (2,'full name','Carl von Linné');
-insert into agentname(agent_id, type, name) values (2,'also known as','Carl Linnaeus');
-insert into agentname(agent_id, type, name) values (2,'standard botanical abbreviation','L.');
-insert into agentname(agent_id, type, name) values (2,'standard abbreviation','Linné');
 
-insert into agentlink (agent_id, type, link, text) values (2,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry');
 
 
 -- Each systemuser is one and only one agent
