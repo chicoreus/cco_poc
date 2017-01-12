@@ -23,6 +23,8 @@ src/main/resources/edu/harvard/huh/specify/datamodel/cco_full/model/model.md
 
     $ cd src/main/resources/edu_harvard/huh/specify/datamodel/cco_full/db/
     $ mysql -p cco_full < tables.sql
+    $ mysql -p cco_full < functions.sql
+    $ mysql -p cco_full < baselinedata.sql
     $ mysql -p cco_full < exampledata.sql
 
 # Building CCO_FULL with liquibase
@@ -33,13 +35,13 @@ This draft incorporates liquibase markup, **but it should not yet be considered 
 
 ### Software 
 
-1. java ( tested with OpenJDK ver. 1.7.0_95 )
+1. java ( tested with OpenJDK ver. 1.7.0_95 and Java 1.8.0_73 )
 2. [maven](https://maven.apache.org/) 
-3. either MySQL or postgreSQL
+3. either MariaDB/MySQL or postgreSQL
 
 ### Default database
-the default database should be **MySQL** in this repo, defined in  the file liquibase.properties  
-You **have to** create the database 'cco_full' before running the project.  
+The default database should be **MySQL** in this repo, defined in  the file liquibase.properties  
+You **MUST** create the database 'cco_full' before running the project.  
 
     mysql> drop database cco_full;
     mysql> create database cco_full;

@@ -10,18 +10,17 @@ INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (5,'Default Ornitholog
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (6,'Default Paleontology Department',1);
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (7,'Default Botany Department',1);
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (8,'Default Herpetology Department',1);
-INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (8,'Default Entomology Department',1);
-
-INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (1,'exampleuser',1);
-INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (2,'data entry',2);
-INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (3,'manage transactions',2);
-INSERT INTO systemuser (systemuser_id, username, is_enabled,user_agent_id) VALUES (1,'example@example.com',FALSE,1);  
-INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,1);  -- example user has user permissions in example institution
-INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,2);  -- example user has data entry permissions in example collection
-INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,2);  -- example user has their own permissions
+INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (9,'Default Entomology Department',1);
 
 INSERT INTO agent(agent_id, preferred_name_string) VALUES (1,'Example User');
 INSERT INTO agentname(agent_id, type, name) VALUES (2,'full name','Example User');
+
+INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (1,'user',1);
+INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (2,'data entry',2);
+INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (3,'manage transactions',2);
+INSERT INTO systemuser (systemuser_id, username, is_enabled,user_agent_id) VALUES (1,'example@example.com',FALSE,1);  
+INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,1);  -- example user has user permissions in default institution
+INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,2);  -- example user has data entry permissions in default malacology collection
 
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
 INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
