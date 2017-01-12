@@ -1,4 +1,5 @@
--- changeset chicoreus:36
+-- changeset chicoreus:41
+-- endDelimiter //
 
 --  TODO: Fill in trigger logic to write data to the audit log.
 
@@ -806,4 +807,4 @@
 -- delimiter ;
 
 
---  The last liquibase changeset in this document was number 36
+--  The last liquibase changeset in this document was number 41

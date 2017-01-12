@@ -23,6 +23,9 @@ RETURN replace( substring(substring_index(string, delimiter, position), length(s
 drop function if exists cco_full.getHigherTaxonAtRank;
 
 
+-- changeset chicoreus:37
+-- endDelimiter | 
+
 delimiter |
 -- Obtain the name of a higher taxon at a particular rank from an entry in the taxon tree.
 -- For example, obtain the family into which some species is placed.
@@ -100,12 +103,16 @@ BEGIN
    return sci_name;
 END |
 
+-- changeset chicoreus:38
+-- endDelimiter ;
 delimiter ;
 
 
 
 drop function if exists cco_full.getHigherGeographyAtRank;
 
+-- changeset chicoreus:39
+-- endDelimiter |
 delimiter |
 -- Obtain the name of a higher geography at a particular rank from an entry in the geography tree.
 -- For example, obtain the family into which some species is placed.
@@ -183,8 +190,10 @@ BEGIN
    return geog_name;
 END |
 
+-- changeset chicoreus:40
+-- endDelimiter ;
 delimiter ;
 
---  The last liquibase changeset in this document was number 35
+--  The last liquibase changeset in this document was number 40
 
 

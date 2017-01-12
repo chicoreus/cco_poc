@@ -1,4 +1,4 @@
--- changeset chicoreus:37
+-- changeset chicoreus:42
 
 --  Baseline data for a cco_full database.
 
@@ -317,4 +317,4 @@ INSERT INTO agentname(agent_id, type, name) VALUES (2,'standard botanical abbrev
 INSERT INTO agentname(agent_id, type, name) VALUES (2,'standard abbreviation','Linné');
 INSERT INTO agentlink (agent_id, type, link, text) VALUES (2,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry');
 
---  The last liquibase changeset in this document was number 37
+--  The last liquibase changeset in this document was number 42
