@@ -1,4 +1,4 @@
--- changeset chicoreus:35 
+-- changeset chicoreus:35 dbms:mysql
 
 drop function if exists cco_full.extractFromString;
 
@@ -15,18 +15,16 @@ drop function if exists cco_full.extractFromString;
 --    select extractFromString('/', '/1/5/29/53/2600', 3);
 -- }
 create function cco_full.extractFromString(delimiter varchar(10), string varchar(2000), position int)
-returns varchar(2000) 
-deterministic
+returns varchar(2000) deterministic
 RETURN replace( substring(substring_index(string, delimiter, position), length(substring_index(string, delimiter, position-1))+1), delimiter, ''); 
 
 
 drop function if exists cco_full.getHigherTaxonAtRank;
 
 
--- changeset chicoreus:37
--- endDelimiter | 
-
+-- changeset chicoreus:37 endDelimiter:"\|" dbms:mysql
 delimiter |
+
 -- Obtain the name of a higher taxon at a particular rank from an entry in the taxon tree.
 -- For example, obtain the family into which some species is placed.
 -- 
@@ -103,16 +101,13 @@ BEGIN
    return sci_name;
 END |
 
--- changeset chicoreus:38
--- endDelimiter ;
+-- changeset chicoreus:38 endDelimiter:; dbms:mysql
 delimiter ;
-
 
 
 drop function if exists cco_full.getHigherGeographyAtRank;
 
--- changeset chicoreus:39
--- endDelimiter |
+-- changeset chicoreus:39 endDelimiter:"\|" dbms:mysql
 delimiter |
 -- Obtain the name of a higher geography at a particular rank from an entry in the geography tree.
 -- For example, obtain the family into which some species is placed.
@@ -190,14 +185,14 @@ BEGIN
    return geog_name;
 END |
 
--- changeset chicoreus:40
--- endDelimiter ;
+-- changeset chicoreus:40 endDelimiter:; dbms:mysql
 delimiter ;
 
 drop function if exists cco_full.getCurrentIdentification;
 drop function if exists cco_full.getCurrentIdentID;
 drop function if exists cco_full.getCurrentIdentTaxonID;
 
+-- changeset chicoreus:41 endDelimiter:"\|" dbms:mysql
 delimiter |
 
 create function cco_full.getCurrentIdentification(identifiableitemid INT)
@@ -243,6 +238,8 @@ BEGIN
    return taxonid;
 END |
 
+-- changeset chicoreus:42 endDelimiter:; dbms:mysql
 delimiter ;
 
---  The last liquibase changeset in this document was number 40
+
+--  The last liquibase changeset in this document was number 42
