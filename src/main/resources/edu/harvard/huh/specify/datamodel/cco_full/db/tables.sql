@@ -709,14 +709,14 @@ CREATE TABLE eventdate (
    eventdate_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    date_type varchar(50) not null default 'date',
    verbatim_date varchar(255) not null,  -- the event date in its original verbatim form
-   iso_date varchar(255) not null default '',  -- The event date in ISO form, including date ranges.
-   start_date date,  -- the first date of the event date in date form
+   iso_date varchar(255) not null default '',  -- The event date in ISO form, including date ranges, use this to provide dwc:eventDate.
+   start_date date not null,  -- the first plausible date for the event date in date form, used for sorting, must have a value provided.
    start_date_precision int,  -- precision of the start date (to year, to month, or to day)
    start_datetime datetime default null,  -- if start or end times are known
-   end_date date,  -- the last date of the event date in date form
+   end_date date,  -- the last plausible date of the event date in date form
    end_date_precision int, -- the precision of the end date (to year, to month, or to day)
    end_datetime datetime default null, -- if start or end times are known
-   start_end_fully_specifies boolean default true -- true if a single date or a continuous range.
+   start_end_fully_specifies boolean default true -- true if a single date or a continuous range, false for discontinuous cases that can't be represented as an iso_date such as "april and may of 1960-1963".
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;

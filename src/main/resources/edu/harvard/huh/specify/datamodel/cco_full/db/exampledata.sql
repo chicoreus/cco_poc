@@ -113,7 +113,7 @@ insert into accession (accession_id, accessionnumber, remarks, scope_id) values 
 -- Case 1, simple case, one unit, one organism, one part, one preparation.
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (1, 'Mt. Monadnock','Mount Monadnock', 'Example Locality',8,8);
 insert into collector (collector_id, verbatim_collector, etal, remarks) values (1, 'Tuckerman','et al.','Example collector');
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (1,'10 Jan, 1880','1880-01-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (1,'10 Jan, 1880','1880-01-10','1800-01-01');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (1,1,1,'1880',1);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (1,1,'Ex-999');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (1,1,'001',1,1);
@@ -121,17 +121,18 @@ insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,indiv
 insert into preparation (preparation_id,preparation_type,preservation_type,status) values (1,'sheet','dried','in collection');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (1,1,1,'branch',1);
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id) values (12,1,1,1); 
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (2,'15 Jan, 1880','1880-01-15');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (2,'15 Jan, 1880','1880-01-15','1880-01-15');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,1,0,6,2); 
 
 -- SELECT for Case 1 as single row for flat darwin core:
 -- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where catalog_number = '001' and id.is_current = 1;
-
+-- Alternatively:
+-- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id), did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, concat(catalognumber_prefix,catalog_number) as catalogNumber, part_name, lot_count, preparation_type, preservation_type from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '001' and id.identification_id = getCurrentIdentId(ii.identifiableitem_id) ;
 
 -- Case 2, packet with two organisms (lichen on bark in packet), with the packet being the cataloged object,
 -- thus (one catalog number and two occurrences).
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',8,8);
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (3,'10 Feb, 1882','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (3,'10 Feb, 1882','1882-02-10',1882-02-10);
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (2, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (2,2,2,'1882',3);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (2,2,'Ex-9999');
@@ -141,18 +142,18 @@ insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_num
 insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (2,'packet','dried','in collection',2);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (2,2,2,'whole organism',1);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (3,3,2,'bark fragment',1);
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (4,'10 Feb, 1882','1882-02-10');
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (5,'10 Feb, 1882','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (4,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (5,'10 Feb, 1882','1882-02-10',1882-02-10);
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (8,2,1,6,4); 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,3,1,6,5); 
 
 -- SELECT for Case 2 as two rows (one per dwc:occurrenceId) for flat DarwinCore.
--- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(t.taxon_id,140) as family, t.scientific_name, t.authorship, did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, concat(catalognumber_prefix,catalog_number) as catalogNumber, part_name, lot_count, preparation_type, preservation_type from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '002' and ci.catalognumberseries_id = 1;
+-- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id), did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, concat(catalognumber_prefix,catalog_number) as catalogNumber, part_name, lot_count, preparation_type, preservation_type from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '002' and ci.catalognumberseries_id = 1 and id.identification_id = getCurrentIdentId(ii.identifiableitem_id) ;
 
 
 -- Case 3, lot of one organism but two preparations (with the preparations cataloged)
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (3, 'Cardiff Bay','Cardiff Bay', 'Example Locality',5,9);
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (6,'4-10 62','1962-04-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (6,'4-10 62','1962-04-10','1962-04-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (3, null, 'A. Jones','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (3,3,3,'4-10 62',6);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (3,3,'62-153');
@@ -163,7 +164,7 @@ insert into preparation (preparation_id,preparation_type,preservation_type,statu
 insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (4,'jar','70% ethanol','in collection',4);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (4,4,3,'shell',30);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (5,4,4,'viscera',1);
-insert into eventdate (eventdate_id, verbatim_date, iso_date) values (7,'1980','1980');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (7,'1980','1980','1980-01-01','1980-12-31');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (17,4,1,6,7); 
 
 

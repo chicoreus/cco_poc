@@ -194,6 +194,55 @@ END |
 -- endDelimiter ;
 delimiter ;
 
+drop function if exists cco_full.getCurrentIdentification;
+drop function if exists cco_full.getCurrentIdentID;
+drop function if exists cco_full.getCurrentIdentTaxonID;
+
+delimiter |
+
+create function cco_full.getCurrentIdentification(identifiableitemid INT)
+returns VARCHAR(255)
+READS SQL DATA
+BEGIN
+   declare scientificName varchar(255);
+   select trim(concat(scientific_name, ' ', authorship, ' ', ifnull(qualifier,''))) 
+      from identification i 
+         left join taxon t on i.taxon_id = t.taxon_id
+         left join eventdate on i.date_determined_eventdate_id = eventdate.eventdate_id 
+      where identifiableitem_id = identifiableitemid 
+      order by is_current desc, start_date
+      limit 1 into scientificName;
+   return scientificName;
+END |
+
+create function cco_full.getCurrentIdentId(identifiableitemid INT)
+returns BIGINT
+READS SQL DATA
+BEGIN
+   declare identId bigint;
+   select identification_id
+      from identification i 
+         left join eventdate on i.date_determined_eventdate_id = eventdate.eventdate_id 
+      where identifiableitem_id = identifiableitemid 
+      order by is_current desc, start_date
+      limit 1 into identId;
+   return identId;
+END |
+
+create function cco_full.getCurrentIdentTaxonId(identifiableitemid INT)
+returns BIGINT
+READS SQL DATA
+BEGIN
+   declare taxonid bigint;
+   select taxon_id
+      from identification i 
+         left join eventdate on i.date_determined_eventdate_id = eventdate.eventdate_id 
+      where identifiableitem_id = identifiableitemid 
+      order by is_current desc, start_date
+      limit 1 into taxonid;
+   return taxonid;
+END |
+
+delimiter ;
+
 --  The last liquibase changeset in this document was number 40
-
-
