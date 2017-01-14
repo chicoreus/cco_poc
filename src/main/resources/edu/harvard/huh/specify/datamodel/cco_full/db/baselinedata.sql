@@ -1,7 +1,8 @@
+-- liquibase formatted sql
+
 -- changeset chicoreus:45
 
 --  Baseline data for a cco_full database.
-
 INSERT INTO scope (scope_id, name) VALUES (1,'Default Institution');
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (2,'Default Malacology Department',1);
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (3,'Default Mammalogy Department',1);

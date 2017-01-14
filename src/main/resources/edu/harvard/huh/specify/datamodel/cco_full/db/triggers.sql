@@ -1,8 +1,12 @@
--- changeset chicoreus:43 endDelimiter://
+-- liquibase formatted sql
+
+-- changeset chicoreus:43 dbms:none
+delimiter |
+-- changeset chicoreus:43 endDelimiter:\| dbms:mysql
+select 1;
 
 --  TODO: Fill in trigger logic to write data to the audit log.
 
--- delimiter //
 -- create trigger trg_scope_update after update on  scope 
 --   for each row 
 --    begin 
@@ -803,9 +807,13 @@
 --    begin 
 --      bbbb
 --    end;
+--|
 
--- changeset chicoreus:44 endDelimiter:;
--- delimiter ;
+-- changeset chicoreus:44 dbms:none
+delimiter ;
+-- changeset chicoreus:44 endDelimiter:; dbms:mysql
+-- just a placeholder for the delimiter
+select 1;
 
 
 --  The last liquibase changeset in this document was number 44
