@@ -4,9 +4,49 @@
   <groupId>org.filteredpush</groupId>
   <artifactId>cco_poc</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>cco_poc</name>
-  <url>http://maven.apache.org</url>
+  <description>Proof of concept files for an implementation of an information model for complex natural science collections objects.</description>
+  <url>https://github.com/chicoreus/cco_poc</url>
+  <licenses>
+        <license>
+            <name>GNU General Public License (GPLv2+) Version 2+</name>
+            <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+        </license>
+  </licenses>
+  <developers>
+        <developer>
+            <id>chicoreus</id>
+            <name>Paul J. Morris</name>
+            <email>mole@morris.net</email>
+            <organization>Museum of Comparative Zoology, Harvard University</organization>
+            <organizationUrl>https://www.mcz.harvard.edu/</organizationUrl>
+            <roles>
+              <role>architect</role>
+              <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>ingierli</id>
+            <name>Ingimar Erlingsson</name>
+            <email>ingimar.erlingsson@nrm.se</email>
+            <!-- organization xml:lang="en">Swedish Museum of Natural History</organization -->
+            <organization xml:lang="sv">Naturhistoriska riksmuseet</organization>
+            <organizationUrl>https://www.nrm.se</organizationUrl>
+            <roles>
+              <role>developer</role>
+            </roles>
+        </developer>
+  </developers>
+  <scm>
+        <connection>scm:git:git@github.com:chicoreus/cco_poc.git</connection>
+        <developerConnection>scm:git:git@github.com:chicoreus/cco_poc.git</developerConnection>
+        <url>git@github.com:chicoreus/cco_poc.git</url>
+  </scm>
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -25,22 +65,39 @@
     	<version>5.1.37</version>
     </dependency>
     <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>9.1-901-1.jdbc4</version>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>cco_full</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+         <build.liquibasePropertyFile>liquibase_cco_full</build.liquibasePropertyFile>
+      </properties>
+    </profile>
+    <profile>
+      <id>cco_poc</id>
+      <properties>
+         <build.liquibasePropertyFile>liquibase_cco_poc</build.liquibasePropertyFile>
+      </properties>
+    </profile>
+  </profiles>
   <build>
         <plugins>
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                 <version>3.0.5</version> 	
+                 <version>3.5.3</version> 	
                 <executions>
                     <execution>
                         <phase>process-resources</phase>
                         <configuration>
-                            <propertyFile>config/liquibase_cco_full.properties</propertyFile>
+                            <propertyFile>config/${build.liquibasePropertyFile}.properties</propertyFile>
                         </configuration>
                         <goals>
                             <goal>update</goal>
