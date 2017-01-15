@@ -200,6 +200,8 @@ drop function if exists cco_full.getCurrentIdentification;
 drop function if exists cco_full.getCurrentIdentID;
 drop function if exists cco_full.getCurrentIdentTaxonID;
 
+drop function if exists cco_full.getPreparations;
+
 -- changeset chicoreus:41 dbms:none
 delimiter |
 -- changeset chicoreus:41 endDelimiter:\| dbms:mysql
@@ -246,6 +248,30 @@ BEGIN
       limit 1 into taxonid;
    return taxonid;
 END |
+
+create function cco_full.getPreparations(identifiableitemid INT) 
+returns varchar(2000)
+READS SQL DATA 
+BEGIN
+   declare result varchar(2000) default '';
+   declare prep varchar(255);
+   declare sep varchar(2) default '';
+   declare done int default 0;
+   declare cur cursor for 
+      select distinct concat(preparation_type, ' (', preservation_type, ')') prep from part left join preparation on part.preparation_id = preparation.preparation_id where identifiableitem_id = identifiableitemid;
+   declare continue handler for not found set done = 1;
+   open cur;
+   getpreps: LOOP
+      fetch cur into prep;
+      if done = 1 then
+        LEAVE getpreps;
+      end if;
+      SET result = concat(result,sep,prep);
+      SET sep = "|";
+   END LOOP;
+   return result;
+END |
+
 
 -- changeset chicoreus:42 dbms:none
 delimiter ;
