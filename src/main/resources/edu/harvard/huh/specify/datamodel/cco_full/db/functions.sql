@@ -201,6 +201,8 @@ drop function if exists cco_full.getCurrentIdentID;
 drop function if exists cco_full.getCurrentIdentTaxonID;
 
 drop function if exists cco_full.getPreparations;
+drop function if exists cco_full.getParts;
+drop function if exists cco_full.getCatalogNumbers;
 
 -- changeset chicoreus:41 dbms:none
 delimiter |
@@ -272,6 +274,64 @@ BEGIN
    return result;
 END |
 
+create function cco_full.getParts(identifiableitemid INT) 
+returns varchar(2000)
+READS SQL DATA 
+BEGIN
+   declare result varchar(2000) default '';
+   declare part varchar(255);
+   declare sep varchar(2) default '';
+   declare done int default 0;
+   declare cur cursor for 
+      select distinct concat(part_name, ' (', lot_count, lot_count_modifier, ')') from part where identifiableitem_id = identifiableitemid;
+   declare continue handler for not found set done = 1;
+   open cur;
+   getparts: LOOP
+      fetch cur into part;
+      if done = 1 then
+        LEAVE getparts;
+      end if;
+      SET result = concat(result,sep,part);
+      SET sep = "|";
+   END LOOP;
+   return result;
+END |
+
+create function cco_full.getCatalogNumbers(identifiableitemid INT) 
+returns varchar(2000)
+READS SQL DATA 
+BEGIN
+   declare result varchar(2000) default '';
+   declare num varchar(255);
+   declare sep varchar(2) default '';
+   declare done int default 0;
+   declare cur cursor for 
+       select concat(catalognumber_prefix, catalog_number) catnum 
+       from identifiableitem ii
+          left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id
+          left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id 
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       union 
+       select concat(catalognumber_prefix, catalog_number) catnum 
+       from identifiableitem ii
+          left join part on ii.identifiableitem_id = part.identifiableitem_id 
+          left join preparation prep on part.preparation_id = prep.preparation_id 
+          left join catalogeditem ci on prep.catalogeditem_id = ci.catalogeditem_id
+          left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id 
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       ;
+   declare continue handler for not found set done = 1;
+   open cur;
+   getnums: LOOP
+      fetch cur into num;
+      if done = 1 then
+        LEAVE getnums;
+      end if;
+      SET result = concat(result,sep,num);
+      SET sep = "|";
+   END LOOP;
+   return result;
+END |
 
 -- changeset chicoreus:42 dbms:none
 delimiter ;
