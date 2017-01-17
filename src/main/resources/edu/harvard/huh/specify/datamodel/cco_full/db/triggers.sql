@@ -1,8 +1,8 @@
 -- liquibase formatted sql
 
--- changeset chicoreus:43 dbms:none
+-- changeset chicoreus:158 dbms:none
 delimiter |
--- changeset chicoreus:43 endDelimiter:\| dbms:mysql
+-- changeset chicoreus:158 endDelimiter:\| dbms:mysql
 select 1;
 
 --  TODO: Fill in trigger logic to write data to the audit log.
@@ -809,11 +809,11 @@ select 1;
 --    end;
 --|
 
--- changeset chicoreus:44 dbms:none
+-- changeset chicoreus:159 dbms:none
 delimiter ;
--- changeset chicoreus:44 endDelimiter:; dbms:mysql
+-- changeset chicoreus:159 endDelimiter:; dbms:mysql
 -- just a placeholder for the delimiter
 select 1;
 
 
---  The last liquibase changeset in this document was number 44
+--  The last liquibase changeset in this document was number 159

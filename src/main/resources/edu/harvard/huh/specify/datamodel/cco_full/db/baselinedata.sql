@@ -1,8 +1,10 @@
 -- liquibase formatted sql
 
--- changeset chicoreus:45
+-- changeset chicoreus:160
 
 --  Baseline data for a cco_full database.
+
+-- Composition of scope, principal, and systemuser to define permissions for users.
 INSERT INTO scope (scope_id, name) VALUES (1,'Default Institution');
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (2,'Default Malacology Department',1);
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (3,'Default Mammalogy Department',1);
@@ -23,6 +25,8 @@ INSERT INTO systemuser (systemuser_id, username, is_enabled,user_agent_id) VALUE
 INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,1);  -- example user has user permissions in default institution
 INSERT INTO systemuserprincipal (systemuser_id, principal_id) VALUES (1,2);  -- example user has data entry permissions in default malacology collection
 
+-- Populate some picklists, including examples of internationalization and definitions.
+-- changeset chicoreus:161
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (110, 'count modifier','identifiableitem','individual_count_modifier');
 INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (1,110,1,'?','?');
 INSERT INTO picklistitem (picklistitem_id, picklist_id, ordinal, title, value) VALUES (2,110,2,'+','+'); 
@@ -66,6 +70,7 @@ INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,1,'An
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,2,'ICZN','ICZN');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (5005,3,'ICNafp','ICNafp');
 
+-- changeset chicoreus:162
 INSERT INTO taxontreedefitem (taxontreedefitem_id, rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) VALUES (1,0, 'Life', 1, 0,1);
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) VALUES (10, 'Kingdom', 0, 0,1);
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id) VALUES (20, 'Major Group', 0, 0,1);
@@ -95,6 +100,7 @@ INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontree
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) VALUES (300, 'Prolus', 0, 0,1,'prolus','ICNafp');
 INSERT INTO taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id) VALUES (1,'Life','','','<strong>Life</strong>',null,'/1',1,1);
 
+-- changeset chicoreus:163
 INSERT INTO ctjournaltitletype (title_type) VALUES ('title');
 INSERT INTO ctjournaltitletype (title_type) VALUES ('title variant');
 INSERT INTO ctjournaltitletype (title_type) VALUES ('abbreviation');
@@ -106,10 +112,12 @@ INSERT INTO ctjournalidentifiertype (identifier_type) VALUES ('TL2');   -- For b
 INSERT INTO ctjournalidentifiertype (identifier_type) VALUES ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
 INSERT INTO ctpublicationidentifiertype (identifier_type) VALUES ('ISBN');
 INSERT INTO ctpublicationidentifiertype (identifier_type) VALUES ('LC Control Number');  -- See:  https://lccn.loc.gov/lccnperm-faq.html
+-- changeset chicoreus:164
 INSERT INTO ctcatnumseriespolicy (policy) VALUES ('inactive, complete');  -- All known numbers in this series have been assigned and databased, issue no new numbers.
 INSERT INTO ctcatnumseriespolicy (policy) VALUES ('inactive, manual');  -- Retrospective capture of existing cataloged items only, don't autoassign numbers.
 INSERT INTO ctcatnumseriespolicy (policy) VALUES ('active, manual');  -- Active, assigning numbers for new material, allow users to provide the number.
 INSERT INTO ctcatnumseriespolicy (policy) VALUES ('active, automatic');  -- Active, assigning numbers for new material, provide numbers for users.
+-- changeset chicoreus:165
 INSERT INTO picklist (picklist_id, name, table_name, field_name) VALUES (6001, 'Date Type','eventdate','date_type');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,1,'date','date');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (6001,2,'interval','interval');
@@ -143,11 +151,13 @@ INSERT INTO picklist (picklist_id, name, table_name, field_name, read_only) VALU
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,1,'Yes','Yes');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,2,'No','No');
 INSERT INTO picklistitem (picklist_id, ordinal, title, value) VALUES (101,3,'?','?');
+-- changeset chicoreus:166
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('child of', 'parent of', 'children');
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('student of', 'teacher of', 'students');
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('spouse of', 'spouse of', 'married to');
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('could be', 'confused with', 'confused with');  -- to accompany nototherwisespecified 
 INSERT INTO ctrelationshiptype (relationship, inverse, collective) VALUES ('successor of', 'predecessor of', 'sucessors');  -- to relate organizations 
+-- changeset chicoreus:167
 INSERT INTO ctagentnametype (type, ordinal) VALUES ('full name',1);
 INSERT INTO ctagentnametype (type, ordinal) VALUES ('standard abbreviation',2);
 INSERT INTO ctagentnametype (type, ordinal) VALUES ('standard botanical abbreviation',3);
@@ -156,6 +166,7 @@ INSERT INTO ctagentnametype (type, ordinal) VALUES ('initials last name',5);  --
 INSERT INTO ctagentnametype (type, ordinal) VALUES ('last name, initials',5);  -- expected form for first author.
 INSERT INTO ctagentnametype (type, ordinal) VALUES ('first initials last',5);
 INSERT INTO ctagentnametype (type, ordinal) VALUES ('first last',5);
+-- changeset chicoreus:168
 INSERT INTO ctlengthunit (lengthunit) VALUES ('meters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('centimeters');
 INSERT INTO ctlengthunit (lengthunit) VALUES ('milimeters');
@@ -171,12 +182,14 @@ INSERT INTO ctageclass (ageclass) VALUES ('nestling');
 INSERT INTO ctageclass (ageclass) VALUES ('subadult');
 INSERT INTO ctageclass (ageclass) VALUES ('immature');
 INSERT INTO ctageclass (ageclass) VALUES ('egg');
+-- changeset chicoreus:169
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','pup',4);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','chick',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','nestling',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','subadult',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','immature',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctageclass','egg',5);
+-- changeset chicoreus:170
 INSERT INTO ctbiologicalattributetype (name) VALUES ('sex');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('age');
 INSERT INTO ctbiologicalattributetype (name,valuecodetable) VALUES ('age class','ctageclass');
@@ -190,11 +203,13 @@ INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('body length
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('disk length','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('fork length','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('head length','ctlengthunit');
+-- changeset chicoreus:171
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','standard length',4);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','body length',4);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','disk length',4);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','fork length',4);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','head length',4);
+-- changeset chicoreus:172
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('axillary girth','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('crown-rump length','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('curvilinear length','ctlengthunit');
@@ -205,6 +220,7 @@ INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('hind foot w
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('hind foot without claw','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('tail length','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('tragus length','ctlengthunit');
+-- changeset chicoreus:173
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','axillary girth',3);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','crown-rump length',3);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','curvilinear length',3);
@@ -215,10 +231,13 @@ INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattri
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','hind foot without claw',3);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','tail length',3);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','tragus length',3);
+-- changeset chicoreus:174
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('total length','ctlengthunit');
+-- changeset chicoreus:175
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',3);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',4);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','total length',5);
+-- changeset chicoreus:176
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('wing chord','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name,unitscodetable) VALUES ('eggshell thickness','ctlengthunit');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('bare parts coloration');
@@ -232,6 +251,7 @@ INSERT INTO ctbiologicalattributetype (name) VALUES ('molt condition');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('ossification');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('plumage coloration');
 INSERT INTO ctbiologicalattributetype (name) VALUES ('plumage description');
+-- changeset chicoreus:177
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','wing chord',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','eggshell thickness',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','bare parts coloration',5);
@@ -245,12 +265,15 @@ INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattri
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ossification',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage coloration',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage description',5);
+-- changeset chicoreus:178
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record'); -- Do not show the encumbered record (e.g. hide a media record).
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('redact locality');  -- Redact coordinate, georeference, elevation, and detailed locality information associated with this record.  
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record and relations'); -- Do not show the encumbered record or related data object (e.g. for a taxon, hide units that use this taxon in an identificaiton; or for a media record hide the meida record and associated unit data).
+-- changeset chicoreus:179
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('phone');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('fax');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
+-- changeset chicoreus:180
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('utm/ups','utm');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('decimal degrees','ddg');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees minutes seconds','dms');
@@ -261,6 +284,7 @@ INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('rikets nät,
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('swiss grid','xy');
 INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('public land survey system (township section range)','plss');
 
+-- changeset chicoreus:181
 INSERT INTO geographytreedef (geographytreedef_id,full_name_direction,name) VALUES (1,-1,'geopolitical heirarchy');
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (1,', ',1,0,'root',0,null,null,null,'root',1);
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (2,', ',0,0,'continent',100,null,null,null,'continent',1);
@@ -295,6 +319,7 @@ INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, 
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (33,':' ,0,1,'ocean region',150,null,null,null,'ocean region',1);
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (34,', ',0,0,'ocean subregion',250,null,null,null,'ocean subregion',1);
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (35,', ',0,0,'exclusive economic zone',260,null,null,null,'maritime eez',1);
+-- changeset chicoreus:182
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (1,-1,"Geochronologic tree");
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
 INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (1,1,':',0,'Eon',100);
@@ -310,7 +335,7 @@ INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geo
 INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (104, 2,':',0,'Bed',500);
 INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
-
+-- changeset chicoreus:183
 INSERT INTO agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath) VALUES (2,'Linnaeus','https://viaf.org/viaf/34594730',1707,1778);
 INSERT INTO agentname(agent_id, type, name) VALUES (2,'full name','Carl von Linné');
 INSERT INTO agentname(agent_id, type, name) VALUES (2,'also known as','Carl Linnaeus');
@@ -318,4 +343,4 @@ INSERT INTO agentname(agent_id, type, name) VALUES (2,'standard botanical abbrev
 INSERT INTO agentname(agent_id, type, name) VALUES (2,'standard abbreviation','Linné');
 INSERT INTO agentlink (agent_id, type, link, text) VALUES (2,'wiki','https://en.wikipedia.org/wiki/Carl_Linnaeus','Wikipedia entry');
 
---  The last liquibase changeset in this document was number 45
+--  The last liquibase changeset in this document was number 183

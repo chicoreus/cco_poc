@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset chicoreus:35 dbms:mysql
+-- changeset chicoreus:149 dbms:mysql
 
 drop function if exists cco_full.extractFromString;
 
@@ -20,14 +20,14 @@ create function cco_full.extractFromString(delimiter varchar(10), string varchar
 returns varchar(2000) deterministic
 RETURN replace( substring(substring_index(string, delimiter, position), length(substring_index(string, delimiter, position-1))+1), delimiter, ''); 
 
--- changeset chicoreus:36 dbms:mysql
+-- changeset chicoreus:150 dbms:mysql
 
 drop function if exists cco_full.getHigherTaxonAtRank;
 
 
--- changeset chicoreus:37 dbms:none
+-- changeset chicoreus:151 dbms:none
 delimiter |
--- changeset chicoreus:37 endDelimiter:\| dbms:mysql
+-- changeset chicoreus:152 endDelimiter:\| dbms:mysql
 
 -- Obtain the name of a higher taxon at a particular rank from an entry in the taxon tree.
 -- For example, obtain the family into which some species is placed.
@@ -105,16 +105,16 @@ BEGIN
    return sci_name;
 END |
 
--- changeset chicoreus:38  dbms:none
+-- changeset chicoreus:153  dbms:none
 delimiter ;
--- changeset chicoreus:38 endDelimiter:; dbms:mysql
+-- changeset chicoreus:153 endDelimiter:; dbms:mysql
 
 drop function if exists cco_full.getHigherGeographyAtRank;
 
--- changeset chicoreus:39 dbms:none
+-- changeset chicoreus:154 dbms:none
 delimiter |
 
--- changeset chicoreus:39 endDelimiter:\| dbms:mysql
+-- changeset chicoreus:154 endDelimiter:\| dbms:mysql
 
 -- Obtain the name of a higher geography at a particular rank from an entry in the geography tree.
 -- For example, obtain the family into which some species is placed.
@@ -192,9 +192,9 @@ BEGIN
    return geog_name;
 END |
 
--- changeset chicoreus:40 dbms:none
+-- changeset chicoreus:155 dbms:none
 delimiter ;
--- changeset chicoreus:40 endDelimiter:; dbms:mysql
+-- changeset chicoreus:155 endDelimiter:; dbms:mysql
 
 drop function if exists cco_full.getCurrentIdentification;
 drop function if exists cco_full.getCurrentIdentID;
@@ -204,9 +204,9 @@ drop function if exists cco_full.getPreparations;
 drop function if exists cco_full.getParts;
 drop function if exists cco_full.getCatalogNumbers;
 
--- changeset chicoreus:41 dbms:none
+-- changeset chicoreus:156 dbms:none
 delimiter |
--- changeset chicoreus:41 endDelimiter:\| dbms:mysql
+-- changeset chicoreus:156 endDelimiter:\| dbms:mysql
 
 create function cco_full.getCurrentIdentification(identifiableitemid INT)
 returns VARCHAR(255)
@@ -333,10 +333,10 @@ BEGIN
    return result;
 END |
 
--- changeset chicoreus:42 dbms:none
+-- changeset chicoreus:157 dbms:none
 delimiter ;
--- changeset chicoreus:42 endDelimiter:; dbms:mysql
+-- changeset chicoreus:157 endDelimiter:; dbms:mysql
 -- just a placeholder for the delimiter
 select 1;
 
---  The last liquibase changeset in this document was number 42
+--  The last liquibase changeset in this document was number 157
