@@ -1454,7 +1454,6 @@ DEFAULT CHARSET=utf8;
 -- Each encumberance is visible to one and only one scope.
 -- Each scope provides the visiblility for zero to many encumberances.
 
--- changeset chicoreus:085
 ALTER TABLE encumberance add constraint fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 -- changeset chicoreus:086
 ALTER TABLE encumberance add constraint fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
@@ -1476,7 +1475,7 @@ DEFAULT CHARSET=utf8;
 -- Each catitemencumberance is one and only one encumberance.
 -- Each catitemencumberance is for one and only one catalogeditem.
 
--- changeset chicoreus:088
+-- changeset chicoreus:089
 CREATE TABLE attachmentencumberance ( 
    -- Definition: relationship between encumberances and attachment (metadata records), encumberance of actual media objects needs to be handleed by a digital asset management system.
    attachmentencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1491,7 +1490,7 @@ DEFAULT CHARSET=utf8;
 -- Each attachmentencumberance is one and only one encumberance.
 -- Each attachmentencumberance is for one and only one attachment.
 
--- changeset chicoreus:089
+-- changeset chicoreus:090
 CREATE TABLE localityencumberance ( 
    -- Definition: relationship between encumberances and localities (e.g. for fossil localities where not publicizing the locality was a condition of collecting at that locality).   
    localityencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1506,7 +1505,7 @@ DEFAULT CHARSET=utf8;
 -- Each localityencumberance is one and only one encumberance.
 -- Each localityencumberance is for one and only one locality.
 
--- changeset chicoreus:090
+-- changeset chicoreus:091
 CREATE TABLE taxonencumberance ( 
    -- Definition: relationship between encumberances and taxa (e.g. for soon-to-be-described species, or for taxa which are controled substances).   
    taxonencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1521,7 +1520,7 @@ DEFAULT CHARSET=utf8;
 -- Each taxonencumberance is one and only one encumberance.
 -- Each taxonencumberance is for one and only one taxon.
 
--- changeset chicoreus:091
+-- changeset chicoreus:092
 CREATE TABLE address (
   -- Definition: an address for an agent
   address_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1549,11 +1548,11 @@ DEFAULT CHARSET=utf8;
 create unique index idx_address_u_startdateid on address(start_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_address_u_enddateid on address(end_eventdate_id);  --  Event dates should not be reused.
 
--- changeset chicoreus:092
+-- changeset chicoreus:093
 CREATE INDEX idx_address_addagent_id on address(address_for_agent_id);
 
 ALTER TABLE address add constraint fk_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
--- changeset chicoreus:093
+-- changeset chicoreus:094
 ALTER TABLE address add constraint fk_add_startevdate foreign key (start_eventdate_id) references eventdate (eventdate_id) on update cascade; 
 ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_id) references eventdate (eventdate_id) on update cascade; 
 
@@ -1566,7 +1565,7 @@ ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_i
 -- Each address ends use at zero or one eventdate.
 -- Each eventdate is the end for one and only one address.
 
--- changeset chicoreus:094
+-- changeset chicoreus:095
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
    typename varchar(255) not null primary key 
@@ -1574,7 +1573,7 @@ CREATE TABLE ctelectronicaddresstype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
--- changeset chicoreus:095
+-- changeset chicoreus:096
 CREATE TABLE electronicaddress ( 
    -- Definition: email, phone, fax, or other electronic contact address for an agent
    electronicaddress_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1590,10 +1589,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (typename) references ctelectronicaddresstype (typename) on update cascade;
--- changeset chicoreus:096
+-- changeset chicoreus:097
 ALTER TABLE electronicaddress add constraint fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
 
--- changeset chicoreus:097
 create unique index idx_eaddress_u_agentprimary on electronicaddress(address_for_agent_id, is_primary);  --  Only one primary electronic address for an agent.
 
 -- Each electronicaddress is of one and only one (ct)electronicaddresstype.
