@@ -163,7 +163,7 @@ CREATE TABLE unit (
   materialsample_id bigint,
   verbatim_collection_description text,
   collectingevent_id bigint not null,
-  unit_remarks text
+  remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -188,7 +188,8 @@ CREATE TABLE identifiableitem (
   catalogeditem_id bigint,
   individual_count int,
   individual_count_modifier varchar(50),  -- e.g. +
-  individual_count_units varchar(50)      -- e.g. valves
+  individual_count_units varchar(50),      -- e.g. valves
+  remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -314,7 +315,7 @@ CREATE TABLE taxon (
    scientific_name varchar(900) not null,   -- the complete scientific name for the taxon, without the authorship string
    trivial_epithet varchar(64) not null,    -- the lowest rank epithet of this scientific name (e.g. the subspecific eptithet for a subspecies).
    cultivar_name varchar(32) default null,  
-   authorship varchar(900) not null,  -- the authorship string for the scientific name
+   authorship varchar(900) not null default '',  -- the authorship string for the scientific name
    nomenclatural_code varchar(20) default null,  -- the nomenclatural code that applies to the formulation of this name and its authorship 
    display_name varchar(2000) default null,  -- assembled name, with markup for display in html
    parent_id bigint,   -- pointer to parent node in tree 
@@ -1965,9 +1966,9 @@ CREATE TABLE geography (
   geography_code varchar(24) default null,  -- standard code for the geography (e.g. country code, fips code).
   geography_code_type varchar(24) default null, -- which standard code is used for the geography_code.
   guid varchar(128) default null,
-  is_accepted boolean not null,  -- is a locally accepted value 
+  is_accepted boolean not null default true,  -- is a locally accepted value 
   accepted_id bigint default null,  -- if not accepted, which is the accepted geography entry to use instead.
-  is_current boolean default null, -- is a current geopolitical entity 
+  is_current boolean not null default true, -- is a current geopolitical entity 
   geographytreedef_id bigint not null,  -- which geography tree is this geography placed in    ??Redundant??
   geographytreedefitem_id bigint not null -- which node definition applies to this node.
 ) 

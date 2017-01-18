@@ -78,12 +78,21 @@
       </activation>
       <properties>
          <build.liquibasePropertyFile>liquibase_cco_full</build.liquibasePropertyFile>
+         <build.liquibaseChangeLogFile>edu/harvard/huh/specify/datamodel/cco_full/db/db.changelog-master.xml</build.liquibaseChangeLogFile>
+      </properties>
+    </profile>
+    <profile>
+      <id>cco_full_examples</id>
+      <properties>
+         <build.liquibasePropertyFile>liquibase_cco_full</build.liquibasePropertyFile>
+         <build.liquibaseChangeLogFile>edu/harvard/huh/specify/datamodel/cco_full/db/db.changelog-withexamples.xml</build.liquibaseChangeLogFile>
       </properties>
     </profile>
     <profile>
       <id>cco_poc</id>
       <properties>
          <build.liquibasePropertyFile>liquibase_cco_poc</build.liquibasePropertyFile>
+         <build.liquibaseChangeLogFile>edu/harvard/huh/specify/datamodel/cco_poc/db/db.changelog-master.xml</build.liquibaseChangeLogFile>
       </properties>
     </profile>
   </profiles>
@@ -98,6 +107,7 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <propertyFile>config/${build.liquibasePropertyFile}.properties</propertyFile>
+                            <changeLogFile>${build.liquibaseChangeLogFile}</changeLogFile>
                         </configuration>
                         <goals>
                             <goal>update</goal>

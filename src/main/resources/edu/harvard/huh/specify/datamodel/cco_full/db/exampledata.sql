@@ -1,4 +1,8 @@
+-- liquibase formatted sql
+
 -- Example data illustrating the use of the cco_full schema.
+
+-- changeset chicoreus:184
 
 -- Real agents (authors, collectors) used in the example data.
 
@@ -30,46 +34,48 @@ insert into agentlink (agent_id, type, link, text) values (6,'wiki','https://en.
 
 -- Real taxa used in the example data
 
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (2, 'Fungi', 'Fungi', 1, '/1/2',2, 10, 'ICNafp');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (3, 'Animalia', 'Animalia', 1, '/1/3',2, 10, 'ICZN');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (4, 'Plantae', 'Plantae', 1, '/1/4',2, 10, 'ICNafp');
+-- changeset chicoreus:185
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (2, 'Fungi', 'Fungi','Fungi', 1, '/1/2',2, 10, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (3, 'Animalia', 'Animalia','Animalia', 1, '/1/3',2, 10, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (4, 'Plantae', 'Plantae','Plantae', 1, '/1/4',2, 10, 'ICNafp');
 
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (5, 'Parmeliaceae', 'Parmeliaceae', 2, '/1/2/5',14, 140, 'ICNafp');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (6, 'Xanthoparmelia', '<em>Xanthoparmelia</em>', 5, '/1/2/5/6',17, 180, 'ICNafp');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (7, 'Lichen', '<em>Lichen</em>', 2, '/1/2/7',17, 180, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (5, 'Parmeliaceae', 'Parmeliaceae','Parmeliaceae', 2, '/1/2/5',14, 140, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (6, 'Xanthoparmelia', '<em>Xanthoparmelia</em>', 'Xanthoparmelia', 5, '/1/2/5/6',17, 180, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (7, 'Lichen', '<em>Lichen</em>','Lichen', 2, '/1/2/7',17, 180, 'ICNafp');
 
-insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, parexauthor_agent_id, author_agent_id, year_published, nomenclator_guid) 
-       values (8, 'Xanthoparmelia conspersa', '(Ehrh. ex Ach.) Hale', '<em>Xanthoparmelia conspersa</em> (Ehrh. ex Ach.) Hale', 6, '/1/2/5/6/8',19, 220, 'ICNafp',4,5,3, '(1974)', 'urn:lsid:indexfungorum.org:names:343884');
-insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, exauthor_agent_id, year_published, accepted_taxon_id, nomenclator_guid) 
-       values (9, 'Lichen conspersus', 'Ehrh. ex Ach.', '<em>Lichen conspersus</em> Ehrh. ex Ach.', 7, '/1/2/7/9',19, 220, 'ICNafp',4,5,'1799 [1798]',7, 'urn:lsid:indexfungorum.org:names:393893');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, parexauthor_agent_id, author_agent_id, year_published, nomenclator_guid) 
+       values (8, 'Xanthoparmelia conspersa', '(Ehrh. ex Ach.) Hale', '<em>Xanthoparmelia conspersa</em> (Ehrh. ex Ach.) Hale','conspersa', 6, '/1/2/5/6/8',19, 220, 'ICNafp',4,5,3, '(1974)', 'urn:lsid:indexfungorum.org:names:343884');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, exauthor_agent_id, year_published, accepted_taxon_id, nomenclator_guid) 
+       values (9, 'Lichen conspersus', 'Ehrh. ex Ach.', '<em>Lichen conspersus</em> Ehrh. ex Ach.','conspersus', 7, '/1/2/7/9',19, 220, 'ICNafp',4,5,'1799 [1798]',7, 'urn:lsid:indexfungorum.org:names:393893');
 
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (10, 'Fagaceae', 'Fagaceae', 4, '/1/4/10',14, 140, 'ICNafp');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (11, 'Quercus', '<em>Quercus</em>', 10, '/1/4/10/11',17, 180, 'ICNafp');
-insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
-       values (12, 'Quercus alba', 'L.', '<em>Quercus alba</em> L.', 11, '/1/4/10/11/12',19, 220, 'ICNafp',2,'1753','urn:lsid:ipni.org:names:295763-1:1.2.2.1.1.3');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (10, 'Fagaceae', 'Fagaceae', 'Fagaceae',  4, '/1/4/10',14, 140, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (11, 'Quercus', '<em>Quercus</em>', 'Quercus', 10, '/1/4/10/11',17, 180, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
+       values (12, 'Quercus alba', 'L.', '<em>Quercus alba</em> L.','alba', 11, '/1/4/10/11/12',19, 220, 'ICNafp',2,'1753','urn:lsid:ipni.org:names:295763-1:1.2.2.1.1.3');
 
 
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (13, 'Mollusca', 'Mollusca', 3, '/1/3/13', 4, 30, 'ICZN');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (14, 'Gastropoda', 'Gastropoda', 13, '/1/3/13/14', 7, 60, 'ICZN');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (15, 'Littorinidae', 'Littorinidae', 14, '/1/3/13/14/15', 14, 140, 'ICZN');
-insert into taxon (taxon_id, scientific_name, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (16, 'Littorina', 'Littorina', 15, '/1/3/13/14/15/16', 17, 180, 'ICZN');
-insert into taxon (taxon_id, scientific_name, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
-       values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> ()', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (13, 'Mollusca', 'Mollusca', 'Mollusca', 3, '/1/3/13', 4, 30, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (14, 'Gastropoda', 'Gastropoda', 'Gastropoda', 13, '/1/3/13/14', 7, 60, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (15, 'Littorinidae', 'Littorinidae', 'Littorinidae', 14, '/1/3/13/14/15', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (16, 'Littorina', 'Littorina', 'Littorina', 15, '/1/3/13/14/15/16', 17, 180, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+       values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> ()', 'littorea', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
 
 -- Real geographies used in the example data 
 
+-- changeset chicoreus:186
 insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (1, 'Earth', 'Earth', 0, null, '/1', 'http://sws.geonames.org/6295630/',1,1);
 insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
@@ -93,6 +99,7 @@ insert into geography (geography_id, name, full_name, rank_id, parent_id, parent
 
 -- Example catalog number series and collections used in the example data.
 
+-- changeset chicoreus:187
 insert into catalognumberseries (catalognumberseries_id, name) values (1,'Example:Botany Accession Numbers');
 insert into catalognumberseries (catalognumberseries_id, name) values (2,'Example:Zoology Catalog Numbers');
 
@@ -110,32 +117,37 @@ insert into accession (accession_id, accessionnumber, remarks, scope_id) values 
 
 -- The Examples: 
 
+-- changeset chicoreus:188
 -- Case 1, simple case, one unit, one organism, one part, one preparation.
+-- This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (1, 'Mt. Monadnock','Mount Monadnock', 'Example Locality',8,8);
 insert into collector (collector_id, verbatim_collector, etal, remarks) values (1, 'Tuckerman','et al.','Example collector');
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (1,'10 Jan, 1880','1880-01-10','1800-01-01');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (1,1,1,'1880',1);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (1,1,'Ex-999');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (1,1,'001',1,1);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550', 'This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).');
 insert into preparation (preparation_id,preparation_type,preservation_type,status) values (1,'sheet','dried','in collection');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (1,1,1,'branch',1);
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id) values (12,1,1,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,is_filed_under) values (12,1,1,1,1); 
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (2,'15 Jan, 1880','1880-01-15','1880-01-15');
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,1,0,6,2); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,1,0,6,2,0); 
 
 -- SELECT for Case 1 as single row for flat darwin core:
 -- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where catalog_number = '001' and id.is_current = 1;
 -- Alternatively:
 -- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id), did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, concat(catalognumber_prefix,catalog_number) as catalogNumber, part_name, lot_count, preparation_type, preservation_type from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '001' and id.identification_id = getCurrentIdentId(ii.identifiableitem_id) ;
 
+-- changeset chicoreus:189
 -- Case 2, packet with two organisms (lichen on bark in packet), with the packet being the cataloged object,
 -- thus (one catalog number and two occurrences).
+-- This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, one physical loanable preparation.  Single catalog number on the preparation.
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',8,8);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (3,'10 Feb, 1882','1882-02-10',1882-02-10);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (3,'10 Feb, 1882','1882-02-10','1882-02-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (2, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (2,2,2,'1882',3);
-insert into unit (unit_id,collectingevent_id,unit_field_number) values (2,2,'Ex-9999');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (2,2,'Ex-9999','This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, one physical loanable preparation.  Single catalog number on the preparation.'
+);
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (2,2,null,1,'urn:uuid:32dfd81a-b2af-416c-b797-d610281ca15a');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (3,2,null,1,'urn:uuid:1d3c8962-8dbe-4255-89e0-3828fb30827a');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (2,1,'002',1,1);
@@ -143,21 +155,23 @@ insert into preparation (preparation_id,preparation_type,preservation_type,statu
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (2,2,2,'whole organism',1);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (3,3,2,'bark fragment',1);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (4,'10 Feb, 1882','1882-02-10','1882-02-10');
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (5,'10 Feb, 1882','1882-02-10',1882-02-10);
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (8,2,1,6,4); 
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (12,3,1,6,5); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (5,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (8,2,1,6,4,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,3,1,6,5,0); 
 
 -- SELECT for Case 2 as two rows (one per dwc:occurrenceId) for flat DarwinCore.
 -- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '002' and ci.catalognumberseries_id = 1 and id.identification_id = getCurrentIdentId(ii.identifiableitem_id);
 
 
+-- changeset chicoreus:190
 -- Case 3, lot of one organism but two preparations (with the preparations cataloged)
+-- This corresponds to: Test Case 3a –One biological individual in several specimens of several different preparation types, each preparation cataloged.  One biological individual, several cataloged, loanable preparations of different types, each with a catalog number (potentially in different catalog number series or even collections).
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (3, 'Cardiff Bay','Cardiff Bay', 'Example Locality',5,9);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (6,'4-10 62','1962-04-10','1962-04-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (3, null, 'A. Jones','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (3,3,3,'4-10 62',6);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (3,3,'62-153');
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (4,3,null,30,'urn:uuid:900d240e-5d85-4b5b-b8c2-b9e97db34c51');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (4,3,null,30,'urn:uuid:900d240e-5d85-4b5b-b8c2-b9e97db34c51','This corresponds to: Test Case 3a –One biological individual in several specimens of several different preparation types, each preparation cataloged.  One biological individual, several cataloged, loanable preparations of different types, each with a catalog number.');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (3,2,'Z0001',1,4);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (4,2,'Z0002',1,4);
 insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (3,'tray','dry','in collection',3);
@@ -165,7 +179,7 @@ insert into preparation (preparation_id,preparation_type,preservation_type,statu
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (4,4,3,'shell',30);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (5,4,4,'viscera',1);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (7,'1980','1980','1980-01-01','1980-12-31');
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id) values (17,4,1,6,7); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (17,4,1,6,7,1); 
 
 
 -- SELECT for Case 3 as one row for flat DarwinCore.
@@ -174,8 +188,31 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 -- SELECT for Case 3 as two rows (one per preparation, sharing the same dwc:occurrenceId), needs reduction for flat DarwinCore.
 -- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where ( catalog_number = 'Z0001' or catalog_number = 'Z0002' ) and ci.catalognumberseries_id = 2;
 
+-- changeset chicoreus:191
+-- Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.
+select 'TODO: case 4';
 
+-- changeset chicoreus:192
+-- Test Case 2 –Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.
+select 'TODO: case 5';
+
+-- changeset chicoreus:193
+-- Test Case 3 –One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.
+select 'TODO: case 6';
+
+-- changeset chicoreus:194
+-- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
+select 'TODO: case 7';
+
+-- changeset chicoreus:195
+-- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation.
+select 'TODO: case 8';
+
+-- changeset chicoreus:196
+-- Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)
+select 'TODO: case 9';
 
 -- Retrieve all examples as flat DarwinCore
-select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id;
+select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations, concat(ifnull(u.remarks,''), ifnull(ii.remarks,'')) as remarks from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id;
 
+-- The last liquibase changeset in this file was number 196

@@ -79,6 +79,10 @@ To run the project type '**mvn  clean install**' in the same directory that the 
 
     mvn clean install
 
+If you wish to include the examples, use the cco_full_examples profile instead: 
+
+    mvn clean install -P cco_full_examples
+
 ## Configuration Files 
 
 ### For maven.
