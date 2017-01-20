@@ -190,7 +190,35 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- changeset chicoreus:191
 -- Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.
-select 'TODO: case 4';
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (4, 'Mt. Greylock','Mount Greylock', 'Example Locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (8,'July 15, 83','1883-07-15','1883-07-15');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (4, 6, 'Tuckerman','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (4,4,4,'July 15, 83',8);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (4,2,'Ex-99904','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (5, 'Mt. Washignton','Mount Washington', 'Example Locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (9,'July 5, 1882','1882-07-05','1882-07-05');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (5, 6, 'Tuckerman','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (5,5,5,'July 5, 1882',9);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (5,2,'Ex-88804','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (5,1,'004-a',1,1);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (6,1,'004-b',1,1);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (5,4,5,1,'urn:uuid:abffe64d-a1b2-4f70-9916-186397345a13');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (6,5,6,1,'urn:uuid:70657b0b-ef91-4b5e-b0c6-14039e6b3366');
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (5,'sheet','dried','in collection',null);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (6,5,5,'dried plant',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (7,6,5,'dried plant',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (10,'1884','1884','1884-01-01','1884-12-31');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (11,'1884','1884','1884-01-01','1884-12-31');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (12,'15 Mar, 2006','2006-03-15','2006-03-15');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (13,'15 Mar. 2006','2006-03-15','2006-03-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,5,1,1,12,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,5,0,6,10,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,6,1,1,13,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,6,0,6,11,1); 
 
 -- changeset chicoreus:192
 -- Test Case 2 –Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.
