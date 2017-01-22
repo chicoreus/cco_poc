@@ -32,6 +32,16 @@ insert into agentname(agent_id, type, name) values (6,'full name','Edward Tucker
 insert into agentname(agent_id, type, name) values (6,'standard botanical abbreviation','Tuckerman');
 insert into agentlink (agent_id, type, link, text) values (6,'wiki','https://en.wikipedia.org/wiki/Edward_Tuckerman','Wikipedia entry');
 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (7,'Johann Leonhard Frisch','http://viaf.org/viaf/132112889',1737,1795,'Frisch','','','Johann','Leonhard','Frisch');
+insert into agentname(agent_id, type, name) values (7,'full name','Johann Leonhard Frisch');
+insert into agentname(agent_id, type, name) values (7,'last name, initials','Frisch, J.L.');
+
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (8,'Charles Bixler Heiser','http://viaf.org/viaf/91708870',1920,2010,'Heiser','','','Charles','Bixler','Heiser');
+insert into agentname(agent_id, type, name) values (8,'full name','Charles Bixler Heiser');
+insert into agentname(agent_id, type, name) values (8,'last name, initials','Heiser, C.B.');
+insert into agentname(agent_id, type, name) values (8,'standard botanical abbreviation','Heiser');
 -- Real taxa used in the example data
 
 -- changeset chicoreus:185
@@ -72,6 +82,16 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (16, 'Littorina', 'Littorina', 'Littorina', 15, '/1/3/13/14/15/16', 17, 180, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
        values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> ()', 'littorea', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (18, 'Chordata', 'Chordata', 'Chordata', 3, '/1/3/18', 4, 30, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (19, 'Mammalia', 'Mammalia', 'Mammalia', 18, '/1/3/18/19', 7, 60, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (20, 'Cannidae', 'Canidae', 'Canidae', 19, '/1/3/18/19/20', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, authorship, author_agent_id, year_published,remarks)
+       values (21, 'Vulpes', 'Vulpes', 'Vulpes', 20, '/1/3/18/19/20/21', 17, 180, 'ICZN','Frisch, 1775',7,'1775','While Frisch (1775) is a rejected work (ICZN Opinion 258, 1954), Vulpes has been retained (ICZN Opinion 1129, 1979).  Have not confirmed that Frisch, Johann Leonhard 1737-1795 is the Johann Leonhard Frisch who authored this work, but, but this work (Das Natur-System der Vierfußigen Thiere) is not in the biographical record of Frisch, Johann Leonhard, 1666-1743 from Berlin-Brandenburgische Akademie der Wissenschaften Akademiebibliothek.');
+
 
 -- Real geographies used in the example data 
 
@@ -194,12 +214,12 @@ insert into locality (locality_id, verbatim_locality, specificlocality, remarks,
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (8,'July 15, 83','1883-07-15','1883-07-15');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (4, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (4,4,4,'July 15, 83',8);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (4,2,'Ex-99904','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (4,4,'Ex-99904','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (5, 'Mt. Washignton','Mount Washington', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (9,'July 5, 1882','1882-07-05','1882-07-05');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (5, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (5,5,5,'July 5, 1882',9);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (5,2,'Ex-88804','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (5,5,'Ex-88804','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (5,1,'004-a',1,1);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (6,1,'004-b',1,1);
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (5,4,5,1,'urn:uuid:abffe64d-a1b2-4f70-9916-186397345a13');
@@ -222,7 +242,34 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- changeset chicoreus:192
 -- Test Case 2 –Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.
-select 'TODO: case 5';
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (6, 'Mt. Greylock','Mount Greylock', 'Example Locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (14,'Aug 15, 83','1983-08-15','1983-08-15');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (6, 8, 'Heiser','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (6,6,6,'Aug 15, 83',14);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (6,6,'Ex-99905','This corresponds to one specimen from: Test Case 2 – Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.');
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (7, 'Mt. Washignton','Mount Washington', 'Example Locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (15,'July 5, 1881','1881-07-05','1881-07-05');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (7, 6, 'Tuckerman','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (7,7,7,'July 5, 1881',15);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (7,7,'Ex-88805','This corresponds to one specimen from: Test Case 2 – Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (7,6,null,1,'urn:uuid:c91c0242-6cc4-4865-b139-c443266e71cd');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (8,7,null,1,'urn:uuid:7860e7ea-7eca-4e12-80de-09c2b9ae0bf8');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (7,1,'005',1,1);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (6,'sheet','dried','in collection',7);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (8,7,6,'dried plant',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (9,8,6,'dried plant',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (16,'1884','1884','1884-01-01','1884-12-31');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (17,'1884','1884','1884-01-01','1884-12-31');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (18,'15 Mar, 2006','2006-03-15','2006-03-15');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (19,'15 Mar. 2006','2006-03-15','2006-03-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,7,1,1,18,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,7,0,8,16,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,8,1,1,19,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (12,8,0,6,17,1); 
 
 -- changeset chicoreus:193
 -- Test Case 3 –One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.
@@ -231,6 +278,10 @@ select 'TODO: case 6';
 -- changeset chicoreus:194
 -- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
 select 'TODO: case 7';
+
+-- Richmond, N; Tolman, Harry A.; 22 Dec. 1998
+-- Vulpes vulpes
+-- Skull, skeleton, skin, frozen tissue
 
 -- changeset chicoreus:195
 -- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation.
