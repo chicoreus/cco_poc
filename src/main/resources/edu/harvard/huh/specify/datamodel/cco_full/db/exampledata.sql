@@ -275,6 +275,30 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 -- Test Case 3 –One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.
 select 'TODO: case 6';
 
+-- insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (7, 'Passeio publico','Rio de Janeiro; Passeio Publico [public park]', 'Example Locality', **, **);
+-- insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (20,'10/4/1875','1875-10-04','1875-10-04');
+-- insert into collector (collector_id, agent_id, verbatim_collector, etal) values (7, 8, 'A.F.M. Glaziou','');
+-- -- Palm leaves that span multiple sheets.
+-- Angiospermae
+-- Arecaceae
+-- Cocos
+-- Syagrus
+-- Syagrus oleracea (Martius) Beccari
+-- Martius, Carl (Karl) Friedrich Philipp von
+-- C. F. P. Martius
+-- Mart.
+-- Beccari, Odoardo
+-- Becc.
+-- 
+-- A. F. M. Glaziou 
+-- 1875-10-04
+-- 8063
+-- ID as Cocos oleracea Martius
+-- 
+-- South America: Brazil
+-- Rio de Janeiro
+-- Passeio Publico (public park)
+
 -- changeset chicoreus:194
 -- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
 select 'TODO: case 7';
