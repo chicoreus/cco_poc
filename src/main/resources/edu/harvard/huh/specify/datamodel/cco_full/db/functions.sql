@@ -273,18 +273,23 @@ READS SQL DATA
 BEGIN
    declare result varchar(2000) default '';
    declare prep varchar(255);
+   declare ct varchar(255);
    declare sep varchar(2) default '';
    declare done int default 0;
    declare cur cursor for 
-      select distinct concat(preparation_type, ' (', preservation_type, ')') prep from part left join preparation on part.preparation_id = preparation.preparation_id where identifiableitem_id = identifiableitemid;
+      select concat(preparation_type, ' (', preservation_type, ')') prep, count(*) ct from part left join preparation on part.preparation_id = preparation.preparation_id where identifiableitem_id = identifiableitemid group by concat(preparation_type, ' (', preservation_type, ')'); 
    declare continue handler for not found set done = 1;
    open cur;
    getpreps: LOOP
-      fetch cur into prep;
+      fetch cur into prep, ct;
       if done = 1 then
         LEAVE getpreps;
       end if;
-      SET result = concat(result,sep,prep);
+      if ct > 1 then 
+         SET result = concat(result,sep,prep,'(',ct,')');
+      else 
+         SET result = concat(result,sep,prep);
+      end if;
       SET sep = "|";
    END LOOP;
    return result;

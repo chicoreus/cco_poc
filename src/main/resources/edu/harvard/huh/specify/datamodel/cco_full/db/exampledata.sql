@@ -42,6 +42,26 @@ insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearof
 insert into agentname(agent_id, type, name) values (8,'full name','Charles Bixler Heiser');
 insert into agentname(agent_id, type, name) values (8,'last name, initials','Heiser, C.B.');
 insert into agentname(agent_id, type, name) values (8,'standard botanical abbreviation','Heiser');
+
+
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (9,'A.F.M. Glaziou',null,null,null,'Glaziou','','','A.','F. M.','Glaziou');
+insert into agentname(agent_id, type, name) values (9,'last name, initials','Glaziou, A.F.M.');
+
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (10,'C. F. P. von Martius',null,null,null,'Mart.','von','','C.','F. P.','Martius');
+insert into agentname(agent_id, type, name) values (10,'last name, initials','Martius, C.F.P');
+insert into agentname(agent_id, type, name) values (10,'full name','Carl Friedrich Philipp von Martius');
+insert into agentname(agent_id, type, name) values (10,'also known as','Karl Friedrich Philipp von Martius');
+insert into agentname(agent_id, type, name) values (10,'initials last name','C.F.P. Martius');
+insert into agentname(agent_id, type, name) values (10,'standard botanical abbreviation','Mart.');
+
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (11,'Odoardo Beccari',null,null,null,'Becc.','','','O.','','Beccari');
+insert into agentname(agent_id, type, name) values (11,'last name, initials','Beccari, O.');
+insert into agentname(agent_id, type, name) values (11,'full name','Odoardo Beccari');
+insert into agentname(agent_id, type, name) values (11,'standard botanical abbreviation','Becc.');
+
 -- Real taxa used in the example data
 
 -- changeset chicoreus:185
@@ -92,6 +112,32 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, authorship, author_agent_id, year_published,remarks)
        values (21, 'Vulpes', 'Vulpes', 'Vulpes', 20, '/1/3/18/19/20/21', 17, 180, 'ICZN','Frisch, 1775',7,'1775','While Frisch (1775) is a rejected work (ICZN Opinion 258, 1954), Vulpes has been retained (ICZN Opinion 1129, 1979).  Have not confirmed that Frisch, Johann Leonhard 1737-1795 is the Johann Leonhard Frisch who authored this work, but, but this work (Das Natur-System der Vierfußigen Thiere) is not in the biographical record of Frisch, Johann Leonhard, 1666-1743 from Berlin-Brandenburgische Akademie der Wissenschaften Akademiebibliothek.');
 
+-- 22 Vulpes vulpes
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (23, 'Angiospermae', 'Angiospermae', 'Angiospermae', 4, '/1/4/23', 7, 60, 'ICNafp');
+
+update taxon set parent_id = 23, parentage = '/1/4/23/10' where taxon_id = 10;
+update taxon set parentage = '/1/4/23/10/11' where taxon_id = 11;
+update taxon set parentage = '/1/4/23/10/11' where taxon_id = 11;
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (24, 'Arecaceae', 'Arecaceae', 'Arecaceae', 23, '/1/4/23/24', 14, 140, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (25, 'Cocos', '<em>Cocos</em>', 'Cocos', 24, '/1/4/23/24/25',17, 180, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (26, 'Syagrus', '<em>Syagrus</em>', 'Syagrus', 24, '/1/4/23/24/26',17, 180, 'ICNafp');
+
+-- 27 Syagrus oleracea (Martius) Beccari
+-- Syagrus oleracea (Martius 10) Beccari 11
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, parauthor_agent_id, year_published, nomenclator_guid) 
+       values (27, 'Syagrus oleracea', '(Mart.) Becc.', '<em>Syagrus oleracea</em> (Mart.) Becc.','oleracea', 26, '/1/4/23/24/26/27',19, 220, 'ICNafp',11, 10,'','');
+
+-- 28  Cocos oleracea Martius
+-- Cocos oleracea Martius 10
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
+       values (28, 'Cocos oleracea', 'Mart.', '<em>Cocos oleracea</em> Mart.','oleracea', 25, '/1/4/23/24/25/28',19, 220, 'ICNafp',10,'','');
+
 
 -- Real geographies used in the example data 
 
@@ -116,6 +162,11 @@ insert into geography (geography_id, name, full_name, rank_id, parent_id, parent
 
 insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (9, 'Atlantic', 'Atlantic Ocean', 100, 1, '/1/9', 'http://www.geonames.org/',1,32);
+
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (10, 'South America', 'South America', 100, 1, '/1/10', '',1,2);
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (11, 'Brazil', 'Brazil', 200, 6, '/1/10/11', '',1,6);
 
 -- Example catalog number series and collections used in the example data.
 
@@ -273,32 +324,31 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- changeset chicoreus:193
 -- Test Case 3 –One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.
-select 'TODO: case 6';
+-- Palm leaves that span multiple sheets.
 
--- insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (7, 'Passeio publico','Rio de Janeiro; Passeio Publico [public park]', 'Example Locality', **, **);
--- insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (20,'10/4/1875','1875-10-04','1875-10-04');
--- insert into collector (collector_id, agent_id, verbatim_collector, etal) values (7, 8, 'A.F.M. Glaziou','');
--- -- Palm leaves that span multiple sheets.
--- Angiospermae
--- Arecaceae
--- Cocos
--- Syagrus
--- Syagrus oleracea (Martius) Beccari
--- Martius, Carl (Karl) Friedrich Philipp von
--- C. F. P. Martius
--- Mart.
--- Beccari, Odoardo
--- Becc.
--- 
--- A. F. M. Glaziou 
--- 1875-10-04
--- 8063
--- ID as Cocos oleracea Martius
--- 
--- South America: Brazil
--- Rio de Janeiro
--- Passeio Publico (public park)
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (8, 'Passeio publico','Rio de Janeiro; Passeio Publico [public park]', 'Example Locality', 11, 11);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (20,'10/4/1875','1875-10-04','1875-10-04');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (8, 9, 'A.F.M. Glaziou','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (8,8,8,'10/4/1875',20);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (8,8,'8063','This corresponds to Test Case 3 – One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.  (Leaves from a palm tree spread across several sheets)');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (9,8,null,1,'urn:uuid:2535a8b8-a7bc-40a5-b0d7-38614c67291e');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (21,'1875','1875','1875-01-10','1875-12-31');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (22,'15 Mar. 2006','2006-03-15','2006-03-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (27,9,1,1,22,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
+    values (28,9,0,9,21,0); 
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (8,1,'006',1,1);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (9,1,'007',1,1);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (10,1,'008',1,1);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (7,'sheet','dried','in collection',8);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (8,'sheet','dried','in collection',9);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (9,'sheet','dried','in collection',10);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (10,9,7,'dried plant',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (11,9,8,'dried plant',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (12,9,9,'dried plant',1);
 
+ 
 -- changeset chicoreus:194
 -- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
 select 'TODO: case 7';
