@@ -319,6 +319,8 @@ INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, 
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (33,':' ,0,1,'ocean region',150,null,null,null,'ocean region',1);
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (34,', ',0,0,'ocean subregion',250,null,null,null,'ocean subregion',1);
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (35,', ',0,0,'exclusive economic zone',260,null,null,null,'maritime eez',1);
+INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (36,', ',0,0,'state/province coastal waters',380,null,null,null,'off the coast of {state/province}',1);
+
 -- changeset chicoreus:182
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (1,-1,"Geochronologic tree");
 INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (2,-1,"Lithostratigraphic tree");

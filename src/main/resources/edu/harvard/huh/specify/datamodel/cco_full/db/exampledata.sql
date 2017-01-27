@@ -2,7 +2,7 @@
 
 -- Example data illustrating the use of the cco_full schema.
 
--- changeset chicoreus:184
+-- changeset chicoreus:exampleAgents
 
 -- Real agents (authors, collectors) used in the example data.
 
@@ -62,9 +62,26 @@ insert into agentname(agent_id, type, name) values (11,'last name, initials','Be
 insert into agentname(agent_id, type, name) values (11,'full name','Odoardo Beccari');
 insert into agentname(agent_id, type, name) values (11,'standard botanical abbreviation','Becc.');
 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (12,'Ruth D. Turner','http://viaf.org/viaf/85255758',1914,2000,'R.D. Turner','','','Ruth','Dixon','Turner');
+insert into agentname(agent_id, type, name) values (12,'last name, initials','Turner, R.D.');
+insert into agentname(agent_id, type, name) values (12,'full name','Ruth Dixon Turner');
+insert into agentname(agent_id, type, name) values (12,'also known as','Ruth D. Turner');
+insert into agentname(agent_id, type, name) values (12,'initials last name','R.D. Turner');
+
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string) 
+       values (13,'[no agent data]',null,null,null,'[no agent data]');
+insert into agentname(agent_id, type, name) values (13,'full name','[no agent data]');
+
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (14,'Harry A. Tolman',null,null,null,'H.A. Tolman','','','Harry','A.','Tolman');
+insert into agentname(agent_id, type, name) values (14,'last name, initials','Tolman, H.A.');
+insert into agentname(agent_id, type, name) values (14,'also known as','Harry A. Tolman');
+insert into agentname(agent_id, type, name) values (14,'initials last name','H. A. Tolman');
+
 -- Real taxa used in the example data
 
--- changeset chicoreus:185
+-- changeset chicoreus:exampleTaxa
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (2, 'Fungi', 'Fungi','Fungi', 1, '/1/2',2, 10, 'ICNafp');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
@@ -101,7 +118,7 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (16, 'Littorina', 'Littorina', 'Littorina', 15, '/1/3/13/14/15/16', 17, 180, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
-       values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> ()', 'littorea', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
+       values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> (Linnaeus, 1758)', 'littorea', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (18, 'Chordata', 'Chordata', 'Chordata', 3, '/1/3/18', 4, 30, 'ICZN');
@@ -109,10 +126,10 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (19, 'Mammalia', 'Mammalia', 'Mammalia', 18, '/1/3/18/19', 7, 60, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (20, 'Cannidae', 'Canidae', 'Canidae', 19, '/1/3/18/19/20', 14, 140, 'ICZN');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, authorship, author_agent_id, year_published,remarks)
-       values (21, 'Vulpes', 'Vulpes', 'Vulpes', 20, '/1/3/18/19/20/21', 17, 180, 'ICZN','Frisch, 1775',7,'1775','While Frisch (1775) is a rejected work (ICZN Opinion 258, 1954), Vulpes has been retained (ICZN Opinion 1129, 1979).  Have not confirmed that Frisch, Johann Leonhard 1737-1795 is the Johann Leonhard Frisch who authored this work, but, but this work (Das Natur-System der Vierfußigen Thiere) is not in the biographical record of Frisch, Johann Leonhard, 1666-1743 from Berlin-Brandenburgische Akademie der Wissenschaften Akademiebibliothek.');
-
--- 22 Vulpes vulpes
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, authorship, author_agent_id, year_published,remarks,nomenclator_guid)
+       values (21, 'Vulpes', 'Vulpes', 'Vulpes', 20, '/1/3/18/19/20/21', 17, 180, 'ICZN','Frisch, 1775',7,'1775','While Frisch (1775) is a rejected work (ICZN Opinion 258, 1954), Vulpes has been retained (ICZN Opinion 1129, 1979).  Have not confirmed that Frisch, Johann Leonhard 1737-1795 is the Johann Leonhard Frisch who authored this work, but, but this work (Das Natur-System der Vierfußigen Thiere) is not in the biographical record of Frisch, Johann Leonhard, 1666-1743 from Berlin-Brandenburgische Akademie der Wissenschaften Akademiebibliothek.','urn:lsid:marinespecies.org:taxname:404129');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+       values (22, 'Vulpes vulpes', 'Linnaeus, 1758', '<em>Vulpes vulpes</em> Linnaeus, 1758', 'vulpes', 21, '/1/3/18/19/20/21/22', 19, 220, 'ICZN',2,'1758','http://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?s=y&id=14000892');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (23, 'Angiospermae', 'Angiospermae', 'Angiospermae', 4, '/1/4/23', 7, 60, 'ICNafp');
@@ -131,17 +148,25 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 -- 27 Syagrus oleracea (Martius) Beccari
 -- Syagrus oleracea (Martius 10) Beccari 11
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, parauthor_agent_id, year_published, nomenclator_guid) 
-       values (27, 'Syagrus oleracea', '(Mart.) Becc.', '<em>Syagrus oleracea</em> (Mart.) Becc.','oleracea', 26, '/1/4/23/24/26/27',19, 220, 'ICNafp',11, 10,'','');
+       values (27, 'Syagrus oleracea', '(Mart.) Becc.', '<em>Syagrus oleracea</em> (Mart.) Becc.','oleracea', 26, '/1/4/23/24/26/27',19, 220, 'ICNafp',11, 10,'','urn:lsid:ipni.org:names:1177502-2:1.3');
 
 -- 28  Cocos oleracea Martius
 -- Cocos oleracea Martius 10
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
-       values (28, 'Cocos oleracea', 'Mart.', '<em>Cocos oleracea</em> Mart.','oleracea', 25, '/1/4/23/24/25/28',19, 220, 'ICNafp',10,'','');
+       values (28, 'Cocos oleracea', 'Mart.', '<em>Cocos oleracea</em> Mart.','oleracea', 25, '/1/4/23/24/25/28',19, 220, 'ICNafp',10,'','urn:lsid:ipni.org:names:62615-2:1.2');
 
+-- Janthinidae 
+-- Janthina janthina (Linnaeus, 1758)  urn:lsid:marinespecies.org:taxname:140155
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (29, 'Janthinidae', 'Janthinidae', 'Janthinidae', 14, '/1/3/13/14/29', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (30, 'Janthina', 'Janthina', 'Janthina', 29, '/1/3/13/14/29/30', 17, 180, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+       values (31, 'Janthina janthina', '(Linnaeus, 1758)', '<em>Janthina janthina</em> (Linnaeus, 1758)', 'janthina', 16, '/1/3/13/14/29/30/31', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140155');
 
 -- Real geographies used in the example data 
 
--- changeset chicoreus:186
+-- changeset chicoreus:exampleGeographies
 insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (1, 'Earth', 'Earth', 0, null, '/1', 'http://sws.geonames.org/6295630/',1,1);
 insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
@@ -167,22 +192,37 @@ insert into geography (geography_id, name, full_name, rank_id, parent_id, parent
        values (10, 'South America', 'South America', 100, 1, '/1/10', '',1,2);
 insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
        values (11, 'Brazil', 'Brazil', 200, 6, '/1/10/11', '',1,6);
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (12, 'Maine', 'US: Maine', 300, 7, '/1/6/7/12', '',1,14);
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (13, 'High Seas', 'High Seas', 200, 1, '/1/13', '',1,6);
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (14, 'US Exclusive Economic Zone', 'US: EEZ', 260, 7, '/1/6/7/14', '',1,35);
+
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (15, 'North Atlantic', 'North Atlantic Ocean', 150, 9, '/1/9/15', 'http://www.geonames.org/',1,33);
+insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (16, 'Gulf of Maine', 'Gulf of Maine', 250, 9, '/1/9/15', 'http://www.geonames.org/',1,34);
 
 -- Example catalog number series and collections used in the example data.
 
 -- changeset chicoreus:187
 insert into catalognumberseries (catalognumberseries_id, name) values (1,'Example:Botany Accession Numbers');
 insert into catalognumberseries (catalognumberseries_id, name) values (2,'Example:Zoology Catalog Numbers');
+insert into catalognumberseries (catalognumberseries_id, name) values (3,'Example:Cryogenic Catalog Numbers');
 
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (1,'Example:Botany Department','example.com','example.com','Botany Department','http://example.com/',7);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (2,'Example:Mammalogy Department','example.com','example.com','Mammalogy Department','http://example.com/',3);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (3,'Example:Paleontology Department','example.com','example.com','Paleontology Department','http://example.com/',6);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (4,'Example:Malacology Department','example.com','example.com','Malacology Department','http://example.com/',2);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (5,'Example:Cryogenic Collection','example.com','example.com','Cryogenic collection','http://example.com/',1);
 
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (1,1);
 -- Example of a catalognumberseries that spans more than one department.
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (2,2);
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (2,3);
+insert into catnumseriescollection (catalognumberseries_id, collection_id) values (2,4);
+insert into catnumseriescollection (catalognumberseries_id, collection_id) values (3,5);
 
 insert into accession (accession_id, accessionnumber, remarks, scope_id) values (1,'1','Example default accession',1);
 
@@ -197,7 +237,7 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (1,1,1,'1880',1);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (1,1,'Ex-999');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (1,1,'001',1,1);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550', 'This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550', 'This corresponds to: Test Case 0 – Several (one) specimens on a sheet, one collecting event, one catalog number (a lot). (Simple herbarium sheet example)');
 insert into preparation (preparation_id,preparation_type,preservation_type,status) values (1,'sheet','dried','in collection');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (1,1,1,'branch',1);
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,is_filed_under) values (12,1,1,1,1); 
@@ -348,14 +388,55 @@ insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_co
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (11,9,8,'dried plant',1);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (12,9,9,'dried plant',1);
 
- 
+-- changeset chicoreus:lotofsnails
+-- This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (9, '30 miles SE of Mt Desert Island','Off the Coast of Maine; 30 miles Southeast of Mt Desert Island.', 'Example marine Locality',14,16);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (23,'8-10 62','1962-08-10','1962-08-10');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (9, null, 'A. Jones','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (9,9,9,'8-10 62',23);
+insert into unit (unit_id,collectingevent_id,unit_field_number) values (9,9,'62-500');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (11,2,'00234',1,4);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (10,9,11,45,'urn:uuid:0880242c-05ce-47f2-a666-0f3add191c2b', 'This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot). (Marine mollusk example)');
+insert into preparation (preparation_id,preparation_type,preservation_type,status) values (10,'shells','dry','in collection');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (13,10,10,'shell',45);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (24,'15 Feb, 2004','2004-02-15','2004-02-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,date_determined_eventdate_id,is_filed_under) values (31,10,1,1,24,1); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (25,'18 Feb, 1983','1983-02-18','1983-02-18');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (31,10,0,12,25,0); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, is_filed_under) values (31,10,0,13,0); 
+
+
 -- changeset chicoreus:194
 -- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
-select 'TODO: case 7';
 
--- Richmond, N; Tolman, Harry A.; 22 Dec. 1998
--- Vulpes vulpes
--- Skull, skeleton, skin, frozen tissue
+-- TODO: Because this is cataloged in two collections it returns two rows in flat Darwn Core query which don't clarify material in collection.
+-- TODO: Derived preparation isn't listed in preparations retrieved with function.
+
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (10, 'Near Richmond','Near Richmond, NH', 'Example locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (26,'22 Dec, 98','1998-12-22','1998-12-22');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (10, 14, 'H. Tolman','and students');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (10,10,10,'22 Dec, 98',26);
+insert into unit (unit_id,collectingevent_id,unit_field_number) values (10,10,'35');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (12,2,'00532',1,4);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (13,2,'00533',1,4);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (14,3,'7539365',1,5);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (15,3,'7539733',1,5);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (16,2,'00534',1,4);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (11,10,null,1,'urn:uuid:2ec1860d-112a-465f-ab39-1e0ec754923e', ' This corresponds to: Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers, includes a derived preparation. (Mammology/Cryogenic example (part of animal cataloged in one collection, part in another)).');
+insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (11,'partial animal','dry','in collection',12);
+insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (13,'partial animal','70% ethanol','in collection',13);
+insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (14,'frozen tissue','liquid nitrogen','in collection',14);
+insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (15,'hide','dry','in collection',16);
+insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id,parent_preparation_id) values (16,'DNA Extract','liquid nitrogen','in collection',15,14);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (14,11,11,'skull',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (15,11,11,'partial postcranial skeleton',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (16,11,15,'hide',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (17,11,13,'forelimb',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (18,11,14,'liver tissue',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (27,'15 Feb, 2005','2005-02-15','2005-02-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,date_determined_eventdate_id,is_filed_under) values (22,11,1,13,27,1); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (28,'18 Feb, 1999','1999-02-18','1999-02-18');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (22,11,0,14,28,0); 
 
 -- changeset chicoreus:195
 -- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation.
