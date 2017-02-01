@@ -164,6 +164,11 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
        values (31, 'Janthina janthina', '(Linnaeus, 1758)', '<em>Janthina janthina</em> (Linnaeus, 1758)', 'janthina', 16, '/1/3/13/14/29/30/31', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140155');
 
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (31, 'Arthropoda', 'Arthropoda', 'Arthropoda', 3, '/1/3/31', 4, 30, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (32, 'Formicidae', 'Formicidae', 'Formicidae', 31, '/1/3/31/32', 14, 140, 'ICZN');
+
 -- Real geographies used in the example data 
 
 -- changeset chicoreus:exampleGeographies
@@ -272,6 +277,9 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- SELECT for Case 2 as two rows (one per dwc:occurrenceId) for flat DarwinCore.
 -- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '002' and ci.catalognumberseries_id = 1 and id.identification_id = getCurrentIdentId(ii.identifiableitem_id);
+
+-- changset chicoreus:testcase5ant
+-- TODO: Add a test case for an ethanol vial and a set of pinned ants from one ant hill with an associated species along with an ant on one of the pins.
 
 
 -- changeset chicoreus:190

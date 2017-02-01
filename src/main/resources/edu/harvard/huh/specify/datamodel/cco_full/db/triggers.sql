@@ -71,6 +71,7 @@ select 1;
 --   for each row 
 --    begin 
 --      aaaa
+--      TODO: Update parentage string.
 --    end;
 -- create trigger trg_taxontreedef_update after update on  taxontreedef 
 --   for each row 
