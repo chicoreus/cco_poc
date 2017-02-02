@@ -447,8 +447,13 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (22,11,0,14,28,0); 
 
 -- changeset chicoreus:195
--- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation.
+-- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).
 select 'TODO: case 8';
+
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (11, '4 mi NW Cardiff','4 miles NW of Cardiff', 'Example fossil Locality',5,5);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (29,'12/12/15','2015-12-12','2015-12-12');
+
+
 
 -- changeset chicoreus:196
 -- Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)
