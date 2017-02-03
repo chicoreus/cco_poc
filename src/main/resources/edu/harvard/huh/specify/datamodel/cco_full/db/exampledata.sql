@@ -79,6 +79,11 @@ insert into agentname(agent_id, type, name) values (14,'last name, initials','To
 insert into agentname(agent_id, type, name) values (14,'also known as','Harry A. Tolman');
 insert into agentname(agent_id, type, name) values (14,'initials last name','H. A. Tolman');
 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (15,'S.P. Cover',null,null,null,'S.P. Cover','','','S.','P.','Cover');
+insert into agentname(agent_id, type, name) values (15,'last name, initials','Cover, S.P.');
+insert into agentname(agent_id, type, name) values (15,'initials last name','S.P. Cover');
+
 -- Real taxa used in the example data
 
 -- changeset chicoreus:exampleTaxa
@@ -165,9 +170,18 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, displ
        values (31, 'Janthina janthina', '(Linnaeus, 1758)', '<em>Janthina janthina</em> (Linnaeus, 1758)', 'janthina', 16, '/1/3/13/14/29/30/31', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140155');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (31, 'Arthropoda', 'Arthropoda', 'Arthropoda', 3, '/1/3/31', 4, 30, 'ICZN');
+       values (32, 'Arthropoda', 'Arthropoda', 'Arthropoda', 3, '/1/3/32', 4, 30, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
-       values (32, 'Formicidae', 'Formicidae', 'Formicidae', 31, '/1/3/31/32', 14, 140, 'ICZN');
+       values (33, 'Formicidae', 'Formicidae', 'Formicidae', 32, '/1/3/32/33', 14, 140, 'ICZN');
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (34, 'Pogonomyrmex', 'Pogonomyrmex', 'Pogonomyrmex', 33, '/1/3/32/33/34', 17, 180, 'ICZN');
+
+-- Pogonomyrmex colei, inquiline in Pogonomyrmex rugosus nests
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+       values (35, 'Pogonomyrmex rugosus', 'Emery, 1895', '<em>Pogonomyrmex rugosus</em> Emery, 1895', 'rugosus', 34, '/1/3/32/33/34/35', 19, 220, 'ICZN','1895',null);
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+       values (36, 'Pogonomyrmex colei', 'Emery, 1982', '<em>Pogonomyrmex colei</em> Emery, 1982', 'colei', 34, '/1/3/32/33/34/36', 19, 220, 'ICZN','1895',null);
 
 -- Real geographies used in the example data 
 
@@ -221,6 +235,7 @@ insert into collection(collection_id, collection_name, institution_guid, institu
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (3,'Example:Paleontology Department','example.com','example.com','Paleontology Department','http://example.com/',6);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (4,'Example:Malacology Department','example.com','example.com','Malacology Department','http://example.com/',2);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (5,'Example:Cryogenic Collection','example.com','example.com','Cryogenic collection','http://example.com/',1);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (6,'Example:Entomology Department','example.com','example.com','Entomology Department','http://example.com/',2);
 
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (1,1);
 -- Example of a catalognumberseries that spans more than one department.
@@ -277,9 +292,6 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- SELECT for Case 2 as two rows (one per dwc:occurrenceId) for flat DarwinCore.
 -- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '002' and ci.catalognumberseries_id = 1 and id.identification_id = getCurrentIdentId(ii.identifiableitem_id);
-
--- changset chicoreus:testcase5ant
--- TODO: Add a test case for an ethanol vial and a set of pinned ants from one ant hill with an associated species along with an ant on one of the pins.
 
 
 -- changeset chicoreus:190
@@ -446,12 +458,41 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (28,'18 Feb, 1999','1999-02-18','1999-02-18');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (22,11,0,14,28,0); 
 
+-- changset chicoreus:testcase5ant
+-- Test case for an ethanol vial and a set of pinned ants from one ant hill with an associated species (inquiline ant) along with an ant on one of the pins.
+
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (11, 'Mt. Adams','Mount Adams', 'Example Locality (not the right one for this taxon)',8,8); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (29,'10 Feb, 2002','2002-02-10','2002-02-10');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (11, 15, 'SP Cover','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,verbatim_date,date_collected_eventdate_id) values (11,11,11,'10 Feb, 2002',29);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (11,11,'SPC9999','This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, single physical loanable preparation.  Single catalog number on the preparation. (Ant and other species on a pin) Extended to include additional cataloged items from the same unit.'
+);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (12,11,null,30,'urn:uuid:99342b96-425e-46b0-a562-4fd784dab81d'); -- The ants from the nest
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (13,11,null,1,'urn:uuid:112d6f77-3e1e-4bbb-ae74-f0362242c228','inquiline'); -- The inquilline ant
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (17,2,'06031',1,6);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (18,2,'30031',1,6);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (19,2,'30032',1,6);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (17,'vial','70% ethanol','in collection',17);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (18,'pin','dried','in collection',18);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (19,'pin','dried','in collection',19);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (19,12,17,'whole organism',27,'vial of unsorted ants from nest');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (20,12,18,'whole organism',1,'queen');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (21,12,18,'whole organism',1,'worker');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (22,12,19,'whole organism',1,'worker'); -- ant pinned with inquilline
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (23,13,19,'whole organism',1,'inquiline'); -- inquiline pinned with ant
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (30,'15 Mar, 2005','2005-03-15','2005-03-15');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (31,'15 Mar, 2005','2005-03-15','2005-03-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (35,12,1,15,29,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (36,13,1,15,30,0); 
+
+-- TODO: need part atrribute table to hold caste and other attributes of parts.
+
 -- changeset chicoreus:195
 -- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).
 select 'TODO: case 8';
 
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (11, '4 mi NW Cardiff','4 miles NW of Cardiff', 'Example fossil Locality',5,5);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (29,'12/12/15','2015-12-12','2015-12-12');
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (12, '4 mi NW Cardiff','4 miles NW of Cardiff', 'Example fossil Locality',5,5);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (32,'12/12/15','2015-12-12','2015-12-12');
 
 
 

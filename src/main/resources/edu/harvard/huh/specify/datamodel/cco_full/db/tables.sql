@@ -694,7 +694,7 @@ CREATE TABLE collectingevent (
   collector_id bigint not null, -- the collector who collected in this collecting event.
   sampling_method varchar(50) default null,  -- the sampling method that was applied in this collecting event
   event_field_number varchar(255) default null,  -- a number assigned by the collector to the collecting event, this might be called a field number or a station number or a collector number, but the semantics for this number must be that it applies to the collecting event.
-  verbatim_date varchar(255) default null,
+  verbatim_date varchar(255) default null,  -- TODO: Remove, redundant with eventdate.
   date_collected_eventdate_id bigint default null, -- date or date range within which this collecting event occurred
   guid varchar(128) default null,
   paleocontext_id bigint default null,

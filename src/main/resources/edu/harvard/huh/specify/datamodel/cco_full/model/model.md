@@ -28,9 +28,9 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
 * unit 
   * Definition: logical unit that was collected or observed in a collecting event.
 * identifiableitem 
-  * Definition: a component of a unit for which a scientific identification can be made.
+  * Definition: a component of a unit for which a scientific identification can be made (that is, to which a scientific name can be applied).
 * part 
-  * Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
+  * Definition:  Associative entity between identifiable items and preparations.  Biologically meaningful parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.  Parts may have additional non-taxonomic identifications associated with them, such as sex, lifestage, or caste, and they can have part of the organism attributes such as whole animal or skull or postcranial skeleton.
 * preparation 
   * Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts.
 * identification 
