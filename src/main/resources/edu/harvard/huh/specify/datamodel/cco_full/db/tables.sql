@@ -694,7 +694,6 @@ CREATE TABLE collectingevent (
   collector_id bigint not null, -- the collector who collected in this collecting event.
   sampling_method varchar(50) default null,  -- the sampling method that was applied in this collecting event
   event_field_number varchar(255) default null,  -- a number assigned by the collector to the collecting event, this might be called a field number or a station number or a collector number, but the semantics for this number must be that it applies to the collecting event.
-  verbatim_date varchar(255) default null,  -- TODO: Remove, redundant with eventdate.
   date_collected_eventdate_id bigint default null, -- date or date range within which this collecting event occurred
   guid varchar(128) default null,
   paleocontext_id bigint default null,
@@ -720,6 +719,7 @@ alter table unit add constraint fk_unit_matsampid foreign key (materialsample_id
 -- changeset chicoreus:036
 CREATE TABLE eventdate ( 
    -- Definition: a set of spans of time in which some event occurred.  NOTE: Cardinality is enforced as zero or one to one in each relation with unique indexes, and event dates should not be reused accross relations.
+   -- Remarks: When in a form that can't be tied to a year (e.g. "April", populate verbatim_date with the verbatim value, iso_date with an empty string, and use start_date and end_date to set plausible bounds for the interpretation of "April" (e.g. 1700-2015 for a record of unknown date entered in 2015).
    eventdate_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    date_type varchar(50) not null default 'date',
    verbatim_date varchar(255) not null,  -- the event date in its original verbatim form

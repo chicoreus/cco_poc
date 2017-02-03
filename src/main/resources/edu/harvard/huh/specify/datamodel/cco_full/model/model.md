@@ -73,6 +73,7 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
   * Definition: an event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected, time at which a collector visited a locality and collected one or more collected units using a single sampling method.
 * eventdate 
   * Definition: a set of spans of time in which some event occurred.  NOTE: Cardinality is enforced as zero or one to one in each relation with unique indexes, and event dates should not be reused accross relations.
+  * Remarks: When in a form that can not be tied to a year (e.g. "April"), populate verbatim_date with the verbatim value, iso_date with an empty string, and use start_date and end_date to set plausible bounds for the interpretation of the date (e.g. 1700-2015 for a record of unknown date entered in 2015).  For wholly unknown values, verbatim_date of [unknown] or [data not provided] might be appropriate with a null iso_date and large plausible ranges for the start and end dates.
 * locality 
   * Definition: a location
 * othernumber 
