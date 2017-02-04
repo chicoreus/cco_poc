@@ -1355,7 +1355,8 @@ CREATE TABLE scopect (
   scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   key_name varchar(255) not null,  -- key which has the scope 
   ct_table_name varchar(255) not null,  -- table in which key is found
-  scope_id bigint not null  -- scope for the key 
+  scope_id bigint not null,  -- scope for the key 
+  biolattrib_relation_limit enum('part','identifiableitem') default null -- if ct_table_name is biologicalattribue, limitation on which relation (to part or to identifiable item) this key can be applied to in this scope (e.g. in a lot based collection, scope for sex might be limited to part, in a specimen based collection, it might be limited to identifiable item), if null, no limitation.
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1376,24 +1377,31 @@ alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) ref
 CREATE TABLE biologicalattribute (
     -- Definition: a generic typed attribute for biological characteristics of organisms, 
     --  including metadata about who determined the attribute value when.
-    attributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    biological_attribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     name varchar(255) not null,  -- restricted by ctbiologicalattributetype
     value varchar(900) not null, -- value for attribute, may be restricted by value code table specified in ctbiologicalattributetype
-    units varchar(255) not null, -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
-    determinationmethod varchar(255) not null,
+    units varchar(255) not null default '', -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
+    determinationmethod varchar(255) not null default '',
     remarks text,
     determiningagent_id bigint,
     datedetermined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
-    identifiableitem_id bigint not null  -- the identifiableitem to which this biological attribute applies
+    identifiableitem_id bigint,  -- the identifiableitem to which this biological attribute applies (typical for specimen based collections)
+    part_id bigint  -- the part to which this biological attribute applies (typical for lot based collections)
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:081
 ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
-
 -- Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).
 -- Each ctbiologicalattributetype is the type of zero to many biological attribtues.
+
+ALTER TABLE biologicalattribute add constraint fk_biolattidentitem foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade; 
+ALTER TABLE biologicalattribute add constraint fk_biolattpart foreign key (part_id) references part (part_id) on update cascade; 
+-- Each biologicalattribute applies to zero or one identifiable item.
+-- Each identifiable item has zero to many biological attribtues.
+-- Each biologicalattribute applies to zero or one part.
+-- Each part has zero to many biological attribtues.
 
 -- Minimal audit log of who applied changes to what tables when, does not record the query that was fired.
 -- Significant change from Specify, replaces the createdByAgentId/modifiedByAgentId timestampCreated/timestampLastModified fields in each table.

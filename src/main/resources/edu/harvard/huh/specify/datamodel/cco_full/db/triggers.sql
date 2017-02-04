@@ -257,6 +257,7 @@ select 1;
 --   for each row 
 --    begin 
 --      aaaa
+--      one and only one of identifiableitem_id and part_id must be not_null.
 --    end;
 -- create trigger trg_ctencumberancetype_update after update on  ctencumberancetype 
 --   for each row 
@@ -657,6 +658,7 @@ select 1;
 --   for each row 
 --    begin 
 --      bbbb
+--      one and only one of identifiableitem_id and part_id must be not_null.
 --    end;
 -- create trigger trg_ctencumberancetype_insert after insert on  ctencumberancetype 
 --   for each row 

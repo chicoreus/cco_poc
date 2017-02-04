@@ -265,6 +265,9 @@ INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattri
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','ossification',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage coloration',5);
 INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','plumage description',5);
+-- changeset chicoreus:177a
+INSERT INTO ctbiologicalattributetype (name) VALUES ('caste');
+INSERT INTO scopect (ct_table_name,key_name,scope_id) VALUES ('ctbiologicalattributetype','caste',9);
 -- changeset chicoreus:178
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record'); -- Do not show the encumbered record (e.g. hide a media record).
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('redact locality');  -- Redact coordinate, georeference, elevation, and detailed locality information associated with this record.  

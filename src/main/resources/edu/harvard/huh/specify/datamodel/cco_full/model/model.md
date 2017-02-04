@@ -376,6 +376,10 @@ Each scopect is for one and only one key name in a code table.
 Each key name in a code table has zero to many scope-codetable relations in codect.  
 Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).  
 Each ctbiologicalattributetype is the type of zero to many biological attribtues.  
+Each biologicalattribute applies to zero or one identifiable item.
+Each identifiable item has zero to many biological attribtues.
+Each biologicalattribute applies to zero or one part.
+Each part has zero to many biological attribtues.
 Each _arbitrary table_ has zero to many auditlogs.  
 Each audit log is for one and only one _arbitrary table_.  
 Each auditlog records an action by one and noly one agent.  

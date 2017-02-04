@@ -457,6 +457,7 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,date_determined_eventdate_id,is_filed_under) values (22,11,1,13,27,1); 
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (28,'18 Feb, 1999','1999-02-18','1999-02-18');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (22,11,0,14,28,0); 
+insert into biologicalattribute (name,value,identifiableitem_id) values ('sex','female',11);
 
 -- changset chicoreus:testcase5ant
 -- Test case for an ethanol vial and a set of pinned ants from one ant hill with an associated species (inquiline ant) along with an ant on one of the pins.
@@ -477,8 +478,11 @@ insert into preparation (preparation_id,preparation_type,preservation_type,statu
 insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (19,'pin','dried','in collection',19);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (19,12,17,'whole organism',27,'vial of unsorted ants from nest');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (20,12,18,'whole organism',1,'queen');
+insert into biologicalattribute (name,value,part_id) values ('caste','queen',20);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (21,12,18,'whole organism',1,'worker');
+insert into biologicalattribute (name,value,part_id) values ('caste','worker',21);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (22,12,19,'whole organism',1,'worker'); -- ant pinned with inquilline
+insert into biologicalattribute (name,value,part_id) values ('caste','worker',22);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (23,13,19,'whole organism',1,'inquiline'); -- inquiline pinned with ant
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (30,'15 Mar, 2005','2005-03-15','2005-03-15');
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (31,'15 Mar, 2005','2005-03-15','2005-03-15');
