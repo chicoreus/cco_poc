@@ -110,16 +110,16 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (7, 'Lichen', '<em>Lichen</em>','Lichen', 2, '/1/2/7',17, 180, 'ICNafp');
 
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, parexauthor_agent_id, author_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, parexauthor_agent_id, author_agent_id, year_published, nomenclator_guid) 
        values (8, 'Xanthoparmelia conspersa', '(Ehrh. ex Ach.) Hale', '<em>Xanthoparmelia conspersa</em> (Ehrh. ex Ach.) Hale','conspersa', 6, '/1/2/5/6/8',19, 220, 'ICNafp',4,5,3, '(1974)', 'urn:lsid:indexfungorum.org:names:343884');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, exauthor_agent_id, year_published, accepted_taxon_id, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, exauthor_agent_id, year_published, accepted_taxon_id, nomenclator_guid) 
        values (9, 'Lichen conspersus', 'Ehrh. ex Ach.', '<em>Lichen conspersus</em> Ehrh. ex Ach.','conspersus', 7, '/1/2/7/9',19, 220, 'ICNafp',4,5,'1799 [1798]',7, 'urn:lsid:indexfungorum.org:names:393893');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (10, 'Fagaceae', 'Fagaceae', 'Fagaceae',  4, '/1/4/10',14, 140, 'ICNafp');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (11, 'Quercus', '<em>Quercus</em>', 'Quercus', 10, '/1/4/10/11',17, 180, 'ICNafp');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
        values (12, 'Quercus alba', 'L.', '<em>Quercus alba</em> L.','alba', 11, '/1/4/10/11/12',19, 220, 'ICNafp',2,'1753','urn:lsid:ipni.org:names:295763-1:1.2.2.1.1.3');
 
 
@@ -131,7 +131,7 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (15, 'Littorinidae', 'Littorinidae', 'Littorinidae', 14, '/1/3/13/14/15', 14, 140, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (16, 'Littorina', 'Littorina', 'Littorina', 15, '/1/3/13/14/15/16', 17, 180, 'ICZN');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
        values (17, 'Littorina littorea', '(Linnaeus, 1758)', '<em>Littorina littorea</em> (Linnaeus, 1758)', 'littorea', 16, '/1/3/13/14/15/16/17', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140262');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
@@ -142,7 +142,7 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (20, 'Cannidae', 'Canidae', 'Canidae', 19, '/1/3/18/19/20', 14, 140, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, authorship, author_agent_id, year_published,remarks,nomenclator_guid)
        values (21, 'Vulpes', 'Vulpes', 'Vulpes', 20, '/1/3/18/19/20/21', 17, 180, 'ICZN','Frisch, 1775',7,'1775','While Frisch (1775) is a rejected work (ICZN Opinion 258, 1954), Vulpes has been retained (ICZN Opinion 1129, 1979).  Have not confirmed that Frisch, Johann Leonhard 1737-1795 is the Johann Leonhard Frisch who authored this work, but, but this work (Das Natur-System der Vierfußigen Thiere) is not in the biographical record of Frisch, Johann Leonhard, 1666-1743 from Berlin-Brandenburgische Akademie der Wissenschaften Akademiebibliothek.','urn:lsid:marinespecies.org:taxname:404129');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
        values (22, 'Vulpes vulpes', 'Linnaeus, 1758', '<em>Vulpes vulpes</em> Linnaeus, 1758', 'vulpes', 21, '/1/3/18/19/20/21/22', 19, 220, 'ICZN',2,'1758','http://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?s=y&id=14000892');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
@@ -161,12 +161,12 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 
 -- 27 Syagrus oleracea (Martius) Beccari
 -- Syagrus oleracea (Martius 10) Beccari 11
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, parauthor_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, parauthor_agent_id, year_published, nomenclator_guid) 
        values (27, 'Syagrus oleracea', '(Mart.) Becc.', '<em>Syagrus oleracea</em> (Mart.) Becc.','oleracea', 26, '/1/4/23/24/26/27',19, 220, 'ICNafp',11, 10,'','urn:lsid:ipni.org:names:1177502-2:1.3');
 
 -- 28  Cocos oleracea Martius
 -- Cocos oleracea Martius 10
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
        values (28, 'Cocos oleracea', 'Mart.', '<em>Cocos oleracea</em> Mart.','oleracea', 25, '/1/4/23/24/25/28',19, 220, 'ICNafp',10,'','urn:lsid:ipni.org:names:62615-2:1.2');
 
 -- Janthinidae 
@@ -175,7 +175,7 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (29, 'Janthinidae', 'Janthinidae', 'Janthinidae', 14, '/1/3/13/14/29', 14, 140, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (30, 'Janthina', 'Janthina', 'Janthina', 29, '/1/3/13/14/29/30', 17, 180, 'ICZN');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
        values (31, 'Janthina janthina', '(Linnaeus, 1758)', '<em>Janthina janthina</em> (Linnaeus, 1758)', 'janthina', 16, '/1/3/13/14/29/30/31', 19, 220, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:140155');
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
@@ -187,9 +187,9 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (34, 'Pogonomyrmex', 'Pogonomyrmex', 'Pogonomyrmex', 33, '/1/3/32/33/34', 17, 180, 'ICZN');
 
 -- Pogonomyrmex colei, inquiline in Pogonomyrmex rugosus nests
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (35, 'Pogonomyrmex rugosus', 'Emery, 1895', '<em>Pogonomyrmex rugosus</em> Emery, 1895', 'rugosus', 34, '/1/3/32/33/34/35', 19, 220, 'ICZN','1895',null);
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (36, 'Pogonomyrmex colei', 'Emery, 1982', '<em>Pogonomyrmex colei</em> Emery, 1982', 'colei', 34, '/1/3/32/33/34/36', 19, 220, 'ICZN','1895',null);
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
@@ -202,21 +202,21 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
        values (40, 'Rhipidomellidae', 'Rhipidomellidae', 'Rhipidomellidae', 38, '/1/3/37/38/40', 14, 140, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (41, 'Rhipidomella', 'Rhipidomella', 'Rhipidomella', 37, '/1/3/37/38/40/41', 17, 180, 'ICZN');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (42, 'Rhipidomella michelini', '(Léveilé, 1835)', '<em>Rhipidomella michelini</em> (Léveilé, 1835)', 'michelini', 41, '/1/3/37/38/40/41/42', 19, 220, 'ICZN','1895',null);
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (43, 'Rugosochonetidae', 'Rugosochonetidae', 'Rugosochonetidae', 39, '/1/3/37/39/43', 14, 140, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (44, 'Rugosochonetes', 'Rugosochonetes', 'Rugosochonetes', 43, '/1/3/37/39/43/44', 17, 180, 'ICZN');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (45, 'Rugosochonetes vaughani', 'Muir-Wood, 1962', '<em>Rugosochonetes vaughani</em> Muir-Wood, 1962', 'vaughani', 44, '/1/3/37/39/43/44/45', 19, 220, 'ICZN','1895',null);
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (46, 'Pulsiidae', 'Pulsiidae', 'Pulsiidae', 39, '/1/3/37/39/46', 14, 140, 'ICZN');
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
        values (47, 'Schellwienella', 'Schellwienella', 'Schellwienella', 46, '/1/3/37/39/46/47', 17, 180, 'ICZN');
-insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (48, 'Schellwienella cheuma', 'Basset & Bryant, 2006', '<em>Schellwienella cheuma</em> Basset & Bryant, 2006', 'cheuma', 47, '/1/3/37/39/46/47/48', 19, 220, 'ICZN','1895',null);
 
 -- Real geographies used in the example data 
@@ -540,9 +540,9 @@ insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (20,2,'634636',1,3);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (21,2,'634637',1,3);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (22,2,'634638',1,3);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (14,11,20,3,'urn:uuid:f1aa99b8-1eb0-48b1-b5c1-3a57c83b65ff'); 
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (15,11,21,1,'urn:uuid:5f13b184-4f8a-4b17-b498-b01e44c8860f'); 
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (16,11,22,1,'urn:uuid:2125aa36-b301-44d1-b326-0e34888cdf85');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (14,12,20,3,'urn:uuid:f1aa99b8-1eb0-48b1-b5c1-3a57c83b65ff'); 
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (15,12,21,1,'urn:uuid:5f13b184-4f8a-4b17-b498-b01e44c8860f'); 
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (16,12,22,1,'urn:uuid:2125aa36-b301-44d1-b326-0e34888cdf85');
 insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (20,'slab','in tray','in collection',null);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (24,14,20,'impression',1,'');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (25,14,20,'fragment',2,'');
