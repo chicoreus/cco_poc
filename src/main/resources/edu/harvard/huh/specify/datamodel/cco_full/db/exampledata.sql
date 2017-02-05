@@ -84,6 +84,15 @@ insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearof
 insert into agentname(agent_id, type, name) values (15,'last name, initials','Cover, S.P.');
 insert into agentname(agent_id, type, name) values (15,'initials last name','S.P. Cover');
 
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (16,'M.G. Basset',null,null,null,'M.G. Basset','','','Michael','G.','Basset');
+insert into agentname(agent_id, type, name) values (16,'last name, initials','Basset, M.G.');
+insert into agentname(agent_id, type, name) values (16,'initials last name','M.G. Basset');
+insert into agent(agent_id, preferred_name_string,sameas_guid,yearofbirth,yearofdeath,abbreviated_name_string,prefix,suffix,first_name,middle_names,family_names) 
+       values (17,'Catherine Bryant',null,null,null,'C. Bryant','','','Catherine','','Bryant');
+insert into agentname(agent_id, type, name) values (17,'last name, initials','Bryant, C.');
+insert into agentname(agent_id, type, name) values (17,'full name','Catherine Bryant');
+
 -- Real taxa used in the example data
 
 -- changeset chicoreus:exampleTaxa
@@ -182,6 +191,33 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, displ
        values (35, 'Pogonomyrmex rugosus', 'Emery, 1895', '<em>Pogonomyrmex rugosus</em> Emery, 1895', 'rugosus', 34, '/1/3/32/33/34/35', 19, 220, 'ICZN','1895',null);
 insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (36, 'Pogonomyrmex colei', 'Emery, 1982', '<em>Pogonomyrmex colei</em> Emery, 1982', 'colei', 34, '/1/3/32/33/34/36', 19, 220, 'ICZN','1895',null);
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (37, 'Brachiopoda', 'Brachiopoda', 'Brachiopoda', 3, '/1/3/37', 4, 30, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (38, 'Rhynchonellata', 'Rhynchonellata', 'Rhynchonellata', 37, '/1/3/37/38', 7, 60, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (39, 'Strophomenata', 'Strophomenata', 'Strophomenata', 37, '/1/3/37/39', 7, 60, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (40, 'Rhipidomellidae', 'Rhipidomellidae', 'Rhipidomellidae', 38, '/1/3/37/38/40', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (41, 'Rhipidomella', 'Rhipidomella', 'Rhipidomella', 37, '/1/3/37/38/40/41', 17, 180, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+       values (42, 'Rhipidomella michelini', '(Léveilé, 1835)', '<em>Rhipidomella michelini</em> (Léveilé, 1835)', 'michelini', 41, '/1/3/37/38/40/41/42', 19, 220, 'ICZN','1895',null);
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (43, 'Rugosochonetidae', 'Rugosochonetidae', 'Rugosochonetidae', 39, '/1/3/37/39/43', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (44, 'Rugosochonetes', 'Rugosochonetes', 'Rugosochonetes', 43, '/1/3/37/39/43/44', 17, 180, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+       values (45, 'Rugosochonetes vaughani', 'Muir-Wood, 1962', '<em>Rugosochonetes vaughani</em> Muir-Wood, 1962', 'vaughani', 44, '/1/3/37/39/43/44/45', 19, 220, 'ICZN','1895',null);
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (46, 'Pulsiidae', 'Pulsiidae', 'Pulsiidae', 39, '/1/3/37/39/46', 14, 140, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code) 
+       values (47, 'Schellwienella', 'Schellwienella', 'Schellwienella', 46, '/1/3/37/39/46/47', 17, 180, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id, rank_id, nomenclatural_code, year_published, nomenclator_guid) 
+       values (48, 'Schellwienella cheuma', 'Basset & Bryant, 2006', '<em>Schellwienella cheuma</em> Basset & Bryant, 2006', 'cheuma', 47, '/1/3/37/39/46/47/48', 19, 220, 'ICZN','1895',null);
 
 -- Real geographies used in the example data 
 
@@ -489,15 +525,35 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (35,12,1,15,29,1); 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (36,13,1,15,30,0); 
 
--- TODO: need part atrribute table to hold caste and other attributes of parts.
-
 -- changeset chicoreus:195
 -- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).
-select 'TODO: case 8';
 
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (12, '4 mi NW Cardiff','4 miles NW of Cardiff', 'Example fossil Locality',5,5);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (32,'12/12/15','2015-12-12','2015-12-12');
-
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (12, 'Ty nant quarry, NW of Cardiff','Ty-nant Quarry, NW of Cardiff', 'Example fossil Locality (Point Limestone Fm, Carboniferous)',5,5);
+-- TODO: Geological context
+-- Ty-nant Quarry, Point Limestone Fm
+-- Tournaisian
+-- Lower Carboniferous
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (32,'12/12/04','2004-12-12','2004-12-12');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (12, 16, 'M. Basset','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (12,12,12,32);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (12,12,'04352','This corresponds to: - Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (20,2,'634636',1,3);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (21,2,'634637',1,3);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (22,2,'634638',1,3);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (14,11,20,3,'urn:uuid:f1aa99b8-1eb0-48b1-b5c1-3a57c83b65ff'); 
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (15,11,21,1,'urn:uuid:5f13b184-4f8a-4b17-b498-b01e44c8860f'); 
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (16,11,22,1,'urn:uuid:2125aa36-b301-44d1-b326-0e34888cdf85');
+insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (20,'slab','in tray','in collection',null);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (24,14,20,'impression',1,'');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (25,14,20,'fragment',2,'');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (26,15,20,'impression',1,'');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,remarks) values (27,16,20,'impression',1,'');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (33,'12/12/06','2006-12-12','2006-12-12');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (34,'12/12/06','2006-12-12','2006-12-12');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (35,'12/12/06','2006-12-12','2006-12-12');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (42,14,1,17,33,0); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (45,15,1,17,34,0); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (48,16,1,17,35,1); 
 
 
 -- changeset chicoreus:196
