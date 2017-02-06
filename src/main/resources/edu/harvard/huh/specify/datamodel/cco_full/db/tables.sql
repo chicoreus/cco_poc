@@ -2159,7 +2159,6 @@ CREATE TABLE geologictimeperiod (
   -- Definition: a geological time, rock, or rock/time unit.
   geologictimeperiod_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,
-  rank_id int(11) not null,  -- the rank 
   parent_id bigint default null,  -- the immediate parent of this node, null for root.
   parentage varchar(2000) not null, -- path from the current node to root
   accepted_id bigint default null,
@@ -2171,6 +2170,7 @@ CREATE TABLE geologictimeperiod (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
 
 alter table geologictimeperiod add constraint fk_geoltp_parent_id foreign key (parent_id) references geologictimeperiod (geologictimeperiod_id);
 alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key (accepted_id) references geologictimeperiod (geologictimeperiod_id);
@@ -2237,6 +2237,7 @@ CREATE TABLE paleocontext (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
 
 -- changeset chicoreus:142
 alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;

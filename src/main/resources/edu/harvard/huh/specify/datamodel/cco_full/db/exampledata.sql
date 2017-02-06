@@ -282,6 +282,19 @@ insert into catnumseriescollection (catalognumberseries_id, collection_id) value
 
 insert into accession (accession_id, accessionnumber, remarks, scope_id) values (1,'1','Example default accession',1);
 
+-- changeset chicoreus:examplegeology
+
+-- Some minimal geological context information for examples
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (1,'All Time',null,'/1','',1);
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (2,'Phanerozoic',1,'/1/2','Phanerozoic',2);
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (3,'Proterozoic',2,'/1/2/3','Proterozoic',3);
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (4,'Carboniferous',3,'/1/2/3/4','Carboniferous',3);
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (5,'Lower',4,'/1/2/3/4/5','Lower Carboniferous',3);
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (6,'Tournaisian',5,'/1/2/3/4/5/6','Tournaisian',3);
+
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (7,'All Rocks',null,'/7','',99);
+insert into geologictimeperiod (geologictimeperiod_id, name, parent_id, parentage, full_name, geologictimeperiodtreedefitem_id) values (8,'Point Limestone',7,'/7/8','Point Limestone Formation',102);
+
 -- The Examples: 
 
 -- changeset chicoreus:188
@@ -528,11 +541,8 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 -- changeset chicoreus:195
 -- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).
 
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (12, 'Ty nant quarry, NW of Cardiff','Ty-nant Quarry, NW of Cardiff', 'Example fossil Locality (Point Limestone Fm, Carboniferous)',5,5);
--- TODO: Geological context
--- Ty-nant Quarry, Point Limestone Fm
--- Tournaisian
--- Lower Carboniferous
+insert into paleocontext (paleocontext_id, verbatim_geologic_context, verbatim_lithology, lithology, is_float, earlyest_geochronologic_unit_id, latest_geochronologic_unit_id, lithostratigraphic_unit_id) values (1,'Point Ls, Carb.','Dolomite','Dolomite','No', 6,6,8);
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id,paleocontext_id) values (12, 'Ty nant quarry, NW of Cardiff','Ty-nant Quarry, NW of Cardiff', 'Example fossil Locality',5,5,1);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (32,'12/12/04','2004-12-12','2004-12-12');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (12, 16, 'M. Basset','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (12,12,12,32);
