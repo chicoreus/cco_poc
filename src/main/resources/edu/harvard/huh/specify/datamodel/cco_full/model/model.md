@@ -189,11 +189,11 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
   * Definition: definition of ranks within a storage heirarchy 
 * storage 
   * Definition: location where zero or more preparations are stored 
-* geologictimeperiod 
+* rocktimeunit 
   * Definition: a geological time, rock, or rock/time unit.
-* geologictimeperiodtreedef 
+* rocktimeunittreedef 
   * Definition: geologic rock/time unit trees
-* geologictimeperiodtreedefitem 
+* rocktimeunittreedefitem 
   * Definition: a definition of a rank in a geologic rock/time unit tree
 * paleocontext 
   * Definition: a geological context from which some material was collected.
@@ -482,22 +482,22 @@ Each storage has one and only one scope.
 Each scope is for zero to many storage.  
 Each storage has zero or one parent storage.  
 Each storage is the parent for zero to many other storages.  
-Each geologictimeperiod has zero or one parent geologictimeperiod.  
-Each geologictimeperiod is the parent for zero to many geologictimeperiods.  
-Each geologictimeperiodtreedef is the tree for zero to many geologictimeperiodtreedefitem nodes.  
-Each geologictimeperiodtreedefitem is a node in one and only one geologictimeperiodtreedef.  
-Each geologictimeperiod is defined by one and only one geologictimeperiodtreedefitem.  
-Each geologictimeperiodtreedefitem defines zero to many taxa.  
+Each rocktimeunit has zero or one parent rocktimeunit.  
+Each rocktimeunit is the parent for zero to many rocktimeunits.  
+Each rocktimeunittreedef is the tree for zero to many rocktimeunittreedefitem nodes.  
+Each rocktimeunittreedefitem is a node in one and only one rocktimeunittreedef.  
+Each rocktimeunit is defined by one and only one rocktimeunittreedefitem.  
+Each rocktimeunittreedefitem defines zero to many taxa.  
 Each collectingevent has zero or one paleocontext.  
 Each locality has zero or one paleocontext.  
 Each paleocontext is for zero to many collecting events.  
 Each paleocontext is for zero to many localities.  
-Each paleocontext includes zero or one lithostratigraphicunit.  
-Each paleocontext has zero or one lower bound earlyest geologictimeperiod.  
-Each paleocontext has zero or one upper bound latest geologictimeperiod.  
-Each lithostratigraphic unit is exposed in zero to many paleocontexts.  
-Each geologictimeperiod is the lower bound for zero to many paleocontexts.  
-Each geologictimeperiod is the upper bound for zero to many paleocontexts.  
+Each paleocontext includes zero or one lithostratigraphicunit (rock rocktimeunit).  
+Each paleocontext has zero or one lower bound earlyest (time/timerock) rocktimeunit.  
+Each paleocontext has zero or one upper bound latest (time/timerock) rocktimeunit.  
+Each lithostratigraphic unit (rocktimeunit) is exposed in zero to many paleocontexts.  
+Each rocktimeunit is the lower bound for zero to many paleocontexts.  
+Each rocktimeunit is the upper bound for zero to many paleocontexts.  
 Each systemuser is one and only one agent.  
 Each agent is also zero or one systemuser.  
 

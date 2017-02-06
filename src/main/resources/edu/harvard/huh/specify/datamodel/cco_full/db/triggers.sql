@@ -389,17 +389,17 @@ select 1;
 --    begin 
 --      aaaa
 --    end;
--- create trigger trg_geologictimeperiod_update after update on  geologictimeperiod 
+-- create trigger trg_rocktimeunit_update after update on  rocktimeunit 
 --   for each row 
 --    begin 
 --      aaaa
 --    end;
--- create trigger trg_geologictimeperiodtreedef_update after update on  geologictimeperiodtreedef 
+-- create trigger trg_rocktimeunittreedef_update after update on  rocktimeunittreedef 
 --   for each row 
 --    begin 
 --      aaaa
 --    end;
--- create trigger trg_geologictimeperiodtreedefitem_update after update on  geologictimeperiodtreedefitem 
+-- create trigger trg_rocktimeunittreedefitem_update after update on  rocktimeunittreedefitem 
 --   for each row 
 --    begin 
 --      aaaa
@@ -790,17 +790,17 @@ select 1;
 --    begin 
 --      bbbb
 --    end;
--- create trigger trg_geologictimeperiod_insert after insert on  geologictimeperiod 
+-- create trigger trg_rocktimeunit_insert after insert on  rocktimeunit 
 --   for each row 
 --    begin 
 --      bbbb
 --    end;
--- create trigger trg_geologictimeperiodtreedef_insert after insert on  geologictimeperiodtreedef 
+-- create trigger trg_rocktimeunittreedef_insert after insert on  rocktimeunittreedef 
 --   for each row 
 --    begin 
 --      bbbb
 --    end;
--- create trigger trg_geologictimeperiodtreedefitem_insert after insert on  geologictimeperiodtreedefitem 
+-- create trigger trg_rocktimeunittreedefitem_insert after insert on  rocktimeunittreedefitem 
 --   for each row 
 --    begin 
 --      bbbb

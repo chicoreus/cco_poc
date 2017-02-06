@@ -325,22 +325,22 @@ INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, 
 INSERT INTO geographytreedefitem (geographytreedefitem_id, full_name_separator, is_enforced, is_in_full_name, name, rank_id, remarks, text_after, text_before, title, geographytreedef_id) VALUES (36,', ',0,0,'state/province coastal waters',380,null,null,null,'off the coast of {state/province}',1);
 
 -- changeset chicoreus:182
-INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (1,-1,"Geochronologic tree");
-INSERT INTO geologictimeperiodtreedef (geologictimeperiodtreedef_id,full_name_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (1,1,'',0,'root',0);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (2,1,':',0,'Eon',100);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (3,1,':',1,'Era',200);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (4,1,':',1,'Period',300);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (5,1,':',1,'Epoch',400); -- e.g.  If not named (e.g. Llandovery), uses time related Early/Middle/Late divisions of Period, e.g.  Late Devonian (not position terms, e.g. not Upper Devonian).
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (6,1,':',1,'Age',500);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (7,1,':',1,'Subage',500);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (99,2,'',0,'root',0);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (100, 2,':',0,'Supergroup',100);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (101, 2,':',0,'Group',200);  
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (102, 2,':',0,'Formation',300);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (103, 2,':',0,'Member',400);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (104, 2,':',0,'Bed',500);
-INSERT INTO geologictimeperiodtreedefitem (geologictimeperiodtreedefitem_id, geologictimeperiodtreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (105, 2,':',0,'Flow',500);  -- for named volcanic flows
+INSERT INTO rocktimeunittreedef (rocktimeunittreedef_id,full_name_direction,name) VALUES (1,-1,"Geochronologic tree");
+INSERT INTO rocktimeunittreedef (rocktimeunittreedef_id,full_name_direction,name) VALUES (2,-1,"Lithostratigraphic tree");
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (1,1,'',0,'root',0);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (2,1,':',0,'Eon',100);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (3,1,':',1,'Era',200);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (4,1,':',1,'Period',300);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (5,1,':',1,'Epoch',400); -- e.g.  If not named (e.g. Llandovery), uses time related Early/Middle/Late divisions of Period, e.g.  Late Devonian (not position terms, e.g. not Upper Devonian).
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (6,1,':',1,'Age',500);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (7,1,':',1,'Subage',500);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (99,2,'',0,'root',0);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (100, 2,':',0,'Supergroup',100);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (101, 2,':',0,'Group',200);  
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (102, 2,':',0,'Formation',300);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (103, 2,':',0,'Member',400);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (104, 2,':',0,'Bed',500);
+INSERT INTO rocktimeunittreedefitem (rocktimeunittreedefitem_id, rocktimeunittreedef_id, full_name_separator,is_in_full_name,name,rank_id) VALUES (105, 2,':',0,'Flow',500);  -- for named volcanic flows
 
 
 -- changeset chicoreus:183

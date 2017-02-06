@@ -309,6 +309,9 @@ ALTER TABLE identification add constraint fk_ident_itemid foreign key (identifia
 -- scientific name strings and taxonomic placement therof
 
 -- changeset chicoreus:014
+
+-- TODO: Remove rank_id from taxon, redundant with taxontreedefitem.
+
 CREATE TABLE taxon (
    -- Definition: A scientific name string that may be curated to be linked to a nomeclatural act or to an authoriative record of a name usage.
    taxon_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -1958,6 +1961,7 @@ ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeferen
 -- tables supporting geography
 
 -- changeset chicoreus:124
+-- TODO: Remove rank_id from geography, redundant with geographytreedefitem.
 CREATE TABLE geography (
   -- Definition: heriarchically nested higher geographical entities 
   geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2112,6 +2116,8 @@ CREATE INDEX idx_stdi_rank ON storagetreedefitem(rank_id);
 ALTER TABLE storagetreedefitem add constraint fk_stdi_treeid foreign key (storagetreedef_id) references storagetreedef(storagetreedef_id);
 
 -- changeset chicoreus:136
+-- TODO: Remove rank_id from storage, redundant with storagetreedefitem.
+
 CREATE TABLE storage (
   -- Definition: location where zero or more preparations are stored 
   storage_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2155,9 +2161,10 @@ ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_i
 -- a model for geological context 
 
 -- changeset chicoreus:138
-CREATE TABLE geologictimeperiod (
-  -- Definition: a geological time, rock, or rock/time unit.
-  geologictimeperiod_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+
+CREATE TABLE rocktimeunit (
+  -- Definition: a geological time, rock, or rock/time unit (lithostratigraphic unit, chronostratigraphic unit.
+  rocktimeunit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,
   parent_id bigint default null,  -- the immediate parent of this node, null for root.
   parentage varchar(2000) not null, -- path from the current node to root
@@ -2166,22 +2173,22 @@ CREATE TABLE geologictimeperiod (
   guid varchar(128) default null,
   remarks text,
   standard varchar(64) default null,
-  geologictimeperiodtreedefitem_id int(11) not null  -- the definition for this node 
+  rocktimeunittreedefitem_id int(11) not null  -- the definition for this node 
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 
-alter table geologictimeperiod add constraint fk_geoltp_parent_id foreign key (parent_id) references geologictimeperiod (geologictimeperiod_id);
-alter table geologictimeperiod add constraint fk_geoltp_accepted_id foreign key (accepted_id) references geologictimeperiod (geologictimeperiod_id);
+alter table rocktimeunit add constraint fk_geoltp_parent_id foreign key (parent_id) references rocktimeunit (rocktimeunit_id);
+alter table rocktimeunit add constraint fk_geoltp_accepted_id foreign key (accepted_id) references rocktimeunit (rocktimeunit_id);
 
--- Each geologictimeperiod has zero or one parent geologictimeperiod. 
--- Each geologictimeperiod is the parent for zero to many geologictimeperiods.
+-- Each rocktimeunit has zero or one parent rocktimeunit. 
+-- Each rocktimeunit is the parent for zero to many rocktimeunits.
 
 -- changeset chicoreus:139
-CREATE TABLE geologictimeperiodtreedef (
+CREATE TABLE rocktimeunittreedef (
   -- Definition: geologic rock/time unit trees
-  geologictimeperiodtreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  rocktimeunittreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   full_name_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
   name varchar(64) not null,  -- name 
   remarks text
@@ -2189,12 +2196,12 @@ CREATE TABLE geologictimeperiodtreedef (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON geologictimeperiodtreedef (name);
+CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON rocktimeunittreedef (name);
 
 -- changeset chicoreus:140
-CREATE TABLE geologictimeperiodtreedefitem (
+CREATE TABLE rocktimeunittreedefitem (
   -- Definition: a definition of a rank in a geologic rock/time unit tree
-  geologictimeperiodtreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  rocktimeunittreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,  -- name for this rank 
   rank_id int(11) not null, -- rank for this name in the tree, larger numbers are lower ranks.
   full_name_separator varchar(32) not null default ':',
@@ -2202,17 +2209,17 @@ CREATE TABLE geologictimeperiodtreedefitem (
   is_in_full_name boolean not null default 1, -- include this element when assembling full name 
   text_after varchar(64) default null,  -- text to place after the name of a node at this rank when assembling the name
   text_before varchar(64) default null, -- text to place before the name of a node at this rank when assembling the name
-  geologictimeperiodtreedef_id int(11) not null,
+  rocktimeunittreedef_id int(11) not null,
   remarks text  -- remarks concerning the item definition
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
--- Each geologictimeperiodtreedef is the tree for zero to many geologictimeperiodtreedefitem nodes.
--- Each geologictimeperiodtreedefitem is a node in one and only one geologictimeperiodtreedef.
+-- Each rocktimeunittreedef is the tree for zero to many rocktimeunittreedefitem nodes.
+-- Each rocktimeunittreedefitem is a node in one and only one rocktimeunittreedef.
 
--- Each geologictimeperiod is defined by one and only one geologictimeperiodtreedefitem.
--- Each geologictimeperiodtreedefitem defines zero to many taxa.
+-- Each rocktimeunit is defined by one and only one rocktimeunittreedefitem.
+-- Each rocktimeunittreedefitem defines zero to many taxa.
 
 -- Ranks in geochronologic (geological time, rather than chronostratigraphic rock/time) heirarchy
 
@@ -2240,9 +2247,9 @@ DEFAULT CHARSET=utf8;
 
 
 -- changeset chicoreus:142
-alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
-alter table paleocontext add constraint fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
-alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references geologictimeperiod (geologictimeperiod_id) on update cascade;
+alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
+alter table paleocontext add constraint fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
+alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
 
 
 -- changeset chicoreus:143
@@ -2256,13 +2263,13 @@ alter table collectingevent add constraint fk_colev_paleoid foreign key (paleoco
 -- Each paleocontext is for zero to many localities.
 
 -- Each paleocontext includes zero or one lithostratigraphicunit.
--- Each paleocontext has zero or one lower bound earlyest geologictimeperiod.
--- Each paleocontext has zero or one upper bound latest geologictimeperiod.
+-- Each paleocontext has zero or one lower bound earlyest rocktimeunit.
+-- Each paleocontext has zero or one upper bound latest rocktimeunit.
 
 -- Each lithostratigraphic unit is exposed in zero to many paleocontexts.
 
--- Each geologictimeperiod is the lower bound for zero to many paleocontexts.
--- Each geologictimeperiod is the upper bound for zero to many paleocontexts.
+-- Each rocktimeunit is the lower bound for zero to many paleocontexts.
+-- Each rocktimeunit is the upper bound for zero to many paleocontexts.
 
 -- additional accumulated foreign key constraints
 
