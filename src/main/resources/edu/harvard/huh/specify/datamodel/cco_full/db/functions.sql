@@ -247,13 +247,17 @@ returns VARCHAR(255)
 READS SQL DATA
 BEGIN
    declare dateIdentified varchar(255);
-   select iso_date 
+   declare verbatimDate varchar(255);
+   select iso_date, verbatim_date 
       from identification i 
          left join taxon t on i.taxon_id = t.taxon_id
          left join eventdate on i.date_determined_eventdate_id = eventdate.eventdate_id 
       where identifiableitem_id = identifiableitemid 
       order by is_current desc, start_date
-      limit 1 into dateIdentified;
+      limit 1 into dateIdentified, verbatimDate;
+   if substring(verbatimDate,1,1)='[' then 
+      SET dateIdentified=verbatimDate;
+   end if;
    return dateIdentified;
 END |
 

@@ -311,7 +311,8 @@ insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_num
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550', 'This corresponds to: Test Case 0 – Several (one) specimens on a sheet, one collecting event, one catalog number (a lot). (Simple herbarium sheet example)');
 insert into preparation (preparation_id,preparation_type,preservation_type,status) values (1,'sheet','dried','in collection');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (1,1,1,'branch',1);
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,is_filed_under) values (12,1,1,1,1); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (36,'[date not recorded]','1800-01-01','2015-12-31');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,1,1,1,36,1); 
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (2,'15 Jan, 1880','1880-01-15','1880-01-15');
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,1,0,6,2,0); 
 
@@ -572,6 +573,7 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 -- Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)
 select 'TODO: case 9';
 
+-- eventdate_id 36 used above.
 
 
 -- Case from DINA TC Call 2017 Jan 24
