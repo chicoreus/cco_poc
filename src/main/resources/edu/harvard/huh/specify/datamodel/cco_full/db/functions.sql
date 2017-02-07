@@ -132,7 +132,9 @@ returns VARCHAR(255)
 READS SQL DATA
 BEGIN
    declare geog_name varchar(255);
-   select name into geog_name from geography  where geography_id in ( 
+   select geography.name into geog_name from geography 
+      left join geographytreedefitem on geography.geographytreedefitem_id = geographytreedefitem.geographytreedefitem_id
+   where geography_id in ( 
       select extractFromString('/',parentage,2) from geography where geography_id = geographyid
       union 
       select extractFromString('/', parentage,3) from geography where geography_id = geographyid

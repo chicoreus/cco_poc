@@ -222,42 +222,44 @@ insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_
 -- Real geographies used in the example data 
 
 -- changeset chicoreus:exampleGeographies
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (1, 'Earth', 'Earth', 0, null, '/1', 'http://sws.geonames.org/6295630/',1,1);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (2, 'Europe', 'Europe', 100, 1, '/1/2', 'http://vocab.getty.edu/tgn/1000003',1,2);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (3, 'United Kingdom', 'United Kingdom', 200, 2, '/1/2/3', 'http://sws.geonames.org/2635167/',1,6);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (4, 'Wales', 'Wales', 260, 3, '/1/2/3/4', 'http://sws.geonames.org/2634895/',1,11);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (5, 'Cardiff', 'Wales: Cardiff', 500, 4, '/1/2/3/4/5','http://sws.geonames.org/2653822',1,30);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (1, 'Earth', 'Earth', null, '/1', 'http://sws.geonames.org/6295630/',1,1);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (2, 'Europe', 'Europe', 1, '/1/2', 'http://vocab.getty.edu/tgn/1000003',1,2);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (3, 'United Kingdom', 'United Kingdom', 2, '/1/2/3', 'http://sws.geonames.org/2635167/',1,6);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (4, 'Wales', 'Wales', 3, '/1/2/3/4', 'http://sws.geonames.org/2634895/',1,11);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (5, 'Cardiff', 'Wales: Cardiff', 4, '/1/2/3/4/5','http://sws.geonames.org/2653822',1,30);
 
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (6, 'North America', 'North and Central America', 100, 1, '/1/6', 'http://vocab.getty.edu/tgn/1000001',1,2);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (7, 'United States', 'United States', 200, 6, '/1/6/7', 'http://www.geonames.org/6252001',1,6);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (8, 'New Hampshire', 'US: New Hampshire', 300, 7, '/1/6/7/8', 'http://www.geonames.org/5090174',1,14);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (6, 'North America', 'North and Central America', 1, '/1/6', 'http://vocab.getty.edu/tgn/1000001',1,2);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (7, 'United States', 'United States', 6, '/1/6/7', 'http://www.geonames.org/6252001',1,6);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (8, 'New Hampshire', 'US: New Hampshire', 7, '/1/6/7/8', 'http://www.geonames.org/5090174',1,14);
 
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (9, 'Atlantic', 'Atlantic Ocean', 100, 1, '/1/9', 'http://www.geonames.org/',1,32);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (9, 'Atlantic', 'Atlantic Ocean', 1, '/1/9', 'http://www.geonames.org/',1,32);
 
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (10, 'South America', 'South America', 100, 1, '/1/10', '',1,2);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (11, 'Brazil', 'Brazil', 200, 6, '/1/10/11', '',1,6);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (12, 'Maine', 'US: Maine', 300, 7, '/1/6/7/12', '',1,14);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (13, 'High Seas', 'High Seas', 200, 1, '/1/13', '',1,6);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (14, 'US Exclusive Economic Zone', 'US: EEZ', 260, 7, '/1/6/7/14', '',1,35);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (10, 'South America', 'South America', 1, '/1/10', '',1,2);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (11, 'Brazil', 'Brazil', 6, '/1/10/11', '',1,6);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (12, 'Maine', 'US: Maine', 7, '/1/6/7/12', '',1,14);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (13, 'High Seas', 'High Seas', 1, '/1/13', '',1,6);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (14, 'US Exclusive Economic Zone', 'US: EEZ', 7, '/1/6/7/14', '',1,35);
 
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (15, 'North Atlantic', 'North Atlantic Ocean', 150, 9, '/1/9/15', 'http://www.geonames.org/',1,33);
-insert into geography (geography_id, name, full_name, rank_id, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
-       values (16, 'Gulf of Maine', 'Gulf of Maine', 250, 9, '/1/9/15', 'http://www.geonames.org/',1,34);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (15, 'North Atlantic', 'North Atlantic Ocean', 9, '/1/9/15', 'http://www.geonames.org/',1,33);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (16, 'Gulf of Maine', 'Gulf of Maine', 9, '/1/9/15', 'http://www.geonames.org/',1,34);
+insert into geography (geography_id, name, full_name, parent_id, parentage, guid, geographytreedef_id, geographytreedefitem_id) 
+       values (17, 'Arizona', 'US: Arizona', 7, '/1/6/7/17', '',1,14);
 
 -- Example catalog number series and collections used in the example data.
 
@@ -511,7 +513,7 @@ insert into biologicalattribute (name,value,identifiableitem_id) values ('sex','
 -- changset chicoreus:testcase5ant
 -- Test case for an ethanol vial and a set of pinned ants from one ant hill with an associated species (inquiline ant) along with an ant on one of the pins.
 
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (11, 'Mt. Adams','Mount Adams', 'Example Locality (not the right one for this taxon)',8,8); 
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (11, 'Near Tuscon AZ','Near Tuscon', 'Example Locality',17,17); 
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (29,'10 Feb, 2002','2002-02-10','2002-02-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (11, 15, 'SP Cover','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (11,11,11,29);

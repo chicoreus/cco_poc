@@ -1958,13 +1958,11 @@ ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeferen
 -- tables supporting geography
 
 -- changeset chicoreus:124
--- TODO: Remove rank_id from geography, redundant with geographytreedefitem.
 CREATE TABLE geography (
   -- Definition: heriarchically nested higher geographical entities 
   geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(255) not null,
   full_name varchar(900) default null,
-  rank_id int(11) not null,
   parent_id bigint default null,
   parentage varchar(2000) not null, -- the path from the root of the tree to this geography node
   remarks text,
