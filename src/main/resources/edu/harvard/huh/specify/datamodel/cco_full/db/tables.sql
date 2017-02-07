@@ -310,8 +310,6 @@ ALTER TABLE identification add constraint fk_ident_itemid foreign key (identifia
 
 -- changeset chicoreus:014
 
--- TODO: Remove rank_id from taxon, redundant with taxontreedefitem.
-
 CREATE TABLE taxon (
    -- Definition: A scientific name string that may be curated to be linked to a nomeclatural act or to an authoriative record of a name usage.
    taxon_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -324,7 +322,6 @@ CREATE TABLE taxon (
    parent_id bigint,   -- pointer to parent node in tree 
    parentage varchar(2000) not null,  -- enumerated path from current node to root of tree, using '/' as a separator, starting with a separator, ending with the taxon_id of the current node.
    taxontreedefitem_id bigint not null, -- what is the definition for this node
-   rank_id int,  -- the rank of this node in the heirarchy
    status varchar(50),  -- taxonomic and nomenclatural status for this name
    status_notes text,  -- remarks concerning the taxonomic and nomenclatural status of this name 
    accepted_taxon_id bigint,  -- pointer to another node in tree which is the accepted name to use for this taxon in the opinion of the collection.
@@ -2116,15 +2113,12 @@ CREATE INDEX idx_stdi_rank ON storagetreedefitem(rank_id);
 ALTER TABLE storagetreedefitem add constraint fk_stdi_treeid foreign key (storagetreedef_id) references storagetreedef(storagetreedef_id);
 
 -- changeset chicoreus:136
--- TODO: Remove rank_id from storage, redundant with storagetreedefitem.
-
 CREATE TABLE storage (
   -- Definition: location where zero or more preparations are stored 
   storage_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,  -- the name of this storage location
   barcode varchar(900) not null,  -- barcoded identifier of this storage location
   abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
-  rank_id int(11) not null,    -- the rank of this storage.  ? redundant with node definition
   full_name varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
   parent_id bigint default null, -- the parent node for this tree in the storage heirarchy
   parentage varchar(2000) not null,  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with storage_id of current node.  
@@ -2284,5 +2278,9 @@ alter table collectingevent add constraint fk_colev_eventdateid foreign key (dat
 create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
 -- changeset chicoreus:148
 alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
+
+-- changeset chicoreus:catitemindexes
+create index idx_ii_catitem on identifiableitem(catalogeditem_id);
+create index idx_prep_catitem on preparation(catalogeditem_id);
 
 --  Last liquibase changeset in this document was number 148.

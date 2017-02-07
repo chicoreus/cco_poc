@@ -43,7 +43,9 @@ returns VARCHAR(255)
 READS SQL DATA
 BEGIN
    declare sci_name varchar(255);
-   select scientific_name into sci_name from taxon  where taxon_id in ( 
+   select scientific_name into sci_name from taxon 
+      left join taxontreedefitem on taxon.taxontreedefitem_id = taxontreedefitem.taxontreedefitem_id
+      where taxon_id in ( 
       select extractFromString('/',parentage,2) from taxon where taxon_id = taxonid
       union 
       select extractFromString('/', parentage,3) from taxon where taxon_id = taxonid
