@@ -219,6 +219,12 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, nomenclatural_code, year_published, nomenclator_guid) 
        values (48, 'Schellwienella cheuma', 'Basset & Bryant, 2006', '<em>Schellwienella cheuma</em> Basset & Bryant, 2006', 'cheuma', 47, '/1/3/37/39/46/47/48', 19, 'ICZN','1895',null);
 
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, nomenclatural_code, parauthor_agent_id, author_agent_id, year_published, nomenclator_guid) 
+       values (49, 'Xanthoparmelia diadeta','(Hale) Hale', '<em>Xanthoparmelia diadeta</em> (Hale) Hale','diadeta', 6, '/1/2/5/6/49',19, 'ICNafp',3,3, '(1974)', 'urn:lsid:indexfungorum.org:names:343890');
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
+       values (50, 'Parmelia', '<em>Parmelia</em>', 'Parmelia', 5, '/1/2/5/50',17, 'ICNafp');
+
 -- Real geographies used in the example data 
 
 -- changeset chicoreus:exampleGeographies
@@ -571,10 +577,32 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 
 -- changeset chicoreus:196
 -- Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)
-select 'TODO: case 9';
-
--- eventdate_id 36 used above.
-
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (13, 'SE slopes of Mt. Adams','SE slopes of Mount Adams', 'Example Locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (37,'11 Feb, 1882','1882-02-11','1882-02-11');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (13, 6, 'Tuckerman','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (13,13,13,37);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (13,13,'Ex-19999','This corresponds to: - Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (17,13,null,1,'urn:uuid:4fcd294f-f04b-4dd1-b01e-20062a1f1ecb');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (18,13,null,1,'urn:uuid:b2da61f3-5a22-4c59-bd31-b82d3d3c9d19');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (19,13,null,1,'urn:uuid:bac560b7-9808-4f1a-8b60-bf3edf5a92b8');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (23,1,'52523',1,1);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (24,1,'7234',1,1);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (21,'packet','dried','in collection',23);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (22,'slide','glycerine','in collection',24);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (28,17,21,'whole organism',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (29,17,22,'fragment',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (30,18,21,'bark fragment',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (31,19,21,'whole organism',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (38,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (39,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (40,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (50,17,0,6,38,0); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,18,1,6,39,0); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (50,19,0,6,40,0); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (41,'10 Feb, 2002','2002-02-10','2002-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (42,'10 Feb, 2002','2002-02-10','2002-02-10');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (8,17,1,1,41,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (49,19,1,1,42,0); 
 
 -- Case from DINA TC Call 2017 Jan 24
 select 'TODO: case xx';
