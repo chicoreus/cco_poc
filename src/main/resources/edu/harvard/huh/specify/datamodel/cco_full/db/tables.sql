@@ -201,16 +201,28 @@ ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_i
 -- To apply a pick list to a field, first define a picklist
 -- then define the items which comprise that pick list.
 
+-- changeset chicoreus:t_biol_individ
+
+CREATE TABLE biologicalindividual (
+  -- Definition: An individual organism that is specifically known and identified and known as that individual to have been observed or sampled.
+  biologicalindividual_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  biologicalindividual_guid varchar(900), -- guid for the biological individual darwinsw:{term}
+  name varchar(900), -- human readable identifier for the biological individual
+  remarks text
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:011
 CREATE TABLE part ( 
   -- Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
   part_id bigint not null primary key auto_increment,  -- surrogae numeric primary key 
   identifiableitem_id bigint not null,  -- the identification of the organism that this part is of
-  preparation_id bigint not null, -- the preparation this part is in/on/is
+  preparation_id bigint not null, -- the preparation this part is in/on/is.
   part_name varchar(50) not null, -- the name of this part
   lot_count int(11) default 1,     -- the number of items comprising this part (e.g. number of specimens in a lot)
   lot_count_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
+  biologicalindividual_id bigint, -- biological individual this is a part of
   remarks text
 )
 ENGINE=InnoDB
@@ -218,10 +230,10 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:012
 CREATE TABLE preparation (
-  -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts.
+  -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts (to allow for records of observations, allow for preparations that form non-physical vouchers or records of the observation).
   -- note: does not specify preparation history or conservation history, additional entities are needed for these.
   preparation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  prep_exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, otherwise true).
+  prep_exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, or if the preparation is a digital record of an observation, otherwise true).
   catalogeditem_id bigint,
   materialsample_id bigint,
   preparation_type varchar(50),

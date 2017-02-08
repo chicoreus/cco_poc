@@ -225,6 +225,17 @@ insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
        values (50, 'Parmelia', '<em>Parmelia</em>', 'Parmelia', 5, '/1/2/5/50',17, 'ICNafp');
 
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
+       values (51, 'Actinopterygii', 'Actinopterygii','Actinopterygii', 18, '/1/3/18/51',7, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
+       values (52, 'Perciformes', 'Perciformes','Perciformes', 51, '/1/3/18/51/52',10, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
+       values (53, 'Callionymidae', 'Callionymidae','Callionymidae', 52, '/1/3/18/51/52/53',14, 'ICZN');
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
+       values (54, 'Callionymus', 'Callionymus','Callionymus', 53, '/1/3/18/51/52/53/54',17, 'ICZN');
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
+       values (55, 'Callionymus lyra', 'Linnaeus, 1758', '<em>Callionymus lyra</em> Linnaeus, 1758', 'lyra', 54, '/1/3/18/51/52/53/54/55', 19, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:126792');
+
 -- Real geographies used in the example data 
 
 -- changeset chicoreus:exampleGeographies
@@ -279,7 +290,8 @@ insert into collection(collection_id, collection_name, institution_guid, institu
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (3,'Example:Paleontology Department','example.com','example.com','Paleontology Department','http://example.com/',6);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (4,'Example:Malacology Department','example.com','example.com','Malacology Department','http://example.com/',2);
 insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (5,'Example:Cryogenic Collection','example.com','example.com','Cryogenic collection','http://example.com/',1);
-insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (6,'Example:Entomology Department','example.com','example.com','Entomology Department','http://example.com/',2);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (6,'Example:Entomology Department','example.com','example.com','Entomology Department','http://example.com/',9);
+insert into collection(collection_id, collection_name, institution_guid, institution_code, collection_code, website_iri, scope_id) values (7,'Example:Ichthyology Department','example.com','example.com','Ichthyology Department','http://example.com/', 4);
 
 insert into catnumseriescollection (catalognumberseries_id, collection_id) values (1,1);
 -- Example of a catalognumberseries that spans more than one department.
@@ -605,21 +617,38 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (49,19,1,1,42,0); 
 
 -- Case from DINA TC Call 2017 Jan 24
-select 'TODO: case xx';
-
 -- Jar of 10 fish
 -- Set of 10 frozen tissue samples
 -- One frozen tissue sample has had identification made based on sequence.
 -- One fish has identificaiton made on sequence
 -- Other 9 fish have indentification infered from sequence
 -- All 10 fish live in the same jar (one preparation)
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (14, '51:13:31.4N 033:05:01.3W','North Atlantic: 51.2254,-330837', 'Example high seas Locality',13,15);  -- high seas, north atlantic
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (43,'04/VII/2016','2016-07-04','2016-07-04');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (14, null, 'K. Hartel','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (14,14,14,43);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (14,14,'T45070434','This corresponds to: - Test Case DINA-1 – Single lot with individuals subsampled and indentified with different means. (Jar of 10 fish, one subsampled and identified based on sequence).');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (25,2,'75643',1,7);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (26,2,'75644',1,7);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (27,2,'75644.a',1,7);  
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (20,14,25,9,'urn:uuid:18feed16-a5fc-4c3c-8251-85bf9b464ca1');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (21,14,26,1,'urn:uuid:18feed16-a5fc-4c3c-8251-85bf9b464ca1');
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (23,'jar','70% Ethanol','in collection',null);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (24,'cryovial','frozen','in collection',27);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (32,20,23,'whole organism',9);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (33,21,23,'whole organism',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (34,21,24,'tissue',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (44,'10 May, 2015','2015-05-10','2015-05-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (45,'10 May, 2015','2015-05-10','2015-05-10');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under,method,remarks) values (55,20,1,1,45,1,'Morphology','Inferred from sequence of 75644.a'); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under,method) values (55,21,1,1,44,0,'Sequence'); 
 
 
 -- Case from DINA TC Call 2017 Jan 24
-select 'TODO: case yy';
+select 'TODO: case DINA-2';
 
 -- One tree, resampled multiple times, one herbarium sheet for each resampling event.
--- Unclear if CCO_full can model this case (heriarchical model clearly can)
+-- CCO_FULL can model this with the addition of a biological individual entity linked to part.
 
 -- Retrieve all examples as flat DarwinCore
 select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, ifnull(coll.preferred_name_string,col.verbatim_collector)  as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations, concat(ifnull(u.remarks,''), ifnull(ii.remarks,'')) as remarks from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id;
