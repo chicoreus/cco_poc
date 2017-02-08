@@ -236,6 +236,13 @@ insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, par
 insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, nomenclatural_code, parauthor_agent_id, year_published, nomenclator_guid) 
        values (55, 'Callionymus lyra', 'Linnaeus, 1758', '<em>Callionymus lyra</em> Linnaeus, 1758', 'lyra', 54, '/1/3/18/51/52/53/54/55', 19, 'ICZN',2,'1758','urn:lsid:marinespecies.org:taxname:126792');
 
+
+insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, parentage, taxontreedefitem_id, nomenclatural_code) 
+       values (56, 'Fagus', '<em>Fagus</em>', 'Fagus', 10, '/1/4/10/56',17, 'ICNafp');
+insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, parentage, taxontreedefitem_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
+       values (57, 'Fagus grandiflora', 'Ehrh.', '<em>Fagus grandiflora</em> Ehrh.','grandiflora', 56, '/1/4/10/56/57',19, 'ICNafp',4,'1788','urn:lsid:ipni.org:names:30060661-2:1.1.2.1');
+
+
 -- Real geographies used in the example data 
 
 -- changeset chicoreus:exampleGeographies
@@ -643,12 +650,46 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under,method,remarks) values (55,20,1,1,45,1,'Morphology','Inferred from sequence of 75644.a'); 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under,method) values (55,21,1,1,44,0,'Sequence'); 
 
+-- TODO: Despite one occurrence_guid, returns three rows of flat Darwin Core (from query below, looks like this comes from the catalogeditems being linked to different places.  
 
 -- Case from DINA TC Call 2017 Jan 24
-select 'TODO: case DINA-2';
 
--- One tree, resampled multiple times, one herbarium sheet for each resampling event.
--- CCO_FULL can model this with the addition of a biological individual entity linked to part.
+-- One tree, resampled multiple times, one herbarium sheet for each resampling event.  
+-- In essence, three herbarium sheets, collections at different times, three occurrences, three preparations, 
+-- but all from the same locality, and all linked to the same biological individual.
+-- CCO_FULL can model this with the addition of a biological individual entity linked to part.  
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (15, 'WS4 HB LTER','Tree Core Plot, Watershed 4, Hubbard Brook LTER', 'Example Locality',8,8); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (46,'04/7 86','1986-07-04','1986-07-04');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (15, null, 'B. Herb','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (15,15,15,46);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (47,'04//7 1996','1996-07-04','1996-07-04');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (16,15,15,47);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (48,'2016/07/04','2016-07-04','2016-07-04');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (16, null, 'E. Denny','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (17,15,16,48);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (15,15,'ST1-TR1-a','This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (first sampling)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (16,16,'ST1-TR1-b','This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (second sampling)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (17,17,'ST1-TR1-c','This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (third sampling)');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (28,1,'0091516',1,1);  
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (29,1,'0151553',1,1);  
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (30,1,'0835219',1,1);  
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (22,15,28,1,'urn:uuid:300c5131-b1a6-4fd6-8a78-8b8276c6472c');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (23,16,29,1,'urn:uuid:e4153484-ab26-493c-a5dc-85cbec9d3dab');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (24,17,23,1,'urn:uuid:36aa7cb8-3ee1-40bb-b086-4456bf962dd1');
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (25,'sheet','dried','in collection',null);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (26,'sheet','dried','in collection',null);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (27,'sheet','dried','in collection',null);
+-- all looking like three different gatherings of the same taxon from the same locality, until here, all are linked to one biological individual.
+insert into biologicalindividual(biologicalindividual_id, biologicalindividual_guid, name) values (1,'urn:uuid:c09c0024-77a9-4873-b01e-33719ebfb2d3','ST1-TR1');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,biologicalindividual_id) values (35,22,25,'branch',1,1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,biologicalindividual_id) values (36,23,26,'branch',1,1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count,biologicalindividual_id) values (37,24,27,'branch',1,1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (49,'04/7 86','1986-07-04','1986-07-04');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (57,22,1,1,49,1); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (50,'04//7 1996','1996-07-04','1996-07-04');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (57,23,1,1,50,1); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (51,'2016/07/04','2016-07-04','2016-07-04');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (57,24,1,1,51,1); 
 
 -- Retrieve all examples as flat DarwinCore
 select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, ifnull(coll.preferred_name_string,col.verbatim_collector)  as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations, concat(ifnull(u.remarks,''), ifnull(ii.remarks,'')) as remarks from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id;
