@@ -483,19 +483,18 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 -- changeset chicoreus:exampleCase4SpecimenMultiplePreps
 -- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
 
--- TODO: Because this is cataloged in two collections it returns two rows in flat Darwn Core query which don't clarify material in collection.
--- TODO: Derived preparation isn't listed in preparations retrieved with function.
+-- TODO: Derived preparation (DNA Extract) isn't listed in preparations retrieved with function.
 
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (10, 'Near Richmond','Near Richmond, NH', 'Example locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (26,'22 Dec, 98','1998-12-22','1998-12-22');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (10, 14, 'H. Tolman','and students');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (10,10,10,26);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (10,10,'35');
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (12,2,'00532',1,4);
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (13,2,'00533',1,4);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (12,2,'00532',1,2);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (13,2,'00533',1,2);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (14,3,'7539365',1,5);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (15,3,'7539733',1,5);
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (16,2,'00534',1,4);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (16,2,'00534',1,2);
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (11,10,null,1,'urn:uuid:2ec1860d-112a-465f-ab39-1e0ec754923e', 'TC4 This corresponds to: Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers, includes a derived preparation. (Mammology/Cryogenic example (part of animal cataloged in one collection, part in another)).');
 insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (11,'partial animal','dry','in collection',12);
 insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (13,'partial animal','70% ethanol','in collection',13);
