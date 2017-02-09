@@ -692,6 +692,37 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (57,24,1,1,51,1); 
 
 -- Retrieve all examples as flat DarwinCore
-select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, ifnull(coll.preferred_name_string,col.verbatim_collector)  as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations, concat(ifnull(u.remarks,''), ifnull(ii.remarks,'')) as remarks from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id;
+select distinct 
+    getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, 
+    g.name, 
+    l.specificlocality, 
+    ifnull(coll.preferred_name_string,col.verbatim_collector)  as recordedBy, 
+    unit_field_number, 
+    dcol.iso_date as dateCollected, 
+    getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, 
+    cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, 
+    cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified, 
+    trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, 
+    occurrence_guid as occurrenceId, 
+    cco_full.getInstitutionCode(ii.identifiableitem_id) as institutionCode,
+    cco_full.getCollectionCode(ii.identifiableitem_id) as collectionCode, 
+    cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, 
+    cco_full.getparts(ii.identifiableitem_id) as parts, 
+    cco_full.getPreparations(ii.identifiableitem_id) as preparations, 
+    concat(ifnull(u.remarks,''), ifnull(ii.remarks,'')) as remarks 
+from identifiableitem ii 
+     left join unit u on ii.unit_id = u.unit_id 
+     -- left join part p on ii.identifiableitem_id = p.identifiableitem_id 
+     -- left join preparation pr on p.preparation_id = pr.preparation_id 
+     left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id 
+     left join locality l on ce.locality_id = l.locality_id 
+     left join geography g on l.geopolitical_geography_id = g.geography_id 
+     left join collector col on ce.collector_id = col.collector_id 
+     -- left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id 
+     -- left join collection on ci.collection_id = collection.collection_id 
+     -- left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id 
+     left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id 
+     left join identification id on ii.identifiableitem_id = id.identifiableitem_id 
+     left join agent coll on col.agent_id = coll.agent_id;
 
 -- The last liquibase changeset in this file was number 196

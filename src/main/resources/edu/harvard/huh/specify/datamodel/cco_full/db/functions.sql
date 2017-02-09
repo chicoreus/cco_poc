@@ -209,6 +209,8 @@ drop function if exists cco_full.getPreparations;
 drop function if exists cco_full.getParts;
 drop function if exists cco_full.getCatalogNumbers;
 drop function if exists cco_full.getCollection;
+drop function if exists cco_full.getCollectionCode;
+drop function if exists cco_full.getInstitutionCode;
 
 -- changeset chicoreus:156 dbms:none
 delimiter |
@@ -365,10 +367,11 @@ END |
 
 create function cco_full.getCollection(identifiableitemid INT) 
 returns varchar(2000)
+-- Given an identifiable item, return the list of collections within which it is cataloged.
 READS SQL DATA 
 BEGIN
    declare result varchar(2000) default '';
-   declare num varchar(255);
+   declare name varchar(255);
    declare sep varchar(2) default '';
    declare done int default 0;
    declare cur cursor for 
@@ -391,11 +394,88 @@ BEGIN
    declare continue handler for not found set done = 1;
    open cur;
    getnums: LOOP
-      fetch cur into num;
+      fetch cur into name;
       if done = 1 then
         LEAVE getnums;
       end if;
-      SET result = concat(result,sep,num);
+      SET result = concat(result,sep,name);
+      SET sep = "|";
+   END LOOP;
+   return result;
+END |
+
+create function cco_full.getCollectionCode(identifiableitemid INT) 
+returns varchar(2000)
+-- Given an identifiable item, return the list of collection codes within which it is cataloged.
+READS SQL DATA 
+BEGIN
+   declare result varchar(2000) default '';
+   declare code varchar(255);
+   declare sep varchar(2) default '';
+   declare done int default 0;
+   declare cur cursor for 
+       select distinct collection_code from (
+       select distinct  collection_code
+       from identifiableitem ii
+          left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id
+          left join collection col on ci.collection_id = col.collection_id
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       union
+       select distinct collection_code
+       from identifiableitem ii
+          left join part on ii.identifiableitem_id = part.identifiableitem_id
+          left join preparation prep on part.preparation_id = prep.preparation_id
+          left join catalogeditem ci on prep.catalogeditem_id = ci.catalogeditem_id
+          left join collection col on ci.collection_id = col.collection_id
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       ) a
+       ;
+   declare continue handler for not found set done = 1;
+   open cur;
+   getnums: LOOP
+      fetch cur into code;
+      if done = 1 then
+        LEAVE getnums;
+      end if;
+      SET result = concat(result,sep,code);
+      SET sep = "|";
+   END LOOP;
+   return result;
+END |
+create function cco_full.getInstitutionCode(identifiableitemid INT) 
+returns varchar(2000)
+-- Given an identifiable item, return the list of institution codes within which it is cataloged.
+READS SQL DATA 
+BEGIN
+   declare result varchar(2000) default '';
+   declare code varchar(255);
+   declare sep varchar(2) default '';
+   declare done int default 0;
+   declare cur cursor for 
+       select distinct institution_code from (
+       select distinct  institution_code
+       from identifiableitem ii
+          left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id
+          left join collection col on ci.collection_id = col.collection_id
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       union
+       select distinct institution_code
+       from identifiableitem ii
+          left join part on ii.identifiableitem_id = part.identifiableitem_id
+          left join preparation prep on part.preparation_id = prep.preparation_id
+          left join catalogeditem ci on prep.catalogeditem_id = ci.catalogeditem_id
+          left join collection col on ci.collection_id = col.collection_id
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       ) a
+       ;
+   declare continue handler for not found set done = 1;
+   open cur;
+   getnums: LOOP
+      fetch cur into code;
+      if done = 1 then
+        LEAVE getnums;
+      end if;
+      SET result = concat(result,sep,code);
       SET sep = "|";
    END LOOP;
    return result;
