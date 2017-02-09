@@ -208,6 +208,7 @@ drop function if exists cco_full.getCurrentIdentTaxonID;
 drop function if exists cco_full.getPreparations;
 drop function if exists cco_full.getParts;
 drop function if exists cco_full.getCatalogNumbers;
+drop function if exists cco_full.getCollection;
 
 -- changeset chicoreus:156 dbms:none
 delimiter |
@@ -362,6 +363,45 @@ BEGIN
    return result;
 END |
 
+create function cco_full.getCollection(identifiableitemid INT) 
+returns varchar(2000)
+READS SQL DATA 
+BEGIN
+   declare result varchar(2000) default '';
+   declare num varchar(255);
+   declare sep varchar(2) default '';
+   declare done int default 0;
+   declare cur cursor for 
+       select distinct collection_name from (
+       select distinct  collection_name
+       from identifiableitem ii
+          left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id
+          left join catnumseriescollection cnsc on ci.catalognumberseries_id = cnsc.catalognumberseries_id
+          left join collection col on cnsc.collection_id = col.collection_id
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       union
+       select distinct collection_name
+       from identifiableitem ii
+          left join part on ii.identifiableitem_id = part.identifiableitem_id
+          left join preparation prep on part.preparation_id = prep.preparation_id
+          left join catalogeditem ci on prep.catalogeditem_id = ci.catalogeditem_id
+          left join catnumseriescollection cnsc on ci.catalognumberseries_id = cnsc.catalognumberseries_id
+          left join collection col on cnsc.collection_id = col.collection_id
+       where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
+       ) a
+       ;
+   declare continue handler for not found set done = 1;
+   open cur;
+   getnums: LOOP
+      fetch cur into num;
+      if done = 1 then
+        LEAVE getnums;
+      end if;
+      SET result = concat(result,sep,num);
+      SET sep = "|";
+   END LOOP;
+   return result;
+END |
 -- changeset chicoreus:157 dbms:none
 delimiter ;
 -- changeset chicoreus:157 endDelimiter:; dbms:mysql
