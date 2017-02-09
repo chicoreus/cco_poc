@@ -200,6 +200,8 @@ END |
 delimiter ;
 -- changeset chicoreus:155 endDelimiter:; dbms:mysql
 
+drop function if exists cco_full.getCollector;
+
 drop function if exists cco_full.getCurrentIdentification;
 drop function if exists cco_full.getCurrentIdentID;
 drop function if exists cco_full.getCurrentIdentDateIdentified;
@@ -215,6 +217,18 @@ drop function if exists cco_full.getInstitutionCode;
 -- changeset chicoreus:156 dbms:none
 delimiter |
 -- changeset chicoreus:156 endDelimiter:\| dbms:mysql
+
+create function cco_full.getCollector(collectorId INT)
+returns VARCHAR(255)
+READS SQL DATA
+BEGIN
+   declare collector varchar(900);
+   select trim(concat(ifnull(preferred_name_string, verbatim_collector), ' ', etal)) collector 
+   from collector left join agent on collector.agent_id = agent.agent_id
+   where collector.collector_id = collectorId
+      limit 1 into collector;
+   return collector;
+END |
 
 create function cco_full.getCurrentIdentification(identifiableitemid INT)
 returns VARCHAR(255)
