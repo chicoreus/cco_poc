@@ -376,8 +376,7 @@ BEGIN
        select distinct  collection_name
        from identifiableitem ii
           left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id
-          left join catnumseriescollection cnsc on ci.catalognumberseries_id = cnsc.catalognumberseries_id
-          left join collection col on cnsc.collection_id = col.collection_id
+          left join collection col on ci.collection_id = col.collection_id
        where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
        union
        select distinct collection_name
@@ -385,8 +384,7 @@ BEGIN
           left join part on ii.identifiableitem_id = part.identifiableitem_id
           left join preparation prep on part.preparation_id = prep.preparation_id
           left join catalogeditem ci on prep.catalogeditem_id = ci.catalogeditem_id
-          left join catnumseriescollection cnsc on ci.catalognumberseries_id = cnsc.catalognumberseries_id
-          left join collection col on cnsc.collection_id = col.collection_id
+          left join collection col on ci.collection_id = col.collection_id
        where ii.identifiableitem_id = identifiableitemid and catalog_number is not null
        ) a
        ;
