@@ -324,7 +324,7 @@ insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name
 
 -- The Examples: 
 
--- changeset chicoreus:188
+-- changeset chicoreus:exampleCase0SimpleSheet
 -- Case 1, simple case, one unit, one organism, one part, one preparation.
 -- This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (1, 'Mt. Monadnock','Mount Monadnock', 'Example Locality',8,8);
@@ -333,7 +333,7 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (1,1,1,1);
 insert into unit (unit_id,collectingevent_id,unit_field_number) values (1,1,'Ex-999');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (1,1,'001',1,1);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550', 'This corresponds to: Test Case 0 – Several (one) specimens on a sheet, one collecting event, one catalog number (a lot). (Simple herbarium sheet example)');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (1,1,1,1,'urn:uuid:41f908ba-d112-11e6-ac8b-0015c5c8a550', 'TC0 This corresponds to: Test Case 0 – Several (one) specimens on a sheet, one collecting event, one catalog number (a lot). (Simple herbarium sheet example)');
 insert into preparation (preparation_id,preparation_type,preservation_type,status) values (1,'sheet','dried','in collection');
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (1,1,1,'branch',1);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (36,'[date not recorded]','1800-01-01','2015-12-31');
@@ -346,68 +346,40 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 -- Alternatively:
 -- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id), did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, concat(catalognumber_prefix,catalog_number) as catalogNumber, part_name, lot_count, preparation_type, preservation_type from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on ii.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '001' and id.identification_id = getCurrentIdentId(ii.identifiableitem_id) ;
 
--- changeset chicoreus:189
--- Case 2, packet with two organisms (lichen on bark in packet), with the packet being the cataloged object,
--- thus (one catalog number and two occurrences).
--- This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, one physical loanable preparation.  Single catalog number on the preparation.
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',8,8);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (3,'10 Feb, 1882','1882-02-10','1882-02-10');
-insert into collector (collector_id, agent_id, verbatim_collector, etal) values (2, 6, 'Tuckerman','');
-insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (2,2,2,3);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (2,2,'Ex-9999','This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, one physical loanable preparation.  Single catalog number on the preparation.'
-);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (2,2,null,1,'urn:uuid:32dfd81a-b2af-416c-b797-d610281ca15a');
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (3,2,null,1,'urn:uuid:1d3c8962-8dbe-4255-89e0-3828fb30827a');
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (2,1,'002',1,1);
-insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (2,'packet','dried','in collection',2);
-insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (2,2,2,'whole organism',1);
-insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (3,3,2,'bark fragment',1);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (4,'10 Feb, 1882','1882-02-10','1882-02-10');
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (5,'10 Feb, 1882','1882-02-10','1882-02-10');
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (8,2,1,6,4,1); 
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,3,1,6,5,0); 
+-- changeset chicoreus:exampleCase0lotofsnails
+-- This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (9, '30 miles SE of Mt Desert Island','Off the Coast of Maine; 30 miles Southeast of Mt Desert Island.', 'Example marine Locality',14,16);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (23,'8-10 62','1962-08-10','1962-08-10');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (9, null, 'A. Jones','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (9,9,9,23);
+insert into unit (unit_id,collectingevent_id,unit_field_number) values (9,9,'62-500');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (11,2,'00234',1,4);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (10,9,11,45,'urn:uuid:0880242c-05ce-47f2-a666-0f3add191c2b', 'TC0Z This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot). (Marine mollusk example)');
+insert into preparation (preparation_id,preparation_type,preservation_type,status) values (10,'shells','dry','in collection');
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (13,10,10,'shell',45);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (24,'15 Feb, 2004','2004-02-15','2004-02-15');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,date_determined_eventdate_id,is_filed_under) values (31,10,1,1,24,1); 
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (25,'18 Feb, 1983','1983-02-18','1983-02-18');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (31,10,0,12,25,0); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, is_filed_under) values (31,10,0,13,0); 
+
 
 -- SELECT for Case 2 as two rows (one per dwc:occurrenceId) for flat DarwinCore.
 -- select getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, coll.preferred_name_string as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName, cco_full.getCurrentIdentDateIdentified(ii.identifiableitem_id) as dateIdentified,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, occurrence_guid as occurrenceId, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join agent coll on col.agent_id = coll.agent_id where catalog_number = '002' and ci.catalognumberseries_id = 1 and id.identification_id = getCurrentIdentId(ii.identifiableitem_id);
 
 
--- changeset chicoreus:190
--- Case 3, lot of one organism but two preparations (with the preparations cataloged)
--- This corresponds to: Test Case 3a –One biological individual in several specimens of several different preparation types, each preparation cataloged.  One biological individual, several cataloged, loanable preparations of different types, each with a catalog number (potentially in different catalog number series or even collections).
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (3, 'Cardiff Bay','Cardiff Bay', 'Example Locality',5,9);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (6,'4-10 62','1962-04-10','1962-04-10');
-insert into collector (collector_id, agent_id, verbatim_collector, etal) values (3, null, 'A. Jones','');
-insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (3,3,3,6);
-insert into unit (unit_id,collectingevent_id,unit_field_number) values (3,3,'62-153');
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (4,3,null,30,'urn:uuid:900d240e-5d85-4b5b-b8c2-b9e97db34c51','This corresponds to: Test Case 3a –One biological individual in several specimens of several different preparation types, each preparation cataloged.  One biological individual, several cataloged, loanable preparations of different types, each with a catalog number.');
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (3,2,'Z0001',1,4);
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (4,2,'Z0002',1,4);
-insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (3,'tray','dry','in collection',3);
-insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (4,'jar','70% ethanol','in collection',4);
-insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (4,4,3,'shell',30);
-insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (5,4,4,'viscera',1);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (7,'1980','1980','1980-01-01','1980-12-31');
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (17,4,1,6,7,1); 
-
-
--- SELECT for Case 3 as one row for flat DarwinCore.
--- select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, ifnull(coll.preferred_name_string,verbatim_collector) as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where ( catalog_number = 'Z0001' or catalog_number = 'Z0002' ) and id.identification_id = getCurrentIdentId(ii.identifiableitem_id) and ci.catalognumberseries_id = 2;
-
--- SELECT for Case 3 as two rows (one per preparation, sharing the same dwc:occurrenceId), needs reduction for flat DarwinCore.
--- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where ( catalog_number = 'Z0001' or catalog_number = 'Z0002' ) and ci.catalognumberseries_id = 2;
-
--- changeset chicoreus:191
+-- changeset chicoreus:exampleCase1ComparativeSpecCat
 -- Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (4, 'Mt. Greylock','Mount Greylock', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (8,'July 15, 83','1883-07-15','1883-07-15');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (4, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (4,4,4,8);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (4,4,'Ex-99904','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (4,4,'Ex-99904','TC1 This corresponds to one specimen from: Test Case 1 – Comparative Mount (specimen cataloged): Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number. (first specimen)');
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (5, 'Mt. Washignton','Mount Washington', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (9,'July 5, 1882','1882-07-05','1882-07-05');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (5, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (5,5,5,9);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (5,5,'Ex-88804','This corresponds to one specimen from: Test Case 1 – Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number.');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (5,5,'Ex-88804','TC1 This corresponds to one specimen from: Test Case 1 – Comparative Mount (specimen cataloged): Several specimens on a sheet, each cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, each with a catalog number. (second specimen)');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (5,1,'004-a',1,1);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (6,1,'004-b',1,1);
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (5,4,5,1,'urn:uuid:abffe64d-a1b2-4f70-9916-186397345a13');
@@ -428,18 +400,18 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
     values (12,6,0,6,11,1); 
 
--- changeset chicoreus:192
+-- changeset chicoreus:exampleCase2ComparativeSheetCat
 -- Test Case 2 –Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (6, 'Mt. Greylock','Mount Greylock', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (14,'Aug 15, 83','1983-08-15','1983-08-15');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (6, 8, 'Heiser','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (6,6,6,14);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (6,6,'Ex-99905','This corresponds to one specimen from: Test Case 2 – Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (6,6,'Ex-99905','TC2 This corresponds to one specimen from: Test Case 2 – Comparative Mount (sheet cataloged): Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number. (first specimen)');
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (7, 'Mt. Washignton','Mount Washington', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (15,'July 5, 1881','1881-07-05','1881-07-05');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (7, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (7,7,7,15);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (7,7,'Ex-88805','This corresponds to one specimen from: Test Case 2 – Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number.');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (7,7,'Ex-88805','TC2 This corresponds to one specimen from: Test Case 2 – Comparative Mount (sheet cataloged) Several specimens on a sheet, sheet cataloged.  One physical, loanable preparation, containing several different biological individuals collected in separate collecting events, under a single catalog number. (second specimen)');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (7,6,null,1,'urn:uuid:c91c0242-6cc4-4865-b139-c443266e71cd');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (8,7,null,1,'urn:uuid:7860e7ea-7eca-4e12-80de-09c2b9ae0bf8');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (7,1,'005',1,1);
@@ -459,7 +431,7 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) 
     values (12,8,0,6,17,1); 
 
--- changeset chicoreus:193
+-- changeset chicoreus:exampleCase3SpecimenMultipleSheets
 -- Test Case 3 –One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.
 -- Palm leaves that span multiple sheets.
 
@@ -467,7 +439,7 @@ insert into locality (locality_id, verbatim_locality, specificlocality, remarks,
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (20,'10/4/1875','1875-10-04','1875-10-04');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (8, 9, 'A.F.M. Glaziou','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (8,8,8,20);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (8,8,'8063','This corresponds to Test Case 3 – One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.  (Leaves from a palm tree spread across several sheets)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (8,8,'8063','TC3 This corresponds to Test Case 3 – One biological individual in several specimens on several sheets, each sheet cataloged.  One biological individual, several cataloged, loanable preparations of the same type, each with a catalog number.  (Leaves from a palm tree spread across several sheets)');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (9,8,null,1,'urn:uuid:2535a8b8-a7bc-40a5-b0d7-38614c67291e');
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (21,'1875','1875','1875-01-10','1875-12-31');
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (22,'15 Mar. 2006','2006-03-15','2006-03-15');
@@ -485,25 +457,30 @@ insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_co
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (11,9,8,'dried plant',1);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (12,9,9,'dried plant',1);
 
--- changeset chicoreus:lotofsnails
--- This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot).
-insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (9, '30 miles SE of Mt Desert Island','Off the Coast of Maine; 30 miles Southeast of Mt Desert Island.', 'Example marine Locality',14,16);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (23,'8-10 62','1962-08-10','1962-08-10');
-insert into collector (collector_id, agent_id, verbatim_collector, etal) values (9, null, 'A. Jones','');
-insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (9,9,9,23);
-insert into unit (unit_id,collectingevent_id,unit_field_number) values (9,9,'62-500');
-insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (11,2,'00234',1,4);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (10,9,11,45,'urn:uuid:0880242c-05ce-47f2-a666-0f3add191c2b', 'This corresponds to: Test Case 0 – Several specimens on a sheet, one collecting event, one catalog number (a lot). (Marine mollusk example)');
-insert into preparation (preparation_id,preparation_type,preservation_type,status) values (10,'shells','dry','in collection');
-insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (13,10,10,'shell',45);
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (24,'15 Feb, 2004','2004-02-15','2004-02-15');
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id,date_determined_eventdate_id,is_filed_under) values (31,10,1,1,24,1); 
-insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (25,'18 Feb, 1983','1983-02-18','1983-02-18');
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (31,10,0,12,25,0); 
-insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, is_filed_under) values (31,10,0,13,0); 
+-- changeset chicoreus:exampleCase3aLotPrepsCataloged
+-- Case 3, lot of one organism but two preparations (with the preparations cataloged)
+-- This corresponds to: Test Case 3a –One biological individual in several specimens of several different preparation types, each preparation cataloged.  One biological individual, several cataloged, loanable preparations of different types, each with a catalog number (potentially in different catalog number series or even collections).
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id,geographic_geography_id) values (3, 'Cardiff Bay','Cardiff Bay', 'Example Locality',5,9);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (6,'4-10 62','1962-04-10','1962-04-10');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (3, null, 'A. Jones','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (3,3,3,6);
+insert into unit (unit_id,collectingevent_id,unit_field_number) values (3,3,'62-153');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (4,3,null,30,'urn:uuid:900d240e-5d85-4b5b-b8c2-b9e97db34c51','TC3a This corresponds to: Test Case 3a –One biological individual in several specimens of several different preparation types, each preparation cataloged.  One biological individual, several cataloged, loanable preparations of different types, each with a catalog number.');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (3,2,'Z0001',1,4);
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (4,2,'Z0002',1,4);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (3,'tray','dry','in collection',3);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (4,'jar','70% ethanol','in collection',4);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (4,4,3,'shell',30);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (5,4,4,'viscera',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date,end_date) values (7,'1980','1980','1980-01-01','1980-12-31');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (17,4,1,6,7,1); 
+-- SELECT for Case 3 as one row for flat DarwinCore.
+-- select distinct getHigherGeographyAtRank(l.geopolitical_geography_id,200) as country, g.name, l.specificlocality, ifnull(coll.preferred_name_string,verbatim_collector) as recordedBy, unit_field_number, dcol.iso_date as dateCollected, getHigherTaxonAtRank(getCurrentIdentTaxonId(ii.identifiableitem_id),140) as family, cco_full.getCurrentIdentification(ii.identifiableitem_id) as scientificName,  trim(concat(individual_count, ' ', ifnull(individual_count_modifier,''))) as numberOfIndividuals, did.iso_date as dateIdentified, occurrence_guid, institution_code, collection_code, cco_full.getCatalogNumbers(ii.identifiableitem_id) as catalogNumber, cco_full.getparts(ii.identifiableitem_id) as parts, cco_full.getPreparations(ii.identifiableitem_id) as preparations from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join eventdate did on id.date_determined_eventdate_id = did.eventdate_id left join agent coll on col.agent_id = coll.agent_id where ( catalog_number = 'Z0001' or catalog_number = 'Z0002' ) and id.identification_id = getCurrentIdentId(ii.identifiableitem_id) and ci.catalognumberseries_id = 2;
 
+-- SELECT for Case 3 as two rows (one per preparation, sharing the same dwc:occurrenceId), needs reduction for flat DarwinCore.
+-- select * from identifiableitem ii left join unit u on ii.unit_id = u.unit_id left join part p on ii.identifiableitem_id = p.identifiableitem_id left join preparation pr on p.preparation_id = pr.preparation_id left join collectingevent ce on u.collectingevent_id = ce.collectingevent_id left join locality l on ce.locality_id = l.locality_id left join geography g on l.geopolitical_geography_id = g.geography_id left join identification id on ii.identifiableitem_id = id.identifiableitem_id left join taxon t on id.taxon_id = t.taxon_id left join collector col on ce.collector_id = col.collector_id left join catalogeditem ci on pr.catalogeditem_id = ci.catalogeditem_id left join collection on ci.collection_id = collection.collection_id left join catalognumberseries cns on ci.catalognumberseries_id = cns.catalognumberseries_id where ( catalog_number = 'Z0001' or catalog_number = 'Z0002' ) and ci.catalognumberseries_id = 2;
 
--- changeset chicoreus:194
+-- changeset chicoreus:exampleCase4SpecimenMultiplePreps
 -- Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers.
 
 -- TODO: Because this is cataloged in two collections it returns two rows in flat Darwn Core query which don't clarify material in collection.
@@ -519,7 +496,7 @@ insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_num
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (14,3,'7539365',1,5);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (15,3,'7539733',1,5);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (16,2,'00534',1,4);
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (11,10,null,1,'urn:uuid:2ec1860d-112a-465f-ab39-1e0ec754923e', ' This corresponds to: Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers, includes a derived preparation. (Mammology/Cryogenic example (part of animal cataloged in one collection, part in another)).');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (11,10,null,1,'urn:uuid:2ec1860d-112a-465f-ab39-1e0ec754923e', 'TC4 This corresponds to: Test Case 4 – Series of derived preparations.  One biological individual, several cataloged, loanable preparations of different types,  some sharing a catalog number, others with different numbers, includes a derived preparation. (Mammology/Cryogenic example (part of animal cataloged in one collection, part in another)).');
 insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (11,'partial animal','dry','in collection',12);
 insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (13,'partial animal','70% ethanol','in collection',13);
 insert into preparation (preparation_id,preparation_type,preservation_type,status,catalogeditem_id) values (14,'frozen tissue','liquid nitrogen','in collection',14);
@@ -536,14 +513,14 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (22,11,0,14,28,0); 
 insert into biologicalattribute (name,value,identifiableitem_id) values ('sex','female',11);
 
--- changset chicoreus:testcase5ant
+-- changset chicoreus:exampleCase5MixedCollectionAnts
 -- Test case for an ethanol vial and a set of pinned ants from one ant hill with an associated species (inquiline ant) along with an ant on one of the pins.
 
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (11, 'Near Tuscon AZ','Near Tuscon', 'Example Locality',17,17); 
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (29,'10 Feb, 2002','2002-02-10','2002-02-10');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (11, 15, 'SP Cover','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (11,11,11,29);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (11,11,'SPC9999','This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, single physical loanable preparation.  Single catalog number on the preparation. (Ant and other species on a pin) Extended to include additional cataloged items from the same unit.'
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (11,11,'SPC9999','TC5 Zoo. This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, single physical loanable preparation.  Single catalog number on the preparation. (Ant and other species on a pin) Extended to include additional cataloged items from the same unit.'
 );
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (12,11,null,30,'urn:uuid:99342b96-425e-46b0-a562-4fd784dab81d'); -- The ants from the nest
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid,remarks) values (13,11,null,1,'urn:uuid:112d6f77-3e1e-4bbb-ae74-f0362242c228','inquiline'); -- The inquilline ant
@@ -566,7 +543,27 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (35,12,1,15,29,1); 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (36,13,1,15,30,0); 
 
--- changeset chicoreus:195
+-- changeset chicoreus:exampleCase5MixedCollPrepCataloged
+-- Case [2], packet with two organisms (lichen on bark in packet), with the packet being the cataloged object,
+-- thus (one catalog number and two occurrences).
+-- This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, one physical loanable preparation.  Single catalog number on the preparation.
+insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (2, 'Mt. Adams','Mount Adams', 'Example Locality',8,8);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (3,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into collector (collector_id, agent_id, verbatim_collector, etal) values (2, 6, 'Tuckerman','');
+insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (2,2,2,3);
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (2,2,'Ex-9999','TC5 Bot. This corresponds to: Test Case 5 – Mixed Collection with a single catalog number.  Multiple biological individuals of different species, one physical loanable preparation.  Single catalog number on the preparation.'
+);
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (2,2,null,1,'urn:uuid:32dfd81a-b2af-416c-b797-d610281ca15a');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (3,2,null,1,'urn:uuid:1d3c8962-8dbe-4255-89e0-3828fb30827a');
+insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (2,1,'002',1,1);
+insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (2,'packet','dried','in collection',2);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (2,2,2,'whole organism',1);
+insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (3,3,2,'bark fragment',1);
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (4,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (5,'10 Feb, 1882','1882-02-10','1882-02-10');
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (8,2,1,6,4,1); 
+insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (12,3,1,6,5,0); 
+-- changeset chicoreus:exampleCase5aMixedCollSpecCataloged
 -- Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).
 
 insert into paleocontext (paleocontext_id, verbatim_geologic_context, verbatim_lithology, lithology, is_float, earlyest_geochronologic_unit_id, latest_geochronologic_unit_id, lithostratigraphic_unit_id) values (1,'Point Ls, Carb.','Dolomite','Dolomite','No', 6,6,8);
@@ -574,7 +571,7 @@ insert into locality (locality_id, verbatim_locality, specificlocality, remarks,
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (32,'12/12/04','2004-12-12','2004-12-12');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (12, 16, 'M. Basset','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (12,12,12,32);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (12,12,'04352','This corresponds to: - Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (12,12,'04352','TC5a This corresponds to: - Test Case 5a – Mixed Collection with multiple catalog numbers Multiple biological individuals of different species, each with a catalog number, one physical loanable preparation (fossil slab with several cataloged specimens).');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (20,2,'634636',1,3);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (21,2,'634637',1,3);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (22,2,'634638',1,3);
@@ -594,13 +591,13 @@ insert into identification (taxon_id, identifiableitem_id,is_current,determiner_
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (48,16,1,17,35,1); 
 
 
--- changeset chicoreus:196
+-- changeset chicoreus:exampleCase6MixedCollectionWithPreps
 -- Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)
 insert into locality (locality_id, verbatim_locality, specificlocality, remarks, geopolitical_geography_id, geographic_geography_id) values (13, 'SE slopes of Mt. Adams','SE slopes of Mount Adams', 'Example Locality',8,8);
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (37,'11 Feb, 1882','1882-02-11','1882-02-11');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (13, 6, 'Tuckerman','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (13,13,13,37);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (13,13,'Ex-19999','This corresponds to: - Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (13,13,'Ex-19999','TC6 This corresponds to: - Test Case 6 – Mixed Collection with derivatives.  Multiple biological individuals of different species, more than one physical loanable preparation (a mixed collection in a packet, with a slide that has been prepared from one of the taxa present in the mixed collection)');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (17,13,null,1,'urn:uuid:4fcd294f-f04b-4dd1-b01e-20062a1f1ecb');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (18,13,null,1,'urn:uuid:b2da61f3-5a22-4c59-bd31-b82d3d3c9d19');
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (19,13,null,1,'urn:uuid:bac560b7-9808-4f1a-8b60-bf3edf5a92b8');
@@ -623,6 +620,8 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (8,17,1,1,41,1); 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under) values (49,19,1,1,42,0); 
 
+-- changeset chicoreus:exampleDina1FishLotDetOnOneSpec
+
 -- Case from DINA TC Call 2017 Jan 24
 -- Jar of 10 fish
 -- Set of 10 frozen tissue samples
@@ -634,7 +633,7 @@ insert into locality (locality_id, verbatim_locality, specificlocality, remarks,
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (43,'04/VII/2016','2016-07-04','2016-07-04');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (14, null, 'K. Hartel','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (14,14,14,43);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (14,14,'T45070434','This corresponds to: - Test Case DINA-1 – Single lot with individuals subsampled and indentified with different means. (Jar of 10 fish, one subsampled and identified based on sequence).');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (14,14,'T45070434','TCDina1 This corresponds to: - Test Case DINA-1 – Single lot with individuals subsampled and indentified with different means. (Jar of 10 fish, one subsampled and identified based on sequence).');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (25,2,'75643',1,7);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (26,2,'75644',1,7);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (27,2,'75644.a',1,7);  
@@ -653,7 +652,7 @@ insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under,method,remarks) values (55,20,1,1,45,1,'Morphology','Inferred from sequence of 75644.a'); 
 insert into identification (taxon_id, identifiableitem_id,is_current,determiner_agent_id, date_determined_eventdate_id,is_filed_under,method) values (55,21,1,1,44,0,'Sequence'); 
 
--- TODO: Despite one occurrence_guid, returns three rows of flat Darwin Core (from query below, looks like this comes from the catalogeditems being linked to different places.  
+-- changeset chicoreus:exampleDina2ResampledIndividual
 
 -- Case from DINA TC Call 2017 Jan 24
 
@@ -670,9 +669,9 @@ insert into collectingevent (collectingevent_id, locality_id,collector_id,date_c
 insert into eventdate (eventdate_id, verbatim_date, iso_date,start_date) values (48,'2016/07/04','2016-07-04','2016-07-04');
 insert into collector (collector_id, agent_id, verbatim_collector, etal) values (16, null, 'E. Denny','');
 insert into collectingevent (collectingevent_id, locality_id,collector_id,date_collected_eventdate_id) values (17,15,16,48);
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (15,15,'ST1-TR1-a','This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (first sampling)');
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (16,16,'ST1-TR1-b','This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (second sampling)');
-insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (17,17,'ST1-TR1-c','This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (third sampling)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (15,15,'ST1-TR1-a','TCDina2 This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (first sampling)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (16,16,'ST1-TR1-b','TCDina2 This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (second sampling)');
+insert into unit (unit_id,collectingevent_id,unit_field_number,remarks) values (17,17,'ST1-TR1-c','TCDina2 This corresponds to: - Test Case DINA-2, repeated sampling of the same biological individual over time. (third sampling)');
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (28,1,'0091516',1,1);  
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (29,1,'0151553',1,1);  
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (30,1,'0835219',1,1);  
@@ -727,5 +726,6 @@ from identifiableitem ii
      left join eventdate dcol on ce.date_collected_eventdate_id = dcol.eventdate_id 
      -- left join identification id on ii.identifiableitem_id = id.identifiableitem_id 
      -- left join agent coll on col.agent_id = coll.agent_id;
+order by remarks;
 
 -- The last liquibase changeset in this file was number 196

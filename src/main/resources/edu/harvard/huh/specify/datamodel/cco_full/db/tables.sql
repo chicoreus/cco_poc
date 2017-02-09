@@ -223,6 +223,7 @@ CREATE TABLE part (
   lot_count int(11) default 1,     -- the number of items comprising this part (e.g. number of specimens in a lot)
   lot_count_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
   biologicalindividual_id bigint, -- biological individual this is a part of
+  coordinates varchar(255), -- for parts that require representation of location on a preparation (e.g. an x,y coordinate on a slide).
   remarks text
 )
 ENGINE=InnoDB

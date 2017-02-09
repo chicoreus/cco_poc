@@ -32,7 +32,7 @@ Work in progress, entities, their definitions, and cardinality descriptions are 
 * biologicalindividual 
   * Definition: An individual organism that is specifically known and identified and known as that individual to have been observed or sampled.
 * part 
-  * Definition:  Associative entity between identifiable items and preparations.  Biologically meaningful parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.  Parts may have additional non-taxonomic identifications associated with them, such as sex, lifestage, or caste, and they can have part of the organism attributes such as whole animal or skull or postcranial skeleton.
+  * Definition:  Associative entity between identifiable items and preparations.  Biologically meaningful parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.  Parts may have additional non-taxonomic identifications associated with them, such as sex, lifestage, or caste, and they can have part of the organism attributes such as whole animal or skull or postcranial skeleton.  Parts may be locations on slides.
 * preparation 
   * Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts.
 * identification 
