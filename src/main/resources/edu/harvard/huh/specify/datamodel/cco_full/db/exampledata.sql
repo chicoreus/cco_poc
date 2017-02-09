@@ -639,7 +639,10 @@ insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_num
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (26,2,'75644',1,7);
 insert into catalogeditem (catalogeditem_id, catalognumberseries_id, catalog_number, accession_id, collection_id) values (27,2,'75644.a',1,7);  
 insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (20,14,25,9,'urn:uuid:18feed16-a5fc-4c3c-8251-85bf9b464ca1');
-insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (21,14,26,1,'urn:uuid:18feed16-a5fc-4c3c-8251-85bf9b464ca1');
+-- If we treat this as the same occurrence, then queries to get flat darwin core get much more complex than if we treat this as a separate occurrence.
+-- It isn't really a separate occurrence, what differs is the evidence behind the identification.
+-- insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (21,14,26,1,'urn:uuid:18feed16-a5fc-4c3c-8251-85bf9b464ca1');
+insert into identifiableitem (identifiableitem_id,unit_id,catalogeditem_id,individual_count,occurrence_guid) values (21,14,26,1,'urn:uuid:02fc0f5f-1d3c-4216-92a2-9b194e4b6f27');
 insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (23,'jar','70% Ethanol','in collection',null);
 insert into preparation (preparation_id,preparation_type,preservation_type,status, catalogeditem_id) values (24,'cryovial','frozen','in collection',27);
 insert into part (part_id, identifiableitem_id, preparation_id,part_name, lot_count) values (32,20,23,'whole organism',9);
