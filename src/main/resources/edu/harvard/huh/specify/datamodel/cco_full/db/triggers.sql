@@ -3,15 +3,14 @@
 -- changeset chicoreus:158 dbms:none
 delimiter |
 -- changeset chicoreus:158 endDelimiter:\| dbms:mysql
-select 1;
 
 --  TODO: Fill in trigger logic to write data to the audit log.
 
--- create trigger trg_scope_update after update on  scope 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ();
---    end; 
+create trigger trg_scope_update after update on scope 
+  for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'scope',NEW.scope_id);
+    end |
 -- create trigger trg_principal_update after update on  principal 
 --   for each row 
 --    begin 
@@ -57,16 +56,16 @@ select 1;
 --    begin 
 --      aaaa
 --    end;
--- create trigger trg_preparation_update after update on  preparation 
---   for each row 
---    begin 
---      aaaa
---    end;
--- create trigger trg_identification_update after update on  identification 
---   for each row 
---    begin 
---      aaaa
---    end;
+ create trigger trg_preparation_update after update on  preparation 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'preparation',NEW.preparation_id);
+    end |
+ create trigger trg_identification_update after update on  identification 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'identification',NEW.identification_id);
+    end |
 -- create trigger trg_taxon_update after update on  taxon 
 --   for each row 
 --    begin 
@@ -409,11 +408,11 @@ select 1;
 --    begin 
 --      aaaa
 --    end;
--- create trigger trg_scope_insert after insert on  scope 
---   for each row 
---    begin 
---      bbbb
---    end; 
+create trigger trg_scope_insert after insert on  scope 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'scope',NEW.scope_id);
+    end | 
 -- create trigger trg_principal_insert after insert on  principal 
 --   for each row 
 --    begin 
@@ -459,16 +458,16 @@ select 1;
 --    begin 
 --      bbbb
 --    end;
--- create trigger trg_preparation_insert after insert on  preparation 
---   for each row 
---    begin 
---      bbbb
---    end;
--- create trigger trg_identification_insert after insert on  identification 
---   for each row 
---    begin 
---      bbbb
---    end;
+ create trigger trg_preparation_insert after insert on  preparation 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'preparation',NEW.preparation_id);
+    end | 
+ create trigger trg_identification_insert after insert on  identification 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'identification',NEW.identification_id);
+    end |
 -- create trigger trg_taxon_insert after insert on  taxon 
 --   for each row 
 --    begin 
@@ -484,11 +483,11 @@ select 1;
 --    begin 
 --      bbbb
 --    end;
--- create trigger trg_catalogeditem_insert after insert on  catalogeditem 
---   for each row 
---    begin 
---      bbbb
---    end;
+ create trigger trg_catalogeditem_insert after insert on  catalogeditem 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'catalogeditem',NEW.catalogeditem_id);
+    end | 
 -- create trigger trg_materialsample_insert after insert on  materialsample
 --   for each row 
 --    begin 
