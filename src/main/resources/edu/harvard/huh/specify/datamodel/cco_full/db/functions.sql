@@ -29,6 +29,22 @@ drop function if exists cco_full.getHigherTaxonAtRank;
 delimiter |
 -- changeset chicoreus:152 endDelimiter:\| dbms:mysql
 
+-- If Recursive functions get support, then this should work: 
+-- create function cco_full.getTaxonParentage(taxonid INT) 
+-- returns varchar(2000)
+-- READS SQL DATA
+-- begin 
+--    declare parentage varchar(2000);
+--    declare parentid bigint;
+--    select parent_id into parentid from taxon where taxon_id = taxonid;
+--    if parentid is null then 
+--       return concat('/',cast(taxonid as CHAR)); 
+--    else 
+--       return getTaxonParentage(parentid);
+--    end if;
+-- end |
+
+
 -- Obtain the name of a higher taxon at a particular rank from an entry in the taxon tree.
 -- For example, obtain the family into which some species is placed.
 -- 

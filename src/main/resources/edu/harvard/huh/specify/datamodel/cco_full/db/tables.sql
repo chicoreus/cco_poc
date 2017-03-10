@@ -124,7 +124,7 @@ ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_i
 -- changeset chicoreus:007
 CREATE TABLE picklistitemint (
     -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
-    codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+    picklistitemint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     picklistitem_id bigint not null, -- the picklistitem which for which this is an internationalization
     lang varchar(10) not null default 'en-gb',  -- language for this record
     title_lang varchar(255),  -- translation of value to be shown to users into lang
@@ -163,6 +163,7 @@ CREATE TABLE unit (
   materialsample_id bigint,
   verbatim_collection_description text,
   collectingevent_id bigint not null,
+  modified_by_agent_id bigint not null, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
@@ -1089,7 +1090,7 @@ create unique index idx_agentteam_u_teammember on agentteam(team_agent_id, membe
 -- changeset chicoreus:057
 CREATE TABLE agentnumberpattern (
    -- Definition: machine and human redable descriptions of collector number patterns
-   agentnumber_pattern_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   agentnumberpattern_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    agent_id bigint not null,  -- the agent to whom this number pattern applies
    number_type varchar(50) default 'collector number',  -- The type of number pattern
    number_pattern varchar(255),  --  regular expression for numbers that conform with this pattern
@@ -1252,7 +1253,7 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:070
 CREATE TABLE textattribute (
     -- Definition: a generic typed text attribute that can be added to any table.
-    textattributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    textattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     key_name varchar(255) not null,   -- the type of attribute
     value varchar(900) not null,  -- the value of the attribute
     for_table varchar(255) not null,  -- table to which this attribute is applied 
@@ -1272,7 +1273,7 @@ ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_n
 -- changeset chicoreus:071
 CREATE TABLE inference (
     -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
-    inferenceid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    inference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     inference text not null,  -- the interpreter's description of the inference tha was made
     by_agent_id bigint not null, -- who (most recently) made the inference
     ondate timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
@@ -1300,7 +1301,7 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:073
 CREATE TABLE numericattribute (
     -- Definition: a generic typed numeric attribute that can be added to any table.
-    attributeid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    numericattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     name varchar(255) not null,   -- the type of attribute
     value float(20,10) not null,  -- the value of the attribute
     units varchar(255),           -- units, if any to be ascribed to the attribute
@@ -1390,7 +1391,7 @@ alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) ref
 CREATE TABLE biologicalattribute (
     -- Definition: a generic typed attribute for biological characteristics of organisms, 
     --  including metadata about who determined the attribute value when.
-    biological_attribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+    biologicalattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     name varchar(255) not null,  -- restricted by ctbiologicalattributetype
     value varchar(900) not null, -- value for attribute, may be restricted by value code table specified in ctbiologicalattributetype
     units varchar(255) not null default '', -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
@@ -1423,7 +1424,7 @@ ALTER TABLE biologicalattribute add constraint fk_biolattpart foreign key (part_
 -- changeset chicoreus:082
 CREATE TABLE auditlog ( 
     -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  NOTE: Maintain with triggers on each table.
-    auditlogid bigint not null primary key auto_increment, -- surrogate numeric primary key
+    auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     action varchar(50),  -- action carried out, insert, delete, update 
     timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
     username varchar(255) not null,   -- username of current logged in user, retained even if agent record is edited
@@ -1679,7 +1680,7 @@ CREATE TABLE accession (
   accessiontype varchar(32) default null,
   verbatim_accession_info varchar(50) default null, -- verbatim information on which this accession is based (for legacy accessions created from other forms of records).
   addressofrecord_id bigint default null,  -- address from which this accession was recieved 
-  repositoryagreementid bigint default null,  -- repository agreement which governs this accession
+  repositoryagreement_id bigint default null,  -- repository agreement which governs this accession
   scope_id bigint not null  -- the scope within which this accession record is visible
 ) 
 ENGINE=InnoDB 
@@ -1706,7 +1707,7 @@ alter table accession add constraint fk_acc_scope_id foreign key (scope_id) refe
 -- changeset chicoreus:104
 CREATE TABLE repositoryagreement (
   -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
-  repositoryagreementid bigint not null primary key auto_increment, -- surrogate numeric primary key
+  repositoryagreement_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   datereceived date default null,  -- date at which the repository agreement document was received.
   enddate date default null,  -- date at which this repository agreement ends.
   remarks text,
@@ -1727,7 +1728,7 @@ DEFAULT CHARSET=utf8;
 -- Each addressofrecord is the source for zero or one accession.
 
 -- changeset chicoreus:105
-ALTER TABLE accession add constraint fk_acc_repositoryagreement foreign key (repositoryagreementid) references repositoryagreement (repositoryagreementid) on update cascade; 
+ALTER TABLE accession add constraint fk_acc_repositoryagreement foreign key (repositoryagreement_id) references repositoryagreement (repositoryagreement_id) on update cascade; 
 -- changeset chicoreus:106
 ALTER TABLE accession add constraint fk_acc_addresofrecrod foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
 
@@ -1796,7 +1797,7 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:112
 CREATE TABLE attachmentrelation (
   -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
-  attachmentrelationid bigint not null primary key auto_increment, -- surrogate numeric primary key
+  attachmentrelation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   attachment_id bigint not null,
   for_table varchar(255) not null,
   primary_key_value bigint not null,
@@ -1857,7 +1858,7 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:118
 CREATE TABLE coordinate ( 
    -- Definition: a two dimensional point description of a location in one of several standard forms, allows splitting a verbatim coordinate into atomic parts, intended for retaining information about original coordinates, separate from subsequent georeferences.
-   coordinateid bigint not null primary key auto_increment, -- surrogate numeric primary key  
+   coordinate_id bigint not null primary key auto_increment, -- surrogate numeric primary key  
    geodeticdatum varchar(255) not null default 'not recorded',   -- geodetic datum that applies for this coordinate
    remarkslatlongmeridian varchar(50) default null, -- meridian (grenwich, paris) for latitude and longitude, could apply to any lat/long representation
    remarks text default null, -- any additional information needed to interpret the coordinate
@@ -1908,7 +1909,7 @@ create unique index idx_coord_u_typelocalityid on coordinate(coordinatetype, loc
 -- changeset chicoreus:119
 CREATE TABLE georeference (
   -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined, interpreted from textual locality and coordinate information.
-  georeferenceid bigint not null primary key auto_increment, -- surrogate numeric primary key
+  georeference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   locality_id bigint not null, -- the locality to which this georeference applies 
   acceptedflag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
   fieldverifiedflag boolean not null,  -- set true if verified by the collector in the field
