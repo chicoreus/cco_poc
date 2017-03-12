@@ -44,6 +44,45 @@ delimiter |
 --    end if;
 -- end |
 
+create function cco_full.getTaxonParentage(taxonid INT) 
+ returns varchar(2000)
+ READS SQL DATA
+ begin 
+    declare parentage varchar(2000);
+    select concat_ws('/',
+           z.parent_id, y.parent_id, x.parent_id, w.parent_id, v.parent_id, u.parent_id,
+           t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
+           n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
+           h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
+           b.parent_id, a.parent_id, a.taxon_id) into parentage
+        from taxon a left join taxon b on a.parent_id = b.taxon_id 
+                     left join taxon c on b.parent_id = c.taxon_id 
+                     left join taxon d on c.parent_id = d.taxon_id 
+                     left join taxon e on d.parent_id = e.taxon_id 
+                     left join taxon f on e.parent_id = f.taxon_id 
+                     left join taxon g on f.parent_id = g.taxon_id 
+                     left join taxon h on g.parent_id = h.taxon_id 
+                     left join taxon i on h.parent_id = i.taxon_id 
+                     left join taxon j on i.parent_id = j.taxon_id 
+                     left join taxon k on j.parent_id = k.taxon_id 
+                     left join taxon l on k.parent_id = l.taxon_id 
+                     left join taxon m on l.parent_id = m.taxon_id 
+                     left join taxon n on m.parent_id = n.taxon_id 
+                     left join taxon o on n.parent_id = o.taxon_id 
+                     left join taxon p on o.parent_id = p.taxon_id 
+                     left join taxon q on p.parent_id = q.taxon_id 
+                     left join taxon r on q.parent_id = r.taxon_id 
+                     left join taxon s on r.parent_id = s.taxon_id 
+                     left join taxon t on s.parent_id = t.taxon_id 
+                     left join taxon u on t.parent_id = u.taxon_id 
+                     left join taxon v on u.parent_id = v.taxon_id 
+                     left join taxon w on v.parent_id = w.taxon_id 
+                     left join taxon x on w.parent_id = x.taxon_id 
+                     left join taxon y on x.parent_id = y.taxon_id 
+                     left join taxon z on y.parent_id = x.taxon_id 
+        where a.taxon_id = taxonid;
+    return concat('/',parentage); 
+ end |
 
 -- Obtain the name of a higher taxon at a particular rank from an entry in the taxon tree.
 -- For example, obtain the family into which some species is placed.
