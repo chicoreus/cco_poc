@@ -44,6 +44,11 @@ delimiter |
 --    end if;
 -- end |
 
+-- Obtain the parentage from the current node to root for a taxon.  
+-- Implementation limited to a tree depth of 24.
+-- @param taxonid the taxon.taxon_id for which to obtain the parentage.
+-- @return the parentage as a / delimited string, starting with / and 
+-- ending with the taxon_id of the requested node.  
 create function cco_full.getTaxonParentage(taxonid INT) 
  returns varchar(2000)
  READS SQL DATA
@@ -84,7 +89,143 @@ create function cco_full.getTaxonParentage(taxonid INT)
     return concat('/',parentage); 
  end |
 
--- Obtain the name of a higher taxon at a particular rank from an entry in the taxon tree.
+-- Obtain the parentage from the current node to root for a geography.  
+-- Implementation limited to a tree depth of 24.
+-- @param geographyid the geography.geography_id for which to obtain the parentage.
+-- @return the parentage as a / delimited string, starting with / and 
+-- ending with the geography_id of the requested node.  
+create function cco_full.getGeogParentage(geographyid INT) 
+ returns varchar(2000)
+ READS SQL DATA
+ begin 
+    declare parentage varchar(2000);
+    select concat_ws('/',
+           z.parent_id, y.parent_id, x.parent_id, w.parent_id, v.parent_id, u.parent_id,
+           t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
+           n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
+           h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
+           b.parent_id, a.parent_id, a.geography_id) into parentage
+        from geography a left join geography b on a.parent_id = b.geography_id 
+                     left join geography c on b.parent_id = c.geography_id 
+                     left join geography d on c.parent_id = d.geography_id 
+                     left join geography e on d.parent_id = e.geography_id 
+                     left join geography f on e.parent_id = f.geography_id 
+                     left join geography g on f.parent_id = g.geography_id 
+                     left join geography h on g.parent_id = h.geography_id 
+                     left join geography i on h.parent_id = i.geography_id 
+                     left join geography j on i.parent_id = j.geography_id 
+                     left join geography k on j.parent_id = k.geography_id 
+                     left join geography l on k.parent_id = l.geography_id 
+                     left join geography m on l.parent_id = m.geography_id 
+                     left join geography n on m.parent_id = n.geography_id 
+                     left join geography o on n.parent_id = o.geography_id 
+                     left join geography p on o.parent_id = p.geography_id 
+                     left join geography q on p.parent_id = q.geography_id 
+                     left join geography r on q.parent_id = r.geography_id 
+                     left join geography s on r.parent_id = s.geography_id 
+                     left join geography t on s.parent_id = t.geography_id 
+                     left join geography u on t.parent_id = u.geography_id 
+                     left join geography v on u.parent_id = v.geography_id 
+                     left join geography w on v.parent_id = w.geography_id 
+                     left join geography x on w.parent_id = x.geography_id 
+                     left join geography y on x.parent_id = y.geography_id 
+                     left join geography z on y.parent_id = x.geography_id 
+        where a.geography_id = geographyid;
+    return concat('/',parentage); 
+ end |
+
+-- Obtain the parentage from the current node to root for a storage.  
+-- Implementation limited to a tree depth of 24.
+-- @param storageid the storage.storage_id for which to obtain the parentage.
+-- @return the parentage as a / delimited string, starting with / and 
+-- ending with the storage_id of the requested node.  
+create function cco_full.getStorageParentage(storageid INT) 
+ returns varchar(2000)
+ READS SQL DATA
+ begin 
+    declare parentage varchar(2000);
+    select concat_ws('/',
+           z.parent_id, y.parent_id, x.parent_id, w.parent_id, v.parent_id, u.parent_id,
+           t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
+           n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
+           h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
+           b.parent_id, a.parent_id, a.storage_id) into parentage
+        from storage a left join storage b on a.parent_id = b.storage_id 
+                     left join storage c on b.parent_id = c.storage_id 
+                     left join storage d on c.parent_id = d.storage_id 
+                     left join storage e on d.parent_id = e.storage_id 
+                     left join storage f on e.parent_id = f.storage_id 
+                     left join storage g on f.parent_id = g.storage_id 
+                     left join storage h on g.parent_id = h.storage_id 
+                     left join storage i on h.parent_id = i.storage_id 
+                     left join storage j on i.parent_id = j.storage_id 
+                     left join storage k on j.parent_id = k.storage_id 
+                     left join storage l on k.parent_id = l.storage_id 
+                     left join storage m on l.parent_id = m.storage_id 
+                     left join storage n on m.parent_id = n.storage_id 
+                     left join storage o on n.parent_id = o.storage_id 
+                     left join storage p on o.parent_id = p.storage_id 
+                     left join storage q on p.parent_id = q.storage_id 
+                     left join storage r on q.parent_id = r.storage_id 
+                     left join storage s on r.parent_id = s.storage_id 
+                     left join storage t on s.parent_id = t.storage_id 
+                     left join storage u on t.parent_id = u.storage_id 
+                     left join storage v on u.parent_id = v.storage_id 
+                     left join storage w on v.parent_id = w.storage_id 
+                     left join storage x on w.parent_id = x.storage_id 
+                     left join storage y on x.parent_id = y.storage_id 
+                     left join storage z on y.parent_id = x.storage_id 
+        where a.storage_id = storageid;
+    return concat('/',parentage); 
+ end |
+
+-- Obtain the parentage from the current node to root for a rocktimeunit.  
+-- Implementation limited to a tree depth of 24.
+-- @param rocktimeunitid the rocktimeunit.rocktimeunit_id for which to obtain the parentage.
+-- @return the parentage as a / delimited string, starting with / and 
+-- ending with the rocktimeunit_id of the requested node.  
+create function cco_full.getRockTimeParentage(rocktimeunitid INT) 
+ returns varchar(2000)
+ READS SQL DATA
+ begin 
+    declare parentage varchar(2000);
+    select concat_ws('/',
+           z.parent_id, y.parent_id, x.parent_id, w.parent_id, v.parent_id, u.parent_id,
+           t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
+           n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
+           h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
+           b.parent_id, a.parent_id, a.rocktimeunit_id) into parentage
+        from rocktimeunit a left join rocktimeunit b on a.parent_id = b.rocktimeunit_id 
+                     left join rocktimeunit c on b.parent_id = c.rocktimeunit_id 
+                     left join rocktimeunit d on c.parent_id = d.rocktimeunit_id 
+                     left join rocktimeunit e on d.parent_id = e.rocktimeunit_id 
+                     left join rocktimeunit f on e.parent_id = f.rocktimeunit_id 
+                     left join rocktimeunit g on f.parent_id = g.rocktimeunit_id 
+                     left join rocktimeunit h on g.parent_id = h.rocktimeunit_id 
+                     left join rocktimeunit i on h.parent_id = i.rocktimeunit_id 
+                     left join rocktimeunit j on i.parent_id = j.rocktimeunit_id 
+                     left join rocktimeunit k on j.parent_id = k.rocktimeunit_id 
+                     left join rocktimeunit l on k.parent_id = l.rocktimeunit_id 
+                     left join rocktimeunit m on l.parent_id = m.rocktimeunit_id 
+                     left join rocktimeunit n on m.parent_id = n.rocktimeunit_id 
+                     left join rocktimeunit o on n.parent_id = o.rocktimeunit_id 
+                     left join rocktimeunit p on o.parent_id = p.rocktimeunit_id 
+                     left join rocktimeunit q on p.parent_id = q.rocktimeunit_id 
+                     left join rocktimeunit r on q.parent_id = r.rocktimeunit_id 
+                     left join rocktimeunit s on r.parent_id = s.rocktimeunit_id 
+                     left join rocktimeunit t on s.parent_id = t.rocktimeunit_id 
+                     left join rocktimeunit u on t.parent_id = u.rocktimeunit_id 
+                     left join rocktimeunit v on u.parent_id = v.rocktimeunit_id 
+                     left join rocktimeunit w on v.parent_id = w.rocktimeunit_id 
+                     left join rocktimeunit x on w.parent_id = x.rocktimeunit_id 
+                     left join rocktimeunit y on x.parent_id = y.rocktimeunit_id 
+                     left join rocktimeunit z on y.parent_id = x.rocktimeunit_id 
+        where a.rocktimeunit_id = rocktimeunitid;
+    return concat('/',parentage); 
+ end |
+
+
+-- Obtain the name of a higher storage at a particular rank from an entry in the storage tree.
 -- For example, obtain the family into which some species is placed.
 -- 
 -- @param taxonid the taxon_id for the taxon for which the higher taxon is to be looked up.
