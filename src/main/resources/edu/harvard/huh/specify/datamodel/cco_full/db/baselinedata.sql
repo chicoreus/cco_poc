@@ -98,7 +98,7 @@ INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontree
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) VALUES (280, 'Lusus', 0, 0,1,'lusus','ICNafp');
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) VALUES (290, 'Modification', 0, 0,1,'mod.','ICNafp');
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) VALUES (300, 'Prolus', 0, 0,1,'prolus','ICNafp');
-INSERT INTO taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, parentage, taxontreedefitem_id) VALUES (1,'Life','','','<strong>Life</strong>',null,'/1',1);
+INSERT INTO taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, taxontreedefitem_id) VALUES (1,'Life','','','<strong>Life</strong>',null,1);
 
 -- changeset chicoreus:163
 INSERT INTO ctjournaltitletype (title_type) VALUES ('title');

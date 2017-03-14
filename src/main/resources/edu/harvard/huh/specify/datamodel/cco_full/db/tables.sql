@@ -334,7 +334,7 @@ CREATE TABLE taxon (
    nomenclatural_code varchar(20) default null,  -- the nomenclatural code that applies to the formulation of this name and its authorship 
    display_name varchar(2000) default null,  -- assembled name, with markup for display in html
    parent_id bigint,   -- pointer to parent node in tree 
-   parentage varchar(2000) not null,  -- enumerated path from current node to root of tree, using '/' as a separator, starting with a separator, ending with the taxon_id of the current node.
+   parentage varchar(2000),  -- enumerated path from current node to root of tree, using '/' as a separator, starting with a separator, ending with the taxon_id of the current node.  Populated with a trigger.
    taxontreedefitem_id bigint not null, -- what is the definition for this node
    status varchar(50),  -- taxonomic and nomenclatural status for this name
    status_notes text,  -- remarks concerning the taxonomic and nomenclatural status of this name 
