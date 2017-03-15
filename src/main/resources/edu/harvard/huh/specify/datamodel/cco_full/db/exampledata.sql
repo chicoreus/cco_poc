@@ -236,11 +236,17 @@ insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_
 
 insert into taxon (taxon_id, scientific_name, trivial_epithet, display_name, parent_id, taxontreedefitem_id, nomenclatural_code) 
        values (56, 'Fagus', '<em>Fagus</em>', 'Fagus', 10, 17, 'ICNafp');
+
+
 insert into taxon (taxon_id, scientific_name, authorship, display_name, trivial_epithet, parent_id, taxontreedefitem_id, nomenclatural_code, author_agent_id, year_published, nomenclator_guid) 
        values (57, 'Fagus grandiflora', 'Ehrh.', '<em>Fagus grandiflora</em> Ehrh.','grandiflora', 56, 19, 'ICNafp',4,'1788','urn:lsid:ipni.org:names:30060661-2:1.1.2.1');
 
--- Force population of taxon parentage by after update trigger.  
-update taxon set parentage = '1';
+-- Implementation note: You can insert a taxon record without a taxon_id, but you will then need to
+-- Force population of taxon parentage by the after update trigger.  
+-- To trigger update of parentage of entire tree: 
+--  update taxon set parentage = '1';
+-- To trigger just an update of the immediate child nodes of one parent (you will know parent_id on an insert):   
+--  update taxon set parentage = '1' where parent_id = 56;
 
 -- Real geographies used in the example data 
 

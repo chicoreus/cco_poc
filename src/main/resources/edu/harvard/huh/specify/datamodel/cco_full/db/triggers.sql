@@ -74,8 +74,8 @@ create trigger trg_scope_update after update on scope
  create trigger trg_taxon_bupdate before update on  taxon 
    for each row 
     begin 
-      -- update taxon set parentage = cco_full.getTaxonParentage(NEW.taxon_id) where taxon.taxon_id = NEW.taxon_id;
-      set NEW.parentage = cco_full.getTaxonParentage(NEW.taxon_id);
+      -- Find the parentage of the new parent, append the new taxon_id of the taxon.
+      set NEW.parentage = concat(cco_full.getTaxonParentage(NEW.parent_id),'/',NEW.taxon_id);
     end |
  create trigger trg_taxontreedef_update after update on  taxontreedef 
    for each row 
@@ -487,13 +487,16 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'taxon',NEW.taxon_id);
     end |
--- create trigger trg_taxon_binsert before insert on  taxon 
---   Doesn't work, NEW.taxon_id is surrogate numeric primary key and thus 0, resulting in NEW.parentage = null.
---   for each row 
---    begin 
-      -- update taxon set parentage = cco_full.getTaxonParentage(NEW.taxon_id) where taxon.taxon_id = NEW.taxon_id;
---      set NEW.parentage = cco_full.getTaxonParentage(NEW.taxon_id);
---    end |
+ create trigger trg_taxon_binsert before insert on  taxon 
+   for each row 
+    begin 
+      -- Find the parentage of the new parent, append the new taxon_id of the taxon.
+      -- Won't work if insert statement wasn't provided a taxon_id as auto_increment value isn't available in before trigger 
+      --   (and set NEW. isn't available in after trigger)
+      if NEW.taxon_id is not null then
+         set NEW.parentage = concat(cco_full.getTaxonParentage(NEW.parent_id),'/',NEW.taxon_id);
+      end if;
+    end |
  create trigger trg_taxontreedef_insert after insert on  taxontreedef 
    for each row 
     begin 

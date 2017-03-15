@@ -100,6 +100,9 @@ INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontree
 INSERT INTO taxontreedefitem (rank_id,name,is_enforced,is_in_full_name,taxontreedef_id,text_before,nomenclatural_code) VALUES (300, 'Prolus', 0, 0,1,'prolus','ICNafp');
 INSERT INTO taxon (taxon_id, scientific_name, trivial_epithet, authorship, display_name, parent_id, taxontreedefitem_id) VALUES (1,'Life','','','<strong>Life</strong>',null,1);
 
+-- Force update of parentage string.
+update taxon set parentage = '' where taxon_id = 1
+
 -- changeset chicoreus:163
 INSERT INTO ctjournaltitletype (title_type) VALUES ('title');
 INSERT INTO ctjournaltitletype (title_type) VALUES ('title variant');
