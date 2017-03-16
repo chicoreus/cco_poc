@@ -320,7 +320,7 @@ delimiter |
 -- @param geographyid the geography_id for the geography for which the higher geography is to be looked up.
 -- @param rankid the rank_id for the higher geography.
 --
--- @return the scientific name of the higher geography, if one is defined in the parentage of the
+-- @return the name of the higher geography, if one is defined in the parentage of the
 -- geography at the provided rank.
 --
 create function cco_full.getHigherGeographyAtRank(geographyid INT, rankid INT)

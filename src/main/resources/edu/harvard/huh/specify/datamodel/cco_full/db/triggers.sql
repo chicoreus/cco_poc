@@ -367,6 +367,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'geography',NEW.geography_id);
     end |
+ create trigger trg_geography_bupdate before update on  geography
+   for each row 
+    begin 
+      set NEW.parentage = concat(cco_full.getGeogParentage(NEW.parent_id),'/',NEW.geography_id);
+    end |
  create trigger trg_geographytreedef_update after update on  geographytreedef 
    for each row 
     begin 
