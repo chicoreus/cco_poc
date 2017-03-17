@@ -334,7 +334,7 @@ CREATE TABLE taxon (
    nomenclatural_code varchar(20) default null,  -- the nomenclatural code that applies to the formulation of this name and its authorship 
    display_name varchar(2000) default null,  -- assembled name, with markup for display in html
    parent_id bigint,   -- pointer to parent node in tree 
-   parentage varchar(2000),  -- enumerated path from current node to root of tree, using '/' as a separator, starting with a separator, ending with the taxon_id of the current node.  Populated with a trigger.
+   parentage varchar(2000),  -- enumerated path from current node to root of tree, using '/' as a separator, starting with a separator, ending with the parent_id of the current node.  Populated with a trigger.
    taxontreedefitem_id bigint not null, -- what is the definition for this node
    status varchar(50),  -- taxonomic and nomenclatural status for this name
    status_notes text,  -- remarks concerning the taxonomic and nomenclatural status of this name 
@@ -1978,7 +1978,7 @@ CREATE TABLE geography (
   name varchar(255) not null,
   full_name varchar(900) default null,
   parent_id bigint default null,
-  parentage varchar(2000) not null, -- the path from the root of the tree to this geography node
+  parentage varchar(2000) not null, -- the path from the root of the tree to this geography node, maintaned by a trigger.  Starts with /, ends with the parent_id of the current node.
   remarks text,
   abbreviation varchar(16) default null,
   centroid_lat decimal(19,2) default null,
@@ -2133,7 +2133,7 @@ CREATE TABLE storage (
   abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
   full_name varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
   parent_id bigint default null, -- the parent node for this tree in the storage heirarchy
-  parentage varchar(2000) not null,  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with storage_id of current node.  
+  parentage varchar(2000) not null,  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with parent_id of current node.  
   scope_id bigint not null,  
   storagetreedefitem_id bigint not null,  -- node definition that applies to this storage 
   remarks text
@@ -2173,7 +2173,7 @@ CREATE TABLE rocktimeunit (
   rocktimeunit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,
   parent_id bigint default null,  -- the immediate parent of this node, null for root.
-  parentage varchar(2000) not null, -- path from the current node to root
+  parentage varchar(2000) not null, -- path from the current node to root, Starts with /, ends with the parent_id of the current node.
   accepted_id bigint default null,
   full_name varchar(255) default null,
   guid varchar(128) default null,
