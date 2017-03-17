@@ -1978,7 +1978,7 @@ CREATE TABLE geography (
   name varchar(255) not null,
   full_name varchar(900) default null,
   parent_id bigint default null,
-  parentage varchar(2000) not null, -- the path from the root of the tree to this geography node, maintaned by a trigger.  Starts with /, ends with the parent_id of the current node.
+  parentage varchar(2000), -- the path from the root of the tree to this geography node, maintaned by a trigger.  Starts with /, ends with the parent_id of the current node. 
   remarks text,
   abbreviation varchar(16) default null,
   centroid_lat decimal(19,2) default null,
