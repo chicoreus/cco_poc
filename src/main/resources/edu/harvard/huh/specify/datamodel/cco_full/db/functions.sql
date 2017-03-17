@@ -48,7 +48,7 @@ delimiter |
 -- Implementation limited to a tree depth of 24.
 -- @param taxonid the taxon.taxon_id for which to obtain the parentage.
 -- @return the parentage as a / delimited string, starting with / and 
--- ending with the taxon_id of the requested node.  
+-- ending with the parent_id of the requested node.  
 create function cco_full.getTaxonParentage(taxonid INT) 
  returns varchar(2000)
  READS SQL DATA
@@ -59,7 +59,9 @@ create function cco_full.getTaxonParentage(taxonid INT)
            t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
            n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
            h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
-           b.parent_id, a.parent_id, a.taxon_id) into parentage
+           b.parent_id, a.parent_id
+           -- , a.taxon_id
+           ) into parentage
         from taxon a left join taxon b on a.parent_id = b.taxon_id 
                      left join taxon c on b.parent_id = c.taxon_id 
                      left join taxon d on c.parent_id = d.taxon_id 
@@ -86,14 +88,14 @@ create function cco_full.getTaxonParentage(taxonid INT)
                      left join taxon y on x.parent_id = y.taxon_id 
                      left join taxon z on y.parent_id = x.taxon_id 
         where a.taxon_id = taxonid;
-    return concat('/',parentage); 
+    return replace(concat('/',parentage),'//','/'); 
  end |
 
 -- Obtain the parentage from the current node to root for a geography.  
 -- Implementation limited to a tree depth of 24.
 -- @param geographyid the geography.geography_id for which to obtain the parentage.
 -- @return the parentage as a / delimited string, starting with / and 
--- ending with the geography_id of the requested node.  
+-- ending with the parent_id of the requested node.  
 create function cco_full.getGeogParentage(geographyid INT) 
  returns varchar(2000)
  READS SQL DATA
@@ -104,7 +106,9 @@ create function cco_full.getGeogParentage(geographyid INT)
            t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
            n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
            h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
-           b.parent_id, a.parent_id, a.geography_id) into parentage
+           b.parent_id, a.parent_id
+           --, a.geography_id
+           ) into parentage
         from geography a left join geography b on a.parent_id = b.geography_id 
                      left join geography c on b.parent_id = c.geography_id 
                      left join geography d on c.parent_id = d.geography_id 
@@ -131,14 +135,14 @@ create function cco_full.getGeogParentage(geographyid INT)
                      left join geography y on x.parent_id = y.geography_id 
                      left join geography z on y.parent_id = x.geography_id 
         where a.geography_id = geographyid;
-    return concat('/',parentage); 
+    return replace(concat('/',parentage),'//','/'); 
  end |
 
 -- Obtain the parentage from the current node to root for a storage.  
 -- Implementation limited to a tree depth of 24.
 -- @param storageid the storage.storage_id for which to obtain the parentage.
 -- @return the parentage as a / delimited string, starting with / and 
--- ending with the storage_id of the requested node.  
+-- ending with the parent_id of the requested node.  
 create function cco_full.getStorageParentage(storageid INT) 
  returns varchar(2000)
  READS SQL DATA
@@ -149,7 +153,9 @@ create function cco_full.getStorageParentage(storageid INT)
            t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
            n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
            h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
-           b.parent_id, a.parent_id, a.storage_id) into parentage
+           b.parent_id, a.parent_id
+           --, a.storage_id
+           ) into parentage
         from storage a left join storage b on a.parent_id = b.storage_id 
                      left join storage c on b.parent_id = c.storage_id 
                      left join storage d on c.parent_id = d.storage_id 
@@ -176,14 +182,14 @@ create function cco_full.getStorageParentage(storageid INT)
                      left join storage y on x.parent_id = y.storage_id 
                      left join storage z on y.parent_id = x.storage_id 
         where a.storage_id = storageid;
-    return concat('/',parentage); 
+    return replace(concat('/',parentage),'//','/'); 
  end |
 
 -- Obtain the parentage from the current node to root for a rocktimeunit.  
 -- Implementation limited to a tree depth of 24.
 -- @param rocktimeunitid the rocktimeunit.rocktimeunit_id for which to obtain the parentage.
 -- @return the parentage as a / delimited string, starting with / and 
--- ending with the rocktimeunit_id of the requested node.  
+-- ending with the parent_id of the requested node.  
 create function cco_full.getRockTimeParentage(rocktimeunitid INT) 
  returns varchar(2000)
  READS SQL DATA
@@ -194,7 +200,9 @@ create function cco_full.getRockTimeParentage(rocktimeunitid INT)
            t.parent_id, s.parent_id, r.parent_id, q.parent_id, p.parent_id, o.parent_id,
            n.parent_id, m.parent_id, l.parent_id, k.parent_id, j.parent_id, i.parent_id,
            h.parent_id, g.parent_id, f.parent_id, e.parent_id, d.parent_id, c.parent_id,
-           b.parent_id, a.parent_id, a.rocktimeunit_id) into parentage
+           b.parent_id, a.parent_id
+           -- , a.rocktimeunit_id
+           ) into parentage
         from rocktimeunit a left join rocktimeunit b on a.parent_id = b.rocktimeunit_id 
                      left join rocktimeunit c on b.parent_id = c.rocktimeunit_id 
                      left join rocktimeunit d on c.parent_id = d.rocktimeunit_id 
@@ -221,7 +229,7 @@ create function cco_full.getRockTimeParentage(rocktimeunitid INT)
                      left join rocktimeunit y on x.parent_id = y.rocktimeunit_id 
                      left join rocktimeunit z on y.parent_id = x.rocktimeunit_id 
         where a.rocktimeunit_id = rocktimeunitid;
-    return concat('/',parentage); 
+    return replace(concat('/',parentage),'//','/'); 
  end |
 
 
@@ -242,6 +250,8 @@ BEGIN
    select scientific_name into sci_name from taxon 
       left join taxontreedefitem on taxon.taxontreedefitem_id = taxontreedefitem.taxontreedefitem_id
       where taxon_id in ( 
+      select taxon_id from taxon where taxon_id = taxonid
+      union
       select extractFromString('/',parentage,2) from taxon where taxon_id = taxonid
       union 
       select extractFromString('/', parentage,3) from taxon where taxon_id = taxonid
@@ -331,6 +341,8 @@ BEGIN
    select geography.name into geog_name from geography 
       left join geographytreedefitem on geography.geographytreedefitem_id = geographytreedefitem.geographytreedefitem_id
    where geography_id in ( 
+      select geography_id from geography where geography_id = geographyid
+      union
       select extractFromString('/',parentage,2) from geography where geography_id = geographyid
       union 
       select extractFromString('/', parentage,3) from geography where geography_id = geographyid
