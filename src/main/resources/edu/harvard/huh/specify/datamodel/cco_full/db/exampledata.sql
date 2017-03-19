@@ -307,15 +307,15 @@ insert into accession (accession_id, accessionnumber, remarks, scope_id) values 
 -- changeset chicoreus:examplegeology
 
 -- Some minimal geological context information for examples
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (1,'All Time',null,'/1','',1);
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (2,'Phanerozoic',1,'/1/2','Phanerozoic',2);
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (3,'Proterozoic',2,'/1/2/3','Proterozoic',3);
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (4,'Carboniferous',3,'/1/2/3/4','Carboniferous',3);
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (5,'Lower',4,'/1/2/3/4/5','Lower Carboniferous',3);
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (6,'Tournaisian',5,'/1/2/3/4/5/6','Tournaisian',3);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (1,'All Time',null,'',1);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (2,'Phanerozoic',1,'Phanerozoic',2);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (3,'Proterozoic',2,'Proterozoic',3);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (4,'Carboniferous',3,'Carboniferous',3);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (5,'Lower',4,'Lower Carboniferous',3);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (6,'Tournaisian',5,'Tournaisian',3);
 
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (7,'All Rocks',null,'/7','',99);
-insert into rocktimeunit (rocktimeunit_id, name, parent_id, parentage, full_name, rocktimeunittreedefitem_id) values (8,'Point Limestone',7,'/7/8','Point Limestone Formation',102);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (7,'All Rocks',null,'',99);
+insert into rocktimeunit (rocktimeunit_id, name, parent_id, full_name, rocktimeunittreedefitem_id) values (8,'Point Limestone',7,'Point Limestone Formation',102);
 
 -- The Examples: 
 

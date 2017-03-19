@@ -2173,7 +2173,7 @@ CREATE TABLE rocktimeunit (
   rocktimeunit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   name varchar(64) not null,
   parent_id bigint default null,  -- the immediate parent of this node, null for root.
-  parentage varchar(2000) not null, -- path from the current node to root, Starts with /, ends with the parent_id of the current node.
+  parentage varchar(2000), -- path from the current node to root, Starts with /, ends with the parent_id of the current node.  Maintained with a trigger.
   accepted_id bigint default null,
   full_name varchar(255) default null,
   guid varchar(128) default null,

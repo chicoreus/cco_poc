@@ -425,6 +425,16 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'rocktimeunit',NEW.rocktimeunit_id);
     end |
+ create trigger trg_rocktimeunit_bupdate before update on  rocktimeunit
+   for each row 
+    begin 
+      -- Find the parentage of the new parent, append the parent_id of the current node.
+    if NEW.parent_id is not null then 
+        set NEW.parentage = replace(concat(cco_full.getRockTimeParentage(NEW.parent_id),'/',NEW.parent_id),'//','/');
+    else
+        set NEW.parentage = '/';
+    end if;
+    end |
  create trigger trg_rocktimeunittreedef_update after update on  rocktimeunittreedef 
    for each row 
     begin 
@@ -863,6 +873,16 @@ create trigger trg_scope_insert after insert on scope
    for each row 
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'rocktimeunit',NEW.rocktimeunit_id);
+    end |
+ create trigger trg_rocktime_binsert before insert on  rocktimeunit
+   for each row 
+    begin 
+      -- Find the parentage of the new parent, append the parent_id of the current node.
+    if NEW.parent_id is not null then 
+        set NEW.parentage = replace(concat(cco_full.getRockTimeParentage(NEW.parent_id),'/',NEW.parent_id),'//','/');
+    else
+        set NEW.parentage = '/';
+    end if;
     end |
  create trigger trg_rocktimeunittreedef_insert after insert on  rocktimeunittreedef 
    for each row 
