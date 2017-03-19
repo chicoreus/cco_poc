@@ -410,6 +410,16 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'storage',NEW.storage_id);
     end |
+ create trigger trg_storage_bupdate before update on  storage
+   for each row 
+    begin 
+      -- Find the parentage of the new parent, append the parent_id of the current node.
+    if NEW.parent_id is not null then 
+        set NEW.parentage = replace(concat(cco_full.getStorageParentage(NEW.parent_id),'/',NEW.parent_id),'//','/');
+    else
+        set NEW.parentage = '/';
+    end if;
+    end |
  create trigger trg_rocktimeunit_update after update on  rocktimeunit 
    for each row 
     begin 
@@ -838,6 +848,16 @@ create trigger trg_scope_insert after insert on scope
    for each row 
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'storage',NEW.storage_id);
+    end |
+ create trigger trg_storage_binsert before insert on  storage
+   for each row 
+    begin 
+      -- Find the parentage of the new parent, append the parent_id of the current node.
+    if NEW.parent_id is not null then 
+        set NEW.parentage = replace(concat(cco_full.getStorageParentage(NEW.parent_id),'/',NEW.parent_id),'//','/');
+    else
+        set NEW.parentage = '/';
+    end if;
     end |
  create trigger trg_rocktimeunit_insert after insert on  rocktimeunit 
    for each row 

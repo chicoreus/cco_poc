@@ -2133,7 +2133,7 @@ CREATE TABLE storage (
   abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
   full_name varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
   parent_id bigint default null, -- the parent node for this tree in the storage heirarchy
-  parentage varchar(2000) not null,  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with parent_id of current node.  
+  parentage varchar(2000),  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with parent_id of current node.  Maintained with a trigger.
   scope_id bigint not null,  
   storagetreedefitem_id bigint not null,  -- node definition that applies to this storage 
   remarks text
