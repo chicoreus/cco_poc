@@ -5,6 +5,7 @@ delimiter |
 -- changeset chicoreus:158 endDelimiter:\| dbms:mysql
 
 --  TODO: Fill in trigger logic to write data to the audit log.
+--  TODO: add auditlog.dbusername and add lastmodifiedagentid to tables to obtain agent_id for audit log.
 
 create trigger trg_scope_update after update on scope 
   for each row 
@@ -166,12 +167,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agent',NEW.agent_id);
     end |
--- TODO: Need an audit log table for tables with a non numeric primary key.
--- create trigger trg_ctrelationshiptype_update after update on  ctrelationshiptype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctrelationshiptype',NEW.ctrelationshiptype_id);
---    end |
+ create trigger trg_ctrelationshiptype_update after update on  ctrelationshiptype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,null,'ctrelationshiptype',NEW.relationship);
+    end |
  create trigger trg_agentteam_update after update on  agentteam 
    for each row 
     begin 
@@ -615,12 +615,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agent',NEW.agent_id);
     end |
--- TODO: Need an audit log table for tables with a non numeric primary key.
--- create trigger trg_ctrelationshiptype_insert after insert on  ctrelationshiptype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctrelationshiptype',NEW.ctrelationshiptype_id);
---    end |
+ create trigger trg_ctrelationshiptype_insert after insert on  ctrelationshiptype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,null,'ctrelationshiptype',NEW.relationship);
+    end |
  create trigger trg_agentteam_insert after insert on  agentteam 
    for each row 
     begin 

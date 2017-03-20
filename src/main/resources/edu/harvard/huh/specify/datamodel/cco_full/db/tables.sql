@@ -1423,10 +1423,11 @@ ALTER TABLE biologicalattribute add constraint fk_biolattpart foreign key (part_
 
 -- changeset chicoreus:082
 CREATE TABLE auditlog ( 
-    -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  NOTE: Maintain with triggers on each table.
+    -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  Maintained with triggers on each table.
     auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
     action varchar(50),  -- action carried out, insert, delete, update 
     timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
+    -- TODO: add a dbusername, switch existing triggers to use that, add modifiedbyagentid to each table to obtain agent_id in trigger.
     username varchar(255) not null,   -- username of current logged in user, retained even if agent record is edited
     agent_id bigint default null,      -- agent_id of the user who made the change
     for_table varchar(255) not null,   -- table in which primary_key_value is found
@@ -1441,8 +1442,30 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:083
 ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
--- Each auditlog records an action by one and noly one agent.
--- Each agent made a change recorded in zero to many auditlogs.
+-- changeset chicoreus:auditlogvarchar
+CREATE TABLE auditlogvarchar ( 
+    -- Definition: timestamps and users who have inserted, deleted, or updated data in each table where the primary key is a varchar (typically controled vocabulary tables).  Maintained with triggers on each applicable table.
+    auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+    action varchar(50),  -- action carried out, insert, delete, update 
+    timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
+    dbusername varchar(255) not null,   -- username of current logged in database user
+    username varchar(255) default null,   -- username of current logged in user, retained even if agent record is edited
+    agent_id bigint default null,      -- agent_id of the user who made the change
+    for_table varchar(255) not null,   -- table in which primary_key_value is found
+    primary_key_value varchar(255) not null  
+)
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8;
+
+-- Each {table (with varchar pk)} has zero to many auditlogsvarchar.
+-- Each audit log is for one and only one {table}.
+
+-- changeset chicoreus:auditlogvarcharfk
+ALTER TABLE auditlogvarchar add constraint fk_auditlogvcagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
+
+-- Each auditlogvarchar records an action by one and noly one agent.
+-- Each agent made a change recorded in zero to many auditlogvarchars.
+
 
 -- Encumberances: means for masking visiblity of data, generalized from mechainism in Arctos.
 
