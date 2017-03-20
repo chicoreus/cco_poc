@@ -50,7 +50,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_unit_update after update on  unit 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),NEW.modified_by_agent_id,'unit',NEW.unit_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'unit',NEW.unit_id);
     end |
  create trigger trg_identifiableitem_update after update on  identifiableitem 
    for each row 
@@ -170,7 +170,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_ctrelationshiptype_update after update on  ctrelationshiptype 
    for each row 
     begin 
-      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,null,'ctrelationshiptype',NEW.relationship);
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctrelationshiptype',NEW.relationship);
     end |
  create trigger trg_agentteam_update after update on  agentteam 
    for each row 
@@ -498,7 +498,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_unit_insert after insert on  unit 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),NEW.modified_by_agent_id,'unit',NEW.unit_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'unit',NEW.unit_id);
     end |
  create trigger trg_identifiableitem_insert after insert on  identifiableitem 
    for each row 
@@ -618,7 +618,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_ctrelationshiptype_insert after insert on  ctrelationshiptype 
    for each row 
     begin 
-      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,null,'ctrelationshiptype',NEW.relationship);
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctrelationshiptype',NEW.relationship);
     end |
  create trigger trg_agentteam_insert after insert on  agentteam 
    for each row 

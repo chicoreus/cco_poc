@@ -409,6 +409,7 @@ delimiter ;
 -- changeset chicoreus:155 endDelimiter:; dbms:mysql
 
 drop function if exists cco_full.getCollector;
+drop function if exists cco_full.getAgentName;
 
 drop function if exists cco_full.getCurrentIdentification;
 drop function if exists cco_full.getCurrentIdentID;
@@ -425,6 +426,17 @@ drop function if exists cco_full.getInstitutionCode;
 -- changeset chicoreus:156 dbms:none
 delimiter |
 -- changeset chicoreus:156 endDelimiter:\| dbms:mysql
+
+create function cco_full.getAgentName(agentId INT)
+returns VARCHAR(255)
+READS SQL DATA
+BEGIN
+   declare name varchar(255);
+   select preferred_name_string name from agent 
+   where agent.agent_id = agentId
+      limit 1 into name;
+   return name;
+END |
 
 create function cco_full.getCollector(collectorId INT)
 returns VARCHAR(255)

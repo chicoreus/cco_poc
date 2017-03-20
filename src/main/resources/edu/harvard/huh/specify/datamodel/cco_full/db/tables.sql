@@ -11,7 +11,7 @@ CREATE TABLE scope (
    -- Definition: Institutions and departments for which access control limitations may be applicable for some data.  NOTE: Serves to support the functionality provided with virtual private databases in Arctos.  
    scope_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    name varchar(255) not null,  -- the name for the scope, that is the name of the 
-   parent_scope_id bigint default null -- Normally expected that there might be two levels of scope limitations, institutions and departments.
+   parent_scope_id bigint default null  -- Normally expected that there might be two levels of scope limitations, institutions and departments.
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1061,7 +1061,8 @@ CREATE TABLE ctrelationshiptype (
    -- Definition: types of relationships between pairs of agents.
    relationship varchar(255) not null primary key,  -- The relationship read in the stored direction (e.g. child of)
    inverse varchar(50),  -- The inverse of the relationship (e.g. parent of).
-   collective varchar(50)  -- The collective term for a set of participants in the relationship (e.g. children), suitable for use as a header for a list of relationhsips.
+   collective varchar(50),  -- The collective term for a set of participants in the relationship (e.g. children), suitable for use as a header for a list of relationhsips.
+   modified_by_agent_id bigint not null default 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -1428,6 +1429,7 @@ CREATE TABLE auditlog (
     action varchar(50),  -- action carried out, insert, delete, update 
     timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
     -- TODO: add a dbusername, switch existing triggers to use that, add modifiedbyagentid to each table to obtain agent_id in trigger.
+    dbusername varchar(255),   -- username of current logged in database user  TODO: Make not null 
     username varchar(255) not null,   -- username of current logged in user, retained even if agent record is edited
     agent_id bigint default null,      -- agent_id of the user who made the change
     for_table varchar(255) not null,   -- table in which primary_key_value is found
