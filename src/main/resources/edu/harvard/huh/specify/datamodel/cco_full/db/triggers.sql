@@ -55,22 +55,32 @@ create trigger trg_scope_update after update on scope
  create trigger trg_identifiableitem_update after update on  identifiableitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'identifiableitem',NEW.identifiableitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'identifiableitem',NEW.identifiableitem_id);
+    end |
+ create trigger trg_biologicalindividual_update after update on  biologicalindividual 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'biologicalindividual',NEW.biologicalindividual_id);
     end |
  create trigger trg_preparation_update after update on  preparation 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'preparation',NEW.preparation_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'preparation',NEW.preparation_id);
+    end |
+ create trigger trg_part_update after update on  part 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'part',NEW.part_id);
     end |
  create trigger trg_identification_update after update on  identification 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'identification',NEW.identification_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'identification',NEW.identification_id);
     end |
  create trigger trg_taxon_update after update on  taxon 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'taxon',NEW.taxon_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxon',NEW.taxon_id);
     end |
  create trigger trg_taxon_bupdate before update on  taxon 
    for each row 
@@ -212,12 +222,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentspeciality',NEW.agentspeciality_id);
     end |
--- TODO: non numeric primary key
--- create trigger trg_cttextattributetype_update after update on  cttextattributetype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'cttextattributetype',NEW.cttextattributetype_id);
---    end |
+ create trigger trg_cttextattributetype_update after update on  cttextattributetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'cttextattributetype',NEW.key_name);
+    end |
  create trigger trg_textattribute_update after update on  textattribute 
    for each row 
     begin 
@@ -228,12 +237,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'inference',NEW.inference_id);
     end |
--- TODO: non numeric primary key
--- create trigger trg_ctnumericattributetype_update after update on  ctnumericattributetype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctnumericattributetype',NEW.ctnumericattributetype_id);
---    end |
+ create trigger trg_ctnumericattributetype_update after update on  ctnumericattributetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctnumericattributetype',NEW.name);
+    end |
  create trigger trg_numericattribute_update after update on  numericattribute 
    for each row 
     begin 
@@ -503,22 +511,32 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_identifiableitem_insert after insert on  identifiableitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'identifiableitem',NEW.identifiableitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'identifiableitem',NEW.identifiableitem_id);
+    end |
+ create trigger trg_biologicalindividual_insert after insert on  biologicalindividual 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'biologicalindividual',NEW.biologicalindividual_id);
     end |
  create trigger trg_preparation_insert after insert on  preparation 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'preparation',NEW.preparation_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'preparation',NEW.preparation_id);
+    end |
+ create trigger trg_part_insert after insert on  part 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'part',NEW.part_id);
     end |
  create trigger trg_identification_insert after insert on  identification 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'identification',NEW.identification_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'identification',NEW.identification_id);
     end |
  create trigger trg_taxon_insert after insert on  taxon 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'taxon',NEW.taxon_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxon',NEW.taxon_id);
     end |
  create trigger trg_taxon_binsert before insert on  taxon 
    for each row 
@@ -660,12 +678,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentspeciality',NEW.agentspeciality_id);
     end |
--- TODO: non numeric primary key
--- create trigger trg_cttextattributetype_insert after insert on  cttextattributetype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'cttextattributetype',NEW.cttextattributetype_id);
---    end |
+ create trigger trg_cttextattributetype_insert after insert on  cttextattributetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'cttextattributeype',NEW.key_name);
+    end |
  create trigger trg_textattribute_insert after insert on  textattribute 
    for each row 
     begin 
@@ -676,12 +693,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'inference',NEW.inference_id);
     end |
--- TODO: non numeric primary key
--- create trigger trg_ctnumericattributetype_insert after insert on  ctnumericattributetype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctnumericattributetype',NEW.ctnumericattributetype_id);
---    end |
+ create trigger trg_ctnumericattributetype_insert after insert on  ctnumericattributetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctnumericattributeype',NEW.name);
+    end |
  create trigger trg_numericattribute_insert after insert on  numericattribute 
    for each row 
     begin 

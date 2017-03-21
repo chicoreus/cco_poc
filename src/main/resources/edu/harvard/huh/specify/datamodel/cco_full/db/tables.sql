@@ -163,7 +163,7 @@ CREATE TABLE unit (
   materialsample_id bigint,
   verbatim_collection_description text,
   collectingevent_id bigint not null,
-  modified_by_agent_id bigint not null, -- agent to last modify row in this table
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
@@ -190,12 +190,14 @@ CREATE TABLE identifiableitem (
   individual_count int,
   individual_count_modifier varchar(50),  -- e.g. +
   individual_count_units varchar(50),      -- e.g. valves
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
+
 -- Each identifiable item comes from one and only one unit
 -- Each unit has zero to many identifiable items
 
@@ -209,6 +211,7 @@ CREATE TABLE biologicalindividual (
   biologicalindividual_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   biologicalindividual_guid varchar(900), -- guid for the biological individual darwinsw:{term}
   name varchar(900), -- human readable identifier for the biological individual
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
@@ -225,10 +228,12 @@ CREATE TABLE part (
   lot_count_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
   biologicalindividual_id bigint, -- biological individual this is a part of
   coordinates varchar(255), -- for parts that require representation of location on a preparation (e.g. an x,y coordinate on a slide).
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
+
 
 -- changeset chicoreus:012
 CREATE TABLE preparation (
@@ -245,11 +250,11 @@ CREATE TABLE preparation (
   status varchar(32) default 'in collection',
   description text default null,
   storage_id bigint default null,  -- The current storage location for this preparation, if any.
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
-
 
 -- Each preparation may be the parent of zero to many child preparations (e.g. a slide prepared from a whole animal)
 -- Each preparation has zero or one parent preparation from which it was derived.
@@ -259,7 +264,6 @@ DEFAULT CHARSET=utf8;
 
 -- Each part is prepared as as one and only one preparation.
 -- Each preparation is composed of one to many parts
-
 
 ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
 
@@ -274,7 +278,6 @@ ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id)
 
 -- Each preparation may be a preparation of zero or one identifiable item.
 -- Each identifiable item may be prepared into zero to many preparations.
-
 
 -- changeset chicoreus:013
 CREATE TABLE identification (
@@ -298,6 +301,7 @@ CREATE TABLE identification (
    is_filed_under boolean not null, -- is this name used to determine the storage location for this identifiable item
    method varchar(50) default null,  -- method for making the identification 
    taxon_concept_identifier varchar(900) default null,  -- a species number or other identifier of the taxon concept used in the identification
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
    remarks text  -- remarks concerning the identification 
 )
 ENGINE=InnoDB
@@ -353,6 +357,7 @@ CREATE TABLE taxon (
    year_published varchar(50),  -- the year this name was published in, per the relevant code (year for the protonym in ICZN, year for the combination in ICNafp).
    publication_id bigint,  -- the publication containing the nomenclatural act that created the protonym/basionym for this scientific name (the publication in which this taxon was originaly described).
    cites_status varchar(32) not null default 'none',  -- CITES listing for this taxon.
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
    remarks text
 )
 ENGINE=InnoDB
@@ -1036,6 +1041,15 @@ DEFAULT CHARSET=utf8;
 
 -- catching up on agent relations 
 
+-- changeset chicoreus:51fksmodagent
+alter table identification add constraint fk_ident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table preparation add constraint fk_prep_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table part add constraint fk_part_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table identifiableitem add constraint fk_iditem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table unit add constraint fk_unit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table biologicalindividual add constraint fk_bioind_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table taxon add constraint fk_taxon_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
 -- changeset chicoreus:052
 ALTER TABLE catalogeditem add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:053
@@ -1065,6 +1079,7 @@ CREATE TABLE ctrelationshiptype (
    modified_by_agent_id bigint not null default 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+alter table ctrelationshiptype add constraint fk_ctreltype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
 -- Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
@@ -1246,10 +1261,13 @@ alter table agentspeciality add constraint fk_agentspeci_taxonid foreign key (ta
 CREATE TABLE cttextattributetype (
     -- Definition: types of text attributes
     key_name varchar(255) not null primary key,  -- the name of the attribute type
-    scope varchar(900)  -- list of tables to which this attribute type applies
+    scope varchar(900),  -- list of tables to which this attribute type applies
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table cttextattributetype add constraint fk_cttextatt_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:070
 CREATE TABLE textattribute (
@@ -1294,10 +1312,13 @@ CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,
 CREATE TABLE ctnumericattributetype (
     -- Definition: types of numeric attributes
     name varchar(255) not null primary key,  -- the name of the attribute type
-    scope varchar(900)  -- list of tables to which this attribute type applies
+    scope varchar(900),  -- list of tables to which this attribute type applies
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table ctnumericattributetype add constraint fk_numatt_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:073
 CREATE TABLE numericattribute (
