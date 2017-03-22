@@ -109,7 +109,8 @@ CREATE TABLE picklistitem (
   scope_id bigint default null,  -- if not null, only show this picklist item in this context (e.g. limit 'egg' as an age class to ornithology).
   ordinal int(11) default null,  -- sort order for picklist items
   title varchar(64) not null,  -- option to show to users (e.g. 'yes', 'no', 'juvenile')
-  value varchar(64) default null -- value to store in database (e.g. 1, 0, 'juvenile'), should be different from title only if field type is numeric (e.g. yes=1).
+  value varchar(64) default null, -- value to store in database (e.g. 1, 0, 'juvenile'), should be different from title only if field type is numeric (e.g. yes=1).
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -552,7 +553,8 @@ CREATE TABLE publication (
   pages varchar(50) default null,  -- Pages, front matter, plates, figures, maps, etc. for inclusion in a citation.
   remarks text,
   journal_id bigint default null,  -- The journal of which this publication is a part
-  contained_in_publication_id bigint default null  -- A publication within which this publication is contained "In".
+  contained_in_publication_id bigint default null,  -- A publication within which this publication is contained "In".
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -632,7 +634,8 @@ CREATE TABLE catalogeditem (
    date_cataloged_eventdate_id bigint,
    cataloger_agent_id bigint,  -- The agent who cataloged the cataloged item
    accession_id bigint not null,  -- The accession in which ownership of this cataloged item was taken
-   collection_id bigint not null  -- The collection within which this item is cataloged (catalog number series doesn't uniquely idenitify collections).
+   collection_id bigint not null,  -- The collection within which this item is cataloged (catalog number series doesn't uniquely idenitify collections).
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
