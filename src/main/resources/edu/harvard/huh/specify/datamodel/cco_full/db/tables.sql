@@ -613,6 +613,7 @@ CREATE TABLE author (
   role enum ('author','editor','in author'),  -- Whether the author's role is as author or editor.
   publication_id bigint not null,  -- The publication for which this is an author.
   agentname_id bigint not null,  -- The name of the author/editor
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB 
@@ -656,6 +657,7 @@ CREATE TABLE materialsample(
    materialsample_guid varchar(255) not null,  -- dwc:materialSampleID
    sample_number varchar(255),  
    date_sampled_eventdate_id bigint,  -- the date the material sample was created
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
    sampled_by_agent_id bigint -- the agent who created the material sample
 )
 ENGINE=InnoDB
@@ -1035,7 +1037,8 @@ CREATE TABLE agent (
     yearofdeathmodifier varchar(12) default '',
     startyearactive int,  -- First year for a team, organization, or software agent.  For an individual, may be used for first known collection or publication.
     endyearactive int,    -- Last year for a team, organization, or software agent. 
-    living enum('Yes','No','?') not null default '?'
+    living enum('Yes','No','?') not null default '?',
+    modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1052,6 +1055,9 @@ alter table identifiableitem add constraint fk_iditem_magentid foreign key (modi
 alter table unit add constraint fk_unit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table biologicalindividual add constraint fk_bioind_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table taxon add constraint fk_taxon_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:052
 ALTER TABLE catalogeditem add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;

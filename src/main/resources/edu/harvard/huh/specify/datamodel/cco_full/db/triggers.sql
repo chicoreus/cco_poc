@@ -107,6 +107,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'publication',NEW.publication_id);
     end |
+ create trigger trg_author_update after update on  author 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'author',NEW.author_id);
+    end |
  create trigger trg_catalogeditem_update after update on  catalogeditem 
    for each row 
     begin 
@@ -115,7 +120,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_materialsample_update after update on  materialsample
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'materialsample',NEW.materialsample_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'materialsample',NEW.materialsample_id);
     end |
  create trigger trg_catalognumberseries_update after update on  catalognumberseries 
    for each row 
@@ -180,7 +185,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_agent_update after update on  agent 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agent',NEW.agent_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agent',NEW.agent_id);
     end |
  create trigger trg_ctrelationshiptype_update after update on  ctrelationshiptype 
    for each row 
@@ -568,6 +573,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'publication',NEW.publication_id);
     end |
+ create trigger trg_author_insert after insert on  author 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'author',NEW.author_id);
+    end |
  create trigger trg_catalogeditem_insert after insert on  catalogeditem 
    for each row 
     begin 
@@ -576,7 +586,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_materialsample_insert after insert on  materialsample
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'materialsample',NEW.materialsample_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'materialsample',NEW.materialsample_id);
     end |
  create trigger trg_catalognumberseries_insert after insert on  catalognumberseries 
    for each row 
@@ -641,7 +651,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_agent_insert after insert on  agent 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agent',NEW.agent_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agent',NEW.agent_id);
     end |
  create trigger trg_ctrelationshiptype_insert after insert on  ctrelationshiptype 
    for each row 
