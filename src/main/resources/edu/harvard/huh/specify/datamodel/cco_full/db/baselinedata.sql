@@ -1,5 +1,11 @@
 -- liquibase formatted sql
 
+-- changeset chicoreus:musthaveanagent
+
+-- The audit log triggers require that at least one agent must be present.
+INSERT INTO agent(agent_id, preferred_name_string) VALUES (1,'SYSTEM User');
+INSERT INTO agentname(agent_id, type, name) VALUES (2,'full name','SYSTEM User');
+
 -- changeset chicoreus:160
 
 --  Baseline data for a cco_full database.
@@ -15,8 +21,6 @@ INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (7,'Default Botany Dep
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (8,'Default Herpetology Department',1);
 INSERT INTO scope (scope_id, name,parent_scope_id) VALUES (9,'Default Entomology Department',1);
 
-INSERT INTO agent(agent_id, preferred_name_string) VALUES (1,'SYSTEM User');
-INSERT INTO agentname(agent_id, type, name) VALUES (2,'full name','SYSTEM User');
 
 INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (1,'user',1);
 INSERT INTO principal (principal_id, principal_name,scope_id) VALUES (2,'data entry',2);

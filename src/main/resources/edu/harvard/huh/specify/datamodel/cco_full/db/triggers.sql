@@ -30,7 +30,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_picklist_update after update on  picklist 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'picklist',NEW.picklist_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'picklist',NEW.picklist_id);
     end |
  create trigger trg_picklistitem_update after update on  picklistitem 
    for each row 
@@ -40,7 +40,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_picklistitemint_update after update on  picklistitemint 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'picklistitemint',NEW.picklistitemint_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'picklistitemint',NEW.picklistitemint_id);
     end |
  create trigger trg_codetableint_update after update on  codetableint 
    for each row 
@@ -215,7 +215,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_agentname_update after update on  agentname 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentname',NEW.agentname_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentname',NEW.agentname_id);
     end |
  create trigger trg_agentrelation_update after update on  agentrelation 
    for each row 
@@ -496,7 +496,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_picklist_insert after insert on  picklist 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'picklist',NEW.picklist_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'picklist',NEW.picklist_id);
     end |
  create trigger trg_picklistitem_insert after insert on  picklistitem 
    for each row 
@@ -506,7 +506,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_picklistitemint_insert after insert on  picklistitemint 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'picklistitemint',NEW.picklistitemint_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'picklistitemint',NEW.picklistitemint_id);
     end |
  create trigger trg_codetableint_insert after insert on  codetableint 
    for each row 
@@ -681,7 +681,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_agentname_insert after insert on  agentname 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentname',NEW.agentname_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentname',NEW.agentname_id);
     end |
  create trigger trg_agentrelation_insert after insert on  agentrelation 
    for each row 

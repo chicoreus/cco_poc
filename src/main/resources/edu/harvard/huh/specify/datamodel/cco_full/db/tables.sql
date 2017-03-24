@@ -90,7 +90,8 @@ CREATE TABLE picklist (
   read_only boolean not null default 0, -- picklist items should not be editable through a picklist editor ui, true for picklists corresponding to enum data types.
   size_limit int(11) default null,   
   picklist_order_hint enum('ordinal','alphabetic','numeric') not null default 'ordinal', -- hint to the UI on what order to apply for the items in the picklist.
-  picklist_type_hint enum('select','filtering','radio') not null default 'select' -- hint to the UI of what sort of control to use to render the picklist.
+  picklist_type_hint enum('select','filtering','radio') not null default 'select', -- hint to the UI of what sort of control to use to render the picklist.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -129,7 +130,8 @@ CREATE TABLE picklistitemint (
     picklistitem_id bigint not null, -- the picklistitem which for which this is an internationalization
     lang varchar(10) not null default 'en-gb',  -- language for this record
     title_lang varchar(255),  -- translation of value to be shown to users into lang
-    definition text  -- definition of name in lang
+    definition text,  -- definition of name in lang
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1058,6 +1060,9 @@ alter table taxon add constraint fk_taxon_magentid foreign key (modified_by_agen
 alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table picklist add constraint fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table picklistitem add constraint fk_picklistitem_mpicklistitemid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table picklistitemint add constraint fk_picklistitemint_mpicklistitemintid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:052
 ALTER TABLE catalogeditem add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
@@ -1185,8 +1190,10 @@ CREATE TABLE agentname (
    type varchar(35) not null default 'full name',  -- The type of agent name. 
    name  varchar(255),  -- The name of the agent.
    language varchar(6) default 'en_us',  -- The language for this name.
+   modified_by_agent_id bigint not null default 1,
    foreign key (type) references ctnametypes(type) on delete no action on update cascade,
-   foreign key (agent_id)  references agent(agent_id)  on delete cascade  on update cascade
+   foreign key (agent_id)  references agent(agent_id)  on delete cascade  on update cascade,
+   foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 )
 ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;  
