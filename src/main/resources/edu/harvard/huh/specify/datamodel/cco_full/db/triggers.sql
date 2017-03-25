@@ -130,17 +130,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_collectingevent_update after update on  collectingevent 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'collectingevent',NEW.collectingevent_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collectingevent',NEW.collectingevent_id);
     end |
  create trigger trg_eventdate_update after update on  eventdate 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'eventdate',NEW.eventdate_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'eventdate',NEW.eventdate_id);
     end | 
  create trigger trg_locality_update after update on  locality 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'locality',NEW.locality_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'locality',NEW.locality_id);
     end |
  create trigger trg_othernumber_update after update on  othernumber 
    for each row 
@@ -596,17 +596,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_collectingevent_insert after insert on  collectingevent 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'collectingevent',NEW.collectingevent_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collectingevent',NEW.collectingevent_id);
     end |
  create trigger trg_eventdate_insert after insert on  eventdate 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'eventdate',NEW.eventdate_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'eventdate',NEW.eventdate_id);
     end | 
  create trigger trg_locality_insert after insert on  locality 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'locality',NEW.locality_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'locality',NEW.locality_id);
     end |
  create trigger trg_othernumber_insert after insert on  othernumber 
    for each row 

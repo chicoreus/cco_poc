@@ -726,6 +726,7 @@ CREATE TABLE collectingevent (
   expedition varchar(900) default null,  -- named expedition that this collecting event was part of
   vessel varchar(900) default null,  -- RV, ship or other vessel that this collecting event was made from
   platform varchar(900) default null, -- submersible, ROV, or other platform that this collecting event was made from
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
@@ -756,7 +757,8 @@ CREATE TABLE eventdate (
    end_date date,  -- the last plausible date of the event date in date form
    end_date_precision int, -- the precision of the end date (to year, to month, or to day)
    end_datetime datetime default null, -- if start or end times are known
-   start_end_fully_specifies boolean default true -- true if a single date or a continuous range, false for discontinuous cases that can't be represented as an iso_date such as "april and may of 1960-1963".
+   start_end_fully_specifies boolean default true, -- true if a single date or a continuous range, false for discontinuous cases that can't be represented as an iso_date such as "april and may of 1960-1963".
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -809,7 +811,8 @@ CREATE TABLE locality (
   remarks text,
   paleocontext_id bigint default null,  -- a geological context for this locality
   geopolitical_geography_id bigint default null,  -- the political context for this locality (country/primary division/secondary division/municipality)
-  geographic_geography_id bigint default null -- the geographic context  for this locality (ocean, ocean region, ocean subregion, sea, continent, etc.),
+  geographic_geography_id bigint default null, -- the geographic context  for this locality (ocean, ocean region, ocean subregion, sea, continent, etc.),
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1063,6 +1066,10 @@ alter table agent add constraint fk_agent_magentid foreign key (modified_by_agen
 alter table picklist add constraint fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table picklistitem add constraint fk_picklistitem_mpicklistitemid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table picklistitemint add constraint fk_picklistitemint_mpicklistitemintid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table collectingevent add constraint fk_collectingevent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table eventdate add constraint fk_eventdate_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table locality add constraint fk_locality_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
 
 -- changeset chicoreus:052
 ALTER TABLE catalogeditem add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
