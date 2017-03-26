@@ -1321,10 +1321,12 @@ CREATE TABLE inference (
     ondate timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
     for_table varchar(255) not null,  -- table to which this interpretation was applied
     for_field varchar(255) not null,  -- field in the table to which this intepretation was applied
-    primary_key_value bigint not null  -- row in for_table to which this interpretation was applied
+    primary_key_value bigint not null,  -- row in for_table to which this interpretation was applied
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+alter table inference add constraint fk_inference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,primary_key_value); -- allow zero or one inferences for one field in one table.
 
@@ -1410,15 +1412,18 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:078
 CREATE TABLE scopect (
-  -- Definition: relationship between a key in a code table and a scope, the scope within which a code table applies.
-  scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  key_name varchar(255) not null,  -- key which has the scope 
-  ct_table_name varchar(255) not null,  -- table in which key is found
-  scope_id bigint not null,  -- scope for the key 
-  biolattrib_relation_limit enum('part','identifiableitem') default null -- if ct_table_name is biologicalattribue, limitation on which relation (to part or to identifiable item) this key can be applied to in this scope (e.g. in a lot based collection, scope for sex might be limited to part, in a specimen based collection, it might be limited to identifiable item), if null, no limitation.
+    -- Definition: relationship between a key in a code table and a scope, the scope within which a code table applies.
+    scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+    key_name varchar(255) not null,  -- key which has the scope 
+    ct_table_name varchar(255) not null,  -- table in which key is found
+    scope_id bigint not null,  -- scope for the key 
+    biolattrib_relation_limit enum('part','identifiableitem') default null, -- if ct_table_name is biologicalattribue, limitation on which relation (to part or to identifiable item) this key can be applied to in this scope (e.g. in a lot based collection, scope for sex might be limited to part, in a specimen based collection, it might be limited to identifiable item), if null, no limitation.
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table scopect add constraint fk_scopect_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each {code table} has zero to many scopes in scopect.
 -- Each scopect provides the scope for zero to many {code table}.
@@ -1445,10 +1450,12 @@ CREATE TABLE biologicalattribute (
     determiningagent_id bigint,
     datedetermined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
     identifiableitem_id bigint,  -- the identifiableitem to which this biological attribute applies (typical for specimen based collections)
-    part_id bigint  -- the part to which this biological attribute applies (typical for lot based collections)
+    part_id bigint,  -- the part to which this biological attribute applies (typical for lot based collections)
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+alter table biologicalattribute add constraint fk_biologicalattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:081
 ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
@@ -1892,11 +1899,13 @@ CREATE TABLE collector (
   agent_id bigint,  -- the agent (individual or group) that has been identified as the collector.
   primary_collector_agent_id bigint,  -- the agent (individual) that has been identified as the primary collector (who's number series is used in the collecting event).
   etal text, -- unnamed individuals and groups that were part of the collecting team.  examples: and students; and native guide.
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table collector add constraint fk_collector_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:114
 ALTER TABLE collector add constraint fk_col_collectoragent foreign key (agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:115

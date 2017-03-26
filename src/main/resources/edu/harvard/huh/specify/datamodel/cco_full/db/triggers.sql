@@ -245,7 +245,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_inference_update after update on  inference 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'inference',NEW.inference_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'inference',NEW.inference_id);
     end |
  create trigger trg_ctnumericattributetype_update after update on  ctnumericattributetype 
    for each row 
@@ -281,12 +281,12 @@ create trigger trg_scope_update after update on scope
  create trigger trg_scopect_update after update on  scopect 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'scopect',NEW.scopect_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'scopect',NEW.scopect_id);
     end |
  create trigger trg_biologicalattribute_update after update on  biologicalattribute 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'biologicalattribute',NEW.biologicalattribute_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'biologicalattribute',NEW.biologicalattribute_id);
       -- TODO: one and only one of identifiableitem_id and part_id must be not_null.
     end |
 -- create trigger trg_ctencumberancetype_update after update on  ctencumberancetype 
@@ -367,7 +367,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_collector_update after update on  collector 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'collector',NEW.collector_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collector',NEW.collector_id);
     end |
 -- create trigger trg_ctcoordinatetype_update after update on  ctcoordinatetype 
 --   for each row 
@@ -711,7 +711,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_inference_insert after insert on  inference 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'inference',NEW.inference_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'inference',NEW.inference_id);
     end |
  create trigger trg_ctnumericattributetype_insert after insert on  ctnumericattributetype 
    for each row 
@@ -747,12 +747,12 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_scopect_insert after insert on  scopect 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'scopect',NEW.scopect_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'scopect',NEW.scopect_id);
     end |
  create trigger trg_biologicalattribute_insert after insert on  biologicalattribute 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'biologicalattribute',NEW.biologicalattribute_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'biologicalattribute',NEW.biologicalattribute_id);
       -- TODO: one and only one of identifiableitem_id and part_id must be not_null.
     end |
 -- create trigger trg_ctencumberancetype_insert after insert on  ctencumberancetype 
@@ -833,7 +833,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_collector_insert after insert on  collector 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'collector',NEW.collector_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collector',NEW.collector_id);
     end |
 -- create trigger trg_ctcoordinatetype_insert after insert on  ctcoordinatetype 
 --   for each row 
