@@ -11,7 +11,8 @@ CREATE TABLE scope (
    -- Definition: Institutions and departments for which access control limitations may be applicable for some data.  NOTE: Serves to support the functionality provided with virtual private databases in Arctos.  
    scope_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    name varchar(255) not null,  -- the name for the scope, that is the name of the 
-   parent_scope_id bigint default null  -- Normally expected that there might be two levels of scope limitations, institutions and departments.
+   parent_scope_id bigint default null,  -- Normally expected that there might be two levels of scope limitations, institutions and departments.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1053,6 +1054,7 @@ DEFAULT CHARSET=utf8;
 -- catching up on agent relations 
 
 -- changeset chicoreus:51fksmodagent
+alter table scope add constraint fk_scope_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table identification add constraint fk_ident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table preparation add constraint fk_prep_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table part add constraint fk_part_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
@@ -2069,7 +2071,8 @@ CREATE TABLE geography (
   accepted_id bigint default null,  -- if not accepted, which is the accepted geography entry to use instead.
   is_current boolean not null default true, -- is a current geopolitical entity 
   geographytreedef_id bigint not null,  -- which geography tree is this geography placed in    ??Redundant??
-  geographytreedefitem_id bigint not null -- which node definition applies to this node.
+  geographytreedefitem_id bigint not null, -- which node definition applies to this node.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2091,6 +2094,7 @@ CREATE TABLE geographytreedef (
   geographytreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   full_name_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
   name varchar(64) not null,  -- name of the geographic tree
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text  
 ) 
 ENGINE=InnoDB
@@ -2109,6 +2113,7 @@ CREATE TABLE geographytreedefitem (
   text_before varchar(64) default null,
   title varchar(64) default null,
   geographytreedef_id bigint not null,
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB 
@@ -2127,6 +2132,10 @@ alter table locality add constraint fk_local_geogeogid foreign key (geographic_g
 
 -- changeset chicoreus:130
 alter table agentgeography add constraint fk_agentgeog_geogid foreign key (geography_id) references geography(geography_id) on update cascade;
+
+alter table geography add constraint fk_geography_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table geographytreedef add constraint fk_geographytreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table geographytreedefitem add constraint fk_geographytreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each geographytreedef is the tree for zero to many geographytreedefitem nodes.
 -- Each geographytreedefitem is a node in one and only one geographytreedef.
@@ -2149,12 +2158,14 @@ CREATE TABLE collection (
   estimated_size_units varchar(50) default 'specimens',
   scope_id varchar(900) default null,  -- the scope into which this collection falls 
   remarks text,
-  website_iri varchar(255) default null  -- website providing more information about this collection
+  website_iri varchar(255) default null,  -- website providing more information about this collection
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 create index idx_coll_name on collection(collection_name(200));
+alter table collection add constraint fk_collection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:132
 ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (collection_id) references collection(collection_id);

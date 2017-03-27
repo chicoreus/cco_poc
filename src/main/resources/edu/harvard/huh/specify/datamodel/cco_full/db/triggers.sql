@@ -10,7 +10,7 @@ delimiter |
 create trigger trg_scope_update after update on scope 
   for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'scope',NEW.scope_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'scope',NEW.scope_id);
     end |
  create trigger trg_principal_update after update on  principal 
    for each row 
@@ -387,7 +387,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_geography_update after update on  geography 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'geography',NEW.geography_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'geography',NEW.geography_id);
     end |
  create trigger trg_geography_bupdate before update on  geography
    for each row 
@@ -401,17 +401,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_geographytreedef_update after update on  geographytreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'geographytreedef',NEW.geographytreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'geographytreedef',NEW.geographytreedef_id);
     end |
  create trigger trg_geographytreedefitem_update after update on  geographytreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'geographytreedefitem',NEW.geographytreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'geographytreedefitem',NEW.geographytreedefitem_id);
     end |
  create trigger trg_collection_update after update on  collection 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'collection',NEW.collection_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collection',NEW.collection_id);
     end |
  create trigger trg_storagetreedef_update after update on  storagetreedef 
    for each row 
@@ -476,7 +476,7 @@ create trigger trg_scope_update after update on scope
 create trigger trg_scope_insert after insert on scope 
   for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'scope',NEW.scope_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'scope',NEW.scope_id);
     end |
  create trigger trg_principal_insert after insert on  principal 
    for each row 
@@ -853,7 +853,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_geography_insert after insert on  geography 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'geography',NEW.geography_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'geography',NEW.geography_id);
     end |
  create trigger trg_geography_binsert before insert on  geography
    for each row 
@@ -867,17 +867,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_geographytreedef_insert after insert on  geographytreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'geographytreedef',NEW.geographytreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'geographytreedef',NEW.geographytreedef_id);
     end |
  create trigger trg_geographytreedefitem_insert after insert on  geographytreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'geographytreedefitem',NEW.geographytreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'geographytreedefitem',NEW.geographytreedefitem_id);
     end |
  create trigger trg_collection_insert after insert on  collection 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'collection',NEW.collection_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collection',NEW.collection_id);
     end |
  create trigger trg_storagetreedef_insert after insert on  storagetreedef 
    for each row 
