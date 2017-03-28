@@ -2186,7 +2186,8 @@ CREATE TABLE storagetreedef (
   full_name_direction int(11) default null,
   name varchar(64) not null,
   remarks text,
-  disciplineid bigint  -- scope of the tree
+  disciplineid bigint,  -- scope of the tree
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2203,7 +2204,8 @@ CREATE TABLE storagetreedefitem (
   rank_id int(11) not null,  -- container rank heirarchy, larger numbers are lower ranks, lower ranks nest in higher ranks
   text_after varchar(64) default null,
   text_before varchar(64) default null,
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2225,7 +2227,8 @@ CREATE TABLE storage (
   parentage varchar(2000),  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with parent_id of current node.  Maintained with a trigger.
   scope_id bigint not null,  
   storagetreedefitem_id bigint not null,  -- node definition that applies to this storage 
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -2268,7 +2271,8 @@ CREATE TABLE rocktimeunit (
   guid varchar(128) default null,
   remarks text,
   standard varchar(64) default null,
-  rocktimeunittreedefitem_id int(11) not null  -- the definition for this node 
+  rocktimeunittreedefitem_id int(11) not null,  -- the definition for this node 
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2286,6 +2290,7 @@ CREATE TABLE rocktimeunittreedef (
   rocktimeunittreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
   full_name_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
   name varchar(64) not null,  -- name 
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
@@ -2305,6 +2310,7 @@ CREATE TABLE rocktimeunittreedefitem (
   text_after varchar(64) default null,  -- text to place after the name of a node at this rank when assembling the name
   text_before varchar(64) default null, -- text to place before the name of a node at this rank when assembling the name
   rocktimeunittreedef_id int(11) not null,
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text  -- remarks concerning the item definition
 ) 
 ENGINE=InnoDB 
@@ -2332,10 +2338,11 @@ CREATE TABLE paleocontext (
   biostratigraphic_unit varchar(255) default null,  -- Biostratigraphic unit for this paleocontext: superzone, biozone, subzone, or biohorizion, or historically zonule.
   is_float enum ('Yes','No','Unknown') default 'Unknown',  -- sample was collected as float on the surface and may come from elsewhere in the section
   measured_location_in_section varchar(900) not null default '',  -- description of the measured location in the section at which the material was collected.
-  remarks text,
   earlyest_geochronologic_unit_id bigint DEFAULT NULL, -- earlest geochronlological unit for this paleocontext
   latest_geochronologic_unit_id bigint DEFAULT NULL,   -- latest geochronological unit for this paleocontext
-  lithostratigraphic_unit_id bigint DEFAULT NULL  -- lithological unit for paleocontext 
+  lithostratigraphic_unit_id bigint DEFAULT NULL,  -- lithological unit for paleocontext 
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2346,6 +2353,11 @@ alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (ear
 alter table paleocontext add constraint fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
 alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
 
+-- changeset chicoreus:142geolmodby
+alter table rocktimeunit add constraint fk_rocktimeunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table rocktimeunittreedef add constraint fk_rocktimeunittreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table rocktimeunittreedefitem add constraint fk_rocktimeunittreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table paleocontext add constraint fk_paleocontext_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:143
 alter table locality add constraint fk_local_paleocontext foreign key (paleocontext_id) references paleocontext (paleocontext_id) on update cascade;

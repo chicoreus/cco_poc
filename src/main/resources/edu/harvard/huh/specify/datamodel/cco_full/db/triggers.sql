@@ -416,17 +416,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_storagetreedef_update after update on  storagetreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'storagetreedef',NEW.storagetreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'storagetreedef',NEW.storagetreedef_id);
     end |
  create trigger trg_storagetreedefitem_update after update on  storagetreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'storagetreedefitem',NEW.storagetreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'storagetreedefitem',NEW.storagetreedefitem_id);
     end |
  create trigger trg_storage_update after update on  storage 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'storage',NEW.storage_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'storage',NEW.storage_id);
     end |
  create trigger trg_storage_bupdate before update on  storage
    for each row 
@@ -441,7 +441,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_rocktimeunit_update after update on  rocktimeunit 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'rocktimeunit',NEW.rocktimeunit_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'rocktimeunit',NEW.rocktimeunit_id);
     end |
  create trigger trg_rocktimeunit_bupdate before update on  rocktimeunit
    for each row 
@@ -456,17 +456,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_rocktimeunittreedef_update after update on  rocktimeunittreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'rocktimeunittreedef',NEW.rocktimeunittreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'rocktimeunittreedef',NEW.rocktimeunittreedef_id);
     end |
  create trigger trg_rocktimeunittreedefitem_update after update on  rocktimeunittreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'rocktimeunittreedefitem',NEW.rocktimeunittreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'rocktimeunittreedefitem',NEW.rocktimeunittreedefitem_id);
     end |
  create trigger trg_paleocontext_update after update on  paleocontext 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'paleocontext',NEW.paleocontext_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'paleocontext',NEW.paleocontext_id);
     end | 
 
 -- End after update triggers
@@ -882,17 +882,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_storagetreedef_insert after insert on  storagetreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'storagetreedef',NEW.storagetreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'storagetreedef',NEW.storagetreedef_id);
     end |
  create trigger trg_storagetreedefitem_insert after insert on  storagetreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'storagetreedefitem',NEW.storagetreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'storagetreedefitem',NEW.storagetreedefitem_id);
     end |
  create trigger trg_storage_insert after insert on  storage 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'storage',NEW.storage_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'storage',NEW.storage_id);
     end |
  create trigger trg_storage_binsert before insert on  storage
    for each row 
@@ -907,7 +907,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_rocktimeunit_insert after insert on  rocktimeunit 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'rocktimeunit',NEW.rocktimeunit_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'rocktimeunit',NEW.rocktimeunit_id);
     end |
  create trigger trg_rocktime_binsert before insert on  rocktimeunit
    for each row 
@@ -922,17 +922,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_rocktimeunittreedef_insert after insert on  rocktimeunittreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'rocktimeunittreedef',NEW.rocktimeunittreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'rocktimeunittreedef',NEW.rocktimeunittreedef_id);
     end |
  create trigger trg_rocktimeunittreedefitem_insert after insert on  rocktimeunittreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'rocktimeunittreedefitem',NEW.rocktimeunittreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'rocktimeunittreedefitem',NEW.rocktimeunittreedefitem_id);
     end |
  create trigger trg_paleocontext_insert after insert on  paleocontext 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'paleocontext',NEW.paleocontext_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'paleocontext',NEW.paleocontext_id);
     end | 
 
 -- End after insert triggers
