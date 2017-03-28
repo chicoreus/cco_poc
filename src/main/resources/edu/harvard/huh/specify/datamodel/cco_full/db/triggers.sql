@@ -95,12 +95,12 @@ create trigger trg_scope_update after update on scope
  create trigger trg_taxontreedef_update after update on  taxontreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'taxontreedef',NEW.taxontreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxontreedef',NEW.taxontreedef_id);
     end |
  create trigger trg_taxontreedefitem_update after update on  taxontreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'taxontreedefitem',NEW.taxontreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxontreedefitem',NEW.taxontreedefitem_id);
     end |
  create trigger trg_publication_update after update on  publication 
    for each row 
@@ -561,12 +561,12 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_taxontreedef_insert after insert on  taxontreedef 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'taxontreedef',NEW.taxontreedef_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxontreedef',NEW.taxontreedef_id);
     end |
  create trigger trg_taxontreedefitem_insert after insert on  taxontreedefitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'taxontreedefitem',NEW.taxontreedefitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxontreedefitem',NEW.taxontreedefitem_id);
     end |
  create trigger trg_publication_insert after insert on  publication 
    for each row 

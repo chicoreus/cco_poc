@@ -408,7 +408,8 @@ CREATE TABLE taxontreedef (
   taxontreedef_id bigint NOT NULL primary key AUTO_INCREMENT,
   full_name_direction int(11) DEFAULT -1,  -- direction of assembly of full name
   name varchar(64) NOT NULL, -- name of the taxon tree
-  remarks varchar(255) DEFAULT NULL
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -427,7 +428,8 @@ CREATE TABLE taxontreedefitem (
   text_after varchar(64) DEFAULT NULL, -- text to include before this element when using in full name 
   text_before varchar(64) DEFAULT NULL, -- text to include after this element when using in full name
   taxontreedef_id bigint NOT NULL,  -- The taxon tree to which this rank definition applies
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1062,6 +1064,8 @@ alter table identifiableitem add constraint fk_iditem_magentid foreign key (modi
 alter table unit add constraint fk_unit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table biologicalindividual add constraint fk_bioind_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table taxon add constraint fk_taxon_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table taxontreedef add constraint fk_taxontreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table taxontreedefitem add constraint fk_taxontreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
@@ -2237,6 +2241,11 @@ CREATE INDEX idx_storage_parentid ON storage(parent_id);
 CREATE INDEX idx_storage_name ON storage(name);
 ALTER TABLE storage add constraint fk_stor_parent_id foreign key (parent_id) references storage (storage_id) on update cascade;
 ALTER TABLE storage add constraint fk_stor_treeitemdefid foreign key (storagetreedefitem_id) references storagetreedefitem (storagetreedefitem_id) on update cascade;
+
+-- changeset chicoreus:136storagemodbyagent
+alter table storage add constraint fk_storage_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table storagetreedef add constraint fk_storagetreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table storagetreedefitem add constraint fk_storagetreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:137
 ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_id) references storage (storage_id) on update cascade;
