@@ -15,17 +15,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_principal_update after update on  principal 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'principal',NEW.principal_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'principal',NEW.principal_id);
     end |
  create trigger trg_systemuser_update after update on  systemuser 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'systemuser',NEW.systemuser_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'systemuser',NEW.systemuser_id);
     end | 
  create trigger trg_systemuserprincipal_update after update on  systemuserprincipal 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'systemuserprincipal',NEW.systemuserprincipal_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'systemuserprincipal',NEW.systemuserprincipal_id);
     end |
  create trigger trg_picklist_update after update on  picklist 
    for each row 
@@ -481,17 +481,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_principal_insert after insert on  principal 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'principal',NEW.principal_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'principal',NEW.principal_id);
     end |
  create trigger trg_systemuser_insert after insert on  systemuser 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'systemuser',NEW.systemuser_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'systemuser',NEW.systemuser_id);
     end | 
  create trigger trg_systemuserprincipal_insert after insert on  systemuserprincipal 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'systemuserprincipal',NEW.systemuserprincipal_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'systemuserprincipal',NEW.systemuserprincipal_id);
     end |
  create trigger trg_picklist_insert after insert on  picklist 
    for each row 

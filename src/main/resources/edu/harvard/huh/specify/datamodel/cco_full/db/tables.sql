@@ -31,7 +31,8 @@ CREATE TABLE principal (
    principal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    principal_name varchar(255) not null,  -- The name of this principal.
    is_active boolean not null default TRUE, -- does this principal have any currently active rights 
-   scope_id bigint not null -- the scope to which this principal extends (e.g. principal may be data entry, scope limits that to data entry in some collection.
+   scope_id bigint not null, -- the scope to which this principal extends (e.g. principal may be data entry, scope limits that to data entry in some collection.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -50,7 +51,8 @@ CREATE TABLE systemuser (
    password_hash varchar(900) not null default '', -- cryptographic hash of the password for this user
    is_enabled boolean default TRUE, -- Is login enabled for this user, user interfaces must prevent login unless this is true.
    last_login date,  -- Date of last login. 
-   user_agent_id bigint not null -- The agent record for this user.  All users must also have agent records.
+   user_agent_id bigint not null, -- The agent record for this user.  All users must also have agent records.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -62,7 +64,8 @@ CREATE TABLE systemuserprincipal (
    -- Definition: Participation of a system user in principals (associative entity relating systemusers to principals).
    systemuserprincipal_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    systemuser_id bigint not null,  -- The system user that is some principal.
-   principal_id bigint not null  -- The principal that is some system user.
+   principal_id bigint not null,  -- The principal that is some system user.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1056,6 +1059,9 @@ DEFAULT CHARSET=utf8;
 -- catching up on agent relations 
 
 -- changeset chicoreus:51fksmodagent
+alter table principal add constraint fk_principal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table systemuser add constraint fk_systemuser_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table systemuserprincipal add constraint fk_systemuserprincipal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table scope add constraint fk_scope_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table identification add constraint fk_ident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table preparation add constraint fk_prep_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
