@@ -125,7 +125,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_catalognumberseries_update after update on  catalognumberseries 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'catalognumberseries',NEW.catalognumberseries_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'catalognumberseries',NEW.catalognumberseries_id);
     end | 
  create trigger trg_collectingevent_update after update on  collectingevent 
    for each row 
@@ -210,7 +210,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_agentlink_update after update on  agentlink 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentlink',NEW.agentlink_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentlink',NEW.agentlink_id);
     end |
  create trigger trg_agentname_update after update on  agentname 
    for each row 
@@ -342,7 +342,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_accession_update after update on  accession 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'accession',NEW.accession_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'accession',NEW.accession_id);
     end |
  create trigger trg_repositoryagreement_update after update on  repositoryagreement 
    for each row 
@@ -591,7 +591,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_catalognumberseries_insert after insert on  catalognumberseries 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'catalognumberseries',NEW.catalognumberseries_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'catalognumberseries',NEW.catalognumberseries_id);
     end | 
  create trigger trg_collectingevent_insert after insert on  collectingevent 
    for each row 
@@ -676,7 +676,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_agentlink_insert after insert on  agentlink 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentlink',NEW.agentlink_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentlink',NEW.agentlink_id);
     end |
  create trigger trg_agentname_insert after insert on  agentname 
    for each row 
@@ -808,7 +808,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_accession_insert after insert on  accession 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'accession',NEW.accession_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'accession',NEW.accession_id);
     end |
  create trigger trg_repositoryagreement_insert after insert on  repositoryagreement 
    for each row 

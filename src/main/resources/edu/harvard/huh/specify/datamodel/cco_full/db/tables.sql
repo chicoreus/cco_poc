@@ -683,7 +683,8 @@ CREATE TABLE catalognumberseries (
    nextavailablenumber varchar(255), -- Place where the next number to be assigned from this number series can be managed when automatically assigned.
    dataset varchar(900),  -- dwc:datasetName
    dataset_guid varchar(900), -- dwc:datasetId
-   remarks text
+   remarks text,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1073,6 +1074,7 @@ alter table taxon add constraint fk_taxon_magentid foreign key (modified_by_agen
 alter table taxontreedef add constraint fk_taxontreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table taxontreedefitem add constraint fk_taxontreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table catalognumberseries add constraint fk_catalognumberseries_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table picklist add constraint fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
@@ -1191,7 +1193,9 @@ CREATE TABLE agentlink (
    type varchar(50),   -- The type of link.
    link varchar(900),  -- An IRI to some source of information aobut and agent.
    isprimarytopicof boolean not null default true,  --  link can be represented as foaf:primarytopicof
-   text varchar(50)  -- The text to display for the link.
+   text varchar(50),  -- The text to display for the link.
+   modified_by_agent_id bigint not null default 1,
+   foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1769,10 +1773,13 @@ CREATE TABLE accession (
   verbatim_accession_info varchar(50) default null, -- verbatim information on which this accession is based (for legacy accessions created from other forms of records).
   addressofrecord_id bigint default null,  -- address from which this accession was recieved 
   repositoryagreement_id bigint default null,  -- repository agreement which governs this accession
-  scope_id bigint not null  -- the scope within which this accession record is visible
+  scope_id bigint not null,  -- the scope within which this accession record is visible
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table accession add constraint fk_accession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:102
 create unique index idx_access_u_dateackid on accession(date_acknowledged_eventdate_id);  --  Event dates should not be reused.
