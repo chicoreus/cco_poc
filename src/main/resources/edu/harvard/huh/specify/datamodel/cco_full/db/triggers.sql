@@ -45,7 +45,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_codetableint_update after update on  codetableint 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'codetableint',NEW.codetableint_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'codetableint',NEW.codetableint_id);
     end | 
  create trigger trg_unit_update after update on  unit 
    for each row 
@@ -145,17 +145,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_othernumber_update after update on  othernumber 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'othernumber',NEW.othernumber_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'othernumber',NEW.othernumber_id);
     end |
  create trigger trg_transactionitem_update after update on  transactionitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'transactionitem',NEW.transactionitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'transactionitem',NEW.transactionitem_id);
     end |
  create trigger trg_transactionc_update after update on  transactionc 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'transactionc',NEW.transactionc_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'transactionc',NEW.transactionc_id);
     end |
  create trigger trg_loan_update after update on  loan 
    for each row 
@@ -511,7 +511,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_codetableint_insert after insert on  codetableint 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'codetableint',NEW.codetableint_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'codetableint',NEW.codetableint_id);
     end | 
  create trigger trg_unit_insert after insert on  unit 
    for each row 
@@ -611,17 +611,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_othernumber_insert after insert on  othernumber 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'othernumber',NEW.othernumber_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'othernumber',NEW.othernumber_id);
     end |
  create trigger trg_transactionitem_insert after insert on  transactionitem 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'transactionitem',NEW.transactionitem_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'transactionitem',NEW.transactionitem_id);
     end |
  create trigger trg_transactionc_insert after insert on  transactionc 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'transactionc',NEW.transactionc_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'transactionc',NEW.transactionc_id);
     end |
  create trigger trg_loan_insert after insert on  loan 
    for each row 

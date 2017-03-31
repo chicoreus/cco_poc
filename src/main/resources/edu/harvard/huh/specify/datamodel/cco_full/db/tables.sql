@@ -155,7 +155,8 @@ CREATE TABLE codetableint (
     codetable varchar(255) not null, -- code table (table name prefixed ct) in which name is found.
     lang varchar(10) not null default 'en-gb',  -- language for this record
     key_name_lang varchar(255),  -- translation of name into lang
-    definition_lang text  -- definition of key_name in lang
+    definition_lang text,  -- definition of key_name in lang
+    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -837,7 +838,8 @@ CREATE TABLE othernumber (
    target_table varchar(255) not null,  -- the table to which pk refers to the primary key.
    pk bigint not null,                 -- the surrogate numeric primary key of a row in target_table.
    number_type varchar(255) not null,  -- the type of other number (which may be unknown)
-   number_value varchar(255) not null  -- the value of the other number
+   number_value varchar(255) not null,  -- the value of the other number
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -861,7 +863,8 @@ CREATE TABLE transactionitem (
    item_count_units varchar(50),  -- units of item count (truckloads, boxes, lots, specimens, etc).
    description text, -- description of the material involved in the transaction.
    item_conditions text,  -- conditions applied to this item in this transaction, e.g. no destructive sampling
-   disposition varchar(50)
+   disposition varchar(50),
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -878,7 +881,8 @@ CREATE TABLE transactionc (
    scope_id bigint not null,  -- the institutiuonal unit within which this transaction is made and to which visibility should be limited.
    contents text,  -- text description of the content of the transaction  
    conditions text,  -- any conditions upon the transaction 
-   remarks text
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1064,6 +1068,7 @@ alter table principal add constraint fk_principal_magentid foreign key (modified
 alter table systemuser add constraint fk_systemuser_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table systemuserprincipal add constraint fk_systemuserprincipal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table scope add constraint fk_scope_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table codetableint add constraint fk_codetableint_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table identification add constraint fk_ident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table preparation add constraint fk_prep_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table part add constraint fk_part_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
@@ -1075,6 +1080,9 @@ alter table taxontreedef add constraint fk_taxontreedef_magentid foreign key (mo
 alter table taxontreedefitem add constraint fk_taxontreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table catalognumberseries add constraint fk_catalognumberseries_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table othernumber add constraint fk_othernumber_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table transactionitem add constraint fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table picklist add constraint fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
