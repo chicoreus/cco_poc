@@ -461,7 +461,8 @@ CREATE TABLE journal (
   last_year_published int,  -- The last year in which this serial was published.
   remarks text,
   preceding_journal_id bigint default null,
-  succeeding_journal_id bigint default null
+  succeeding_journal_id bigint default null,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -481,7 +482,8 @@ CREATE TABLE journaltitle (
   journaltitle_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
   journal_id bigint not null,  -- The serial work for which this is a title.
   title text,  --  The title of the work.
-  title_type varchar(50) not null  -- The kind of title.
+  title_type varchar(50) not null,  -- The kind of title.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;
@@ -1081,6 +1083,8 @@ alter table taxontreedefitem add constraint fk_taxontreedefitem_magentid foreign
 alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table catalognumberseries add constraint fk_catalognumberseries_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table othernumber add constraint fk_othernumber_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table journal add constraint fk_journal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table journaltitle add constraint fk_journaltitle_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionitem add constraint fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
