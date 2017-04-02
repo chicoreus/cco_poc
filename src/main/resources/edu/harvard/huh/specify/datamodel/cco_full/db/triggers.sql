@@ -112,6 +112,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'journaltitle',NEW.journaltitle_id);
     end |
+ create trigger trg_journalidentifier_update after update on  journalidentifier 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'journalidentifier',NEW.journalidentifier_id);
+    end |
  create trigger trg_publication_update after update on  publication 
    for each row 
     begin 
@@ -587,6 +592,11 @@ create trigger trg_scope_insert after insert on scope
    for each row 
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'journaltitle',NEW.journaltitle_id);
+    end |
+ create trigger trg_journalidentifier_insert after insert on  journalidentifier 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'journalidentifier',NEW.journalidentifier_id);
     end |
  create trigger trg_publication_insert after insert on  publication 
    for each row 
