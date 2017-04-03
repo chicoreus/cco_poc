@@ -593,7 +593,8 @@ CREATE TABLE publicationidentifier (
   publicationidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
   publication_id bigint not null,  -- The work to which this identifier applies
   identifier varchar(255),     -- The identifier for this work.
-  identifier_type varchar(50) not null  -- The type of identifier (e.g. ISBN).
+  identifier_type varchar(50) not null,  -- The type of identifier (e.g. ISBN).
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -709,9 +710,10 @@ ALTER TABLE catalognumberseries add constraint fk_cns_policy foreign key (policy
 
 -- changeset chicoreus:032
 CREATE TABLE catnumseriescollection ( 
-   catnumberseriescollection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   catnumseriescollection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    catalognumberseries_id bigint not null, 
-   collection_id bigint not null -- the collection to which this catalog number series belongs
+   collection_id bigint not null, -- the collection to which this catalog number series belongs
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -922,7 +924,8 @@ CREATE TABLE loan (
   source_geography text DEFAULT null,  -- Countries of origin of the material.   
   source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.  
   destination_country_code varchar(3) not null,  -- The country code to which this loan is being sent.
-  recipient_addressofrecord_id bigint DEFAULT NULL  -- address to which this loan was sent 
+  recipient_addressofrecord_id bigint DEFAULT NULL,  -- address to which this loan was sent 
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -941,7 +944,8 @@ CREATE TABLE gift (
   summary_description varchar(255) not null, -- brief description of the material involved in the gift.
   sent_date  date, -- the date on which the loan was made 
   destination_country_code varchar(3) not null,  -- The country code to which this gift is being sent.
-  recipient_addressofrecord_id bigint DEFAULT NULL  -- address to which this gift was sent 
+  recipient_addressofrecord_id bigint DEFAULT NULL,  -- address to which this gift was sent 
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -977,7 +981,8 @@ CREATE TABLE borrow (
   origin_country_code varchar(3) not null,  -- The country code from which this borrow was sent.
   source_geography text DEFAULT null,  -- Countries of origin of the material.
   source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.
-  sender_addressofrecord_id bigint DEFAULT NULL  -- address to which this borrow was expected to be returned.
+  sender_addressofrecord_id bigint DEFAULT NULL,  -- address to which this borrow was expected to be returned.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -995,7 +1000,8 @@ CREATE TABLE deaccession (
   transactionc_id bigint not null,
   summary_description varchar(255) not null, -- brief description of the material involved in the deaccesison.
   deaccession_date  date, -- the date on which the material was deaccessioned.
-  deaccession_reason text -- reason why this material was deaccessioned
+  deaccession_reason text, -- reason why this material was deaccessioned
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1013,6 +1019,7 @@ CREATE TABLE transactionagent (
   agent_id bigint not null,  -- the agent involved in this transaction 
   transactionc_id bigint not null, -- the transaction the agent is involved in
   role varchar(50) not null,  -- the role of the agent in the transaction
+  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
   remarks text
 )
 ENGINE=InnoDB
@@ -1083,12 +1090,19 @@ alter table taxontreedef add constraint fk_taxontreedef_magentid foreign key (mo
 alter table taxontreedefitem add constraint fk_taxontreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table catalognumberseries add constraint fk_catalognumberseries_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table catnumseriescollection add constraint fk_catnumseriescollection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table othernumber add constraint fk_othernumber_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journal add constraint fk_journal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journaltitle add constraint fk_journaltitle_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journalidentifier add constraint fk_journalidentifier_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table publicationidentifier add constraint fk_publident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionitem add constraint fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table loan add constraint fk_loan_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table gift add constraint fk_gift_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table borrow add constraint fk_borrow_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table deaccession add constraint fk_deaccession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table transactionagent add constraint fk_transagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table picklist add constraint fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
@@ -1097,6 +1111,7 @@ alter table picklistitemint add constraint fk_picklistitemint_mpicklistitemintid
 alter table collectingevent add constraint fk_collectingevent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table eventdate add constraint fk_eventdate_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table locality add constraint fk_locality_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
 
 
 -- changeset chicoreus:052
