@@ -1154,12 +1154,14 @@ CREATE TABLE agentteam (
    agentteam_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    team_agent_id bigint not null,  -- The agent which is the team.
    member_agent_id bigint not null,  -- The agent which is a member in the team.
-   ordinal int  -- The position of the agent if the team represents an ordered list of agents.
+   ordinal int,  -- The position of the agent if the team represents an ordered list of agents.
+   modified_by_agent_id bigint not null default 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table agentteam add constraint fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
 alter table agentteam add constraint fk_agentt_membid foreign key (member_agent_id) references agent(agent_id) on delete no action on update cascade;
 
+alter table agentteam add constraint fk_agentteam_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agent is a member of zero to many agentteams.
 -- Each agent is the team for zero to many agentteams.
 -- Each agentteam links one and only one member agents.
@@ -1178,13 +1180,15 @@ CREATE TABLE agentnumberpattern (
    startyear int, --  year for first known occurrence of this number pattern
    endyear int,   --  year for last knon occurrenc of this number pattern
    integerincrement int, -- does number have an integer increment 
-   notes text
+   notes text,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent_id) references agent(agent_id) on delete cascade on update cascade;
 
+alter table agentnumberpattern add constraint fk_agentnumberpattern_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agent has zero to many agentnumberpatterns.
 -- Each agentnumberpattern is for one and only one agent.
 
@@ -1194,7 +1198,8 @@ CREATE TABLE agentreference (
    agentreference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    publication_id bigint not null,  -- The publication in which the agent is mentioned.
    agent_id bigint not null,   -- The agent mentioned in the publication.
-   reference_type varchar(50) -- The nature of the reference (e.g. obituary).
+   reference_type varchar(50), -- The nature of the reference (e.g. obituary).
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1202,6 +1207,7 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:059
 create index idx_refagentlks_refagent on agentreference (publication_id, agent_id);
 
+alter table agentreference add constraint fk_agentreference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agentreference is about one and only one agent.
 -- Each agent has zero to many agentreferences.
 
@@ -1288,9 +1294,11 @@ CREATE TABLE agentrelation (
    to_agent_id bigint not null,    --  child agent in this relationship 
    relationship varchar(50) not null,  -- nature of relationship from ctrelationshiptype 
    notes varchar(900),  -- Remarks concerning the relationship.
+   modified_by_agent_id bigint not null default 1,
    foreign key (from_agent_id) references agent(agent_id) on delete cascade on update cascade,
    foreign key (to_agent_id) references agent(agent_id) on delete cascade on update cascade,
-   foreign key (relationship) references ctrelationshiptype(relationship) on delete no action on update cascade
+   foreign key (relationship) references ctrelationshiptype(relationship) on delete no action on update cascade,
+   foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1302,7 +1310,9 @@ CREATE TABLE agentgeography (
   role varchar(64) DEFAULT NULL,  -- the role of the agent with respect to the geography (e.g. author on, collector in).
   agent_id bigint NOT NULL,  -- the agent with a relattion to geography
   geography_id bigint NOT NULL,  -- the geography the agent has a relationship to.
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1,
+  foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1317,7 +1327,9 @@ CREATE TABLE agentspeciality (
   ordinal int(11) NOT NULL, -- ordering of specialities
   skill_level varchar(50) DEFAULT NULL, -- skill level of agent in speciality (e.g. global expert, regional expert, etc.).
   taxon_id bigint not null, -- the taxon that the agent has a speciality in.
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1,
+  foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;

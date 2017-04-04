@@ -220,17 +220,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_agentteam_update after update on  agentteam 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentteam',NEW.agentteam_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentteam',NEW.agentteam_id);
     end |
  create trigger trg_agentnumberpattern_update after update on  agentnumberpattern 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentnumberpattern',NEW.agentnumberpattern_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentnumberpattern',NEW.agentnumberpattern_id);
     end |
  create trigger trg_agentreference_update after update on  agentreference 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentreference',NEW.agentreference_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentreference',NEW.agentreference_id);
     end |
  create trigger trg_agentlink_update after update on  agentlink 
    for each row 
@@ -245,17 +245,17 @@ create trigger trg_scope_update after update on scope
  create trigger trg_agentrelation_update after update on  agentrelation 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentrelation',NEW.agentrelation_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentrelation',NEW.agentrelation_id);
     end |
  create trigger trg_agentgeography_update after update on  agentgeography 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentgeography',NEW.agentgeography_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentgeography',NEW.agentgeography_id);
     end |
  create trigger trg_agentspeciality_update after update on  agentspeciality 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'agentspeciality',NEW.agentspeciality_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentspeciality',NEW.agentspeciality_id);
     end |
  create trigger trg_cttextattributetype_update after update on  cttextattributetype 
    for each row 
@@ -706,17 +706,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_agentteam_insert after insert on  agentteam 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentteam',NEW.agentteam_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentteam',NEW.agentteam_id);
     end |
  create trigger trg_agentnumberpattern_insert after insert on  agentnumberpattern 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentnumberpattern',NEW.agentnumberpattern_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentnumberpattern',NEW.agentnumberpattern_id);
     end |
  create trigger trg_agentreference_insert after insert on  agentreference 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentreference',NEW.agentreference_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentreference',NEW.agentreference_id);
     end |
  create trigger trg_agentlink_insert after insert on  agentlink 
    for each row 
@@ -731,17 +731,17 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_agentrelation_insert after insert on  agentrelation 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentrelation',NEW.agentrelation_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentrelation',NEW.agentrelation_id);
     end |
  create trigger trg_agentgeography_insert after insert on  agentgeography 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentgeography',NEW.agentgeography_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentgeography',NEW.agentgeography_id);
     end |
  create trigger trg_agentspeciality_insert after insert on  agentspeciality 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'agentspeciality',NEW.agentspeciality_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'agentspeciality',NEW.agentspeciality_id);
     end |
  create trigger trg_cttextattributetype_insert after insert on  cttextattributetype 
    for each row 
