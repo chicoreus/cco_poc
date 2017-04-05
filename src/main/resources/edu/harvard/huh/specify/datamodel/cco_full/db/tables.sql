@@ -1356,13 +1356,15 @@ CREATE TABLE textattribute (
     key_name varchar(255) not null,   -- the type of attribute
     value varchar(900) not null,  -- the value of the attribute
     for_table varchar(255) not null,  -- table to which this attribute is applied 
-    primary_key_value bigint not null  -- row in for_table to which this attribute is applied
+    primary_key_value bigint not null,  -- row in for_table to which this attribute is applied
+    modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
 
+alter table textattribute add constraint fk_textattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each cttextattribute type is the key for zero to many textattributes.
 -- Each textattribute has one and only one cttextattributetype as a key.
 
@@ -1410,7 +1412,8 @@ CREATE TABLE numericattribute (
     value float(20,10) not null,  -- the value of the attribute
     units varchar(255),           -- units, if any to be ascribed to the attribute
     for_table varchar(255) not null,
-    primary_key_value bigint not null
+    primary_key_value bigint not null,
+    modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1420,6 +1423,7 @@ DEFAULT CHARSET=utf8;
 
 ALTER TABLE numericattribute add constraint fk_numericattributetype foreign key (name) references ctnumericattributetype (name) on update cascade; 
 
+alter table numericattribute add constraint fk_numericattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- definitions for pick lists associated with biological attributes and generic attributes.  Table picklist's table/field binding can't be used for these.
 
 -- changeset chicoreus:074

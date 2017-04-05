@@ -265,7 +265,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_textattribute_update after update on  textattribute 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'textattribute',NEW.textattribute_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'textattribute',NEW.textattribute_id);
     end |
  create trigger trg_inference_update after update on  inference 
    for each row 
@@ -280,7 +280,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_numericattribute_update after update on  numericattribute 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'numericattribute',NEW.numericattribute_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
 -- TODO: non numeric primary key
 -- create trigger trg_ctbiologicalattributetype_update after update on  ctbiologicalattributetype 
@@ -751,7 +751,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_textattribute_insert after insert on  textattribute 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'textattribute',NEW.textattribute_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'textattribute',NEW.textattribute_id);
     end |
  create trigger trg_inference_insert after insert on  inference 
    for each row 
@@ -766,7 +766,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_numericattribute_insert after insert on  numericattribute 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'numericattribute',NEW.numericattribute_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
 -- TODO: non numeric primary key
 -- create trigger trg_ctbiologicalattributetype_insert after insert on  ctbiologicalattributetype 
