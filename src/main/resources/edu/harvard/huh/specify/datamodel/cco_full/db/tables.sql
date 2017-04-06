@@ -1462,12 +1462,14 @@ DEFAULT CHARSET=utf8;
 -- changeset chicoreus:077
 CREATE TABLE ctageclass (
   -- Definition: controled vocabulary for age classes.
-  ageclassid bigint not null primary key auto_increment, -- surrogate numeric primary key
-  ageclass varchar(255) not null
+  ctageclass_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+  ageclass varchar(255) not null,
+  modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table ctageclass add constraint fk_ctageclass_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each ctbiologicalattributetype is an age class in ctageclass.
 -- Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.
 
@@ -1600,7 +1602,8 @@ CREATE TABLE encumberance (
    createdby_agent_id bigint not null,
    make_visible_on date, -- date on which encumberance expires, null for no expiration date
    make_visible_criteria text, -- description of criteria under which encumberance expires 
-   visible_to_scope_id bigint -- scope to which the encumbered data should be visible
+   visible_to_scope_id bigint, -- scope to which the encumbered data should be visible
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1626,7 +1629,8 @@ CREATE TABLE catitemencumberance (
    catitemencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
    catalogeditemid bigint not null,
-   tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
+   tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification',  -- tables this encumberance is expected to extend to.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1641,7 +1645,8 @@ CREATE TABLE attachmentencumberance (
    attachmentencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
    attachment_id bigint not null,
-   tablescope varchar(900) default 'attachment'  -- tables this encumberance is expected to extend to.
+   tablescope varchar(900) default 'attachment',  -- tables this encumberance is expected to extend to.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1656,7 +1661,8 @@ CREATE TABLE localityencumberance (
    localityencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null,
    locality_id bigint not null,
-   tablescope varchar(900) default 'locality,coordinate,georeference,collectingevent,catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
+   tablescope varchar(900) default 'locality,coordinate,georeference,collectingevent,catalogeditem,unit,identifiableitem,preparation,identification',  -- tables this encumberance is expected to extend to.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1671,7 +1677,8 @@ CREATE TABLE taxonencumberance (
    taxonencumberance_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    encumberance_id bigint not null, -- The encumberance that applies to a taxon
    taxon_id bigint not null, -- The taxon to which an encumberance applies 
-   tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification'  -- tables this encumberance is expected to extend to.
+   tablescope varchar(900) default 'catalogeditem,unit,identifiableitem,preparation,identification',  -- tables this encumberance is expected to extend to.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1679,6 +1686,13 @@ DEFAULT CHARSET=utf8;
 -- Each encumberance is zero to many taxonencumberances.
 -- Each taxonencumberance is one and only one encumberance.
 -- Each taxonencumberance is for one and only one taxon.
+
+-- changeset chicoreus:091encumbmodbyagent
+alter table encumberance add constraint fk_encumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table catitemencumberance add constraint fk_catitemencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table attachmentencumberance add constraint fk_attachmentencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table localityencumberance add constraint fk_localityencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table taxonencumberance add constraint fk_taxonencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:092
 CREATE TABLE address (

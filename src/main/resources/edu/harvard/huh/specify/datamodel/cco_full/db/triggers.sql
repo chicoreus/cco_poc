@@ -298,11 +298,11 @@ create trigger trg_scope_update after update on scope
 --    begin 
 --      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
 --    end |
--- create trigger trg_ctageclass_update after update on  ctageclass 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctageclass',NEW.ctageclass_id);
---    end |
+ create trigger trg_ctageclass_update after update on  ctageclass 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctageclass',NEW.ctageclass_id);
+    end |
  create trigger trg_scopect_update after update on  scopect 
    for each row 
     begin 
@@ -322,27 +322,27 @@ create trigger trg_scope_update after update on scope
  create trigger trg_encumberance_update after update on  encumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'encumberance',NEW.encumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'encumberance',NEW.encumberance_id);
     end |
  create trigger trg_catitemencumberance_update after update on  catitemencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'catitemencumberance',NEW.catitemencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'catitemencumberance',NEW.catitemencumberance_id);
     end | 
  create trigger trg_attachmentencumberance_update after update on  attachmentencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'attachmentencumberance',NEW.attachmentencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'attachmentencumberance',NEW.attachmentencumberance_id);
     end | 
  create trigger trg_localityencumberance_update after update on  localityencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'localityencumberance',NEW.localityencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'localityencumberance',NEW.localityencumberance_id);
     end | 
  create trigger trg_taxonencumberance_update after update on  taxonencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'taxonencumberance',NEW.taxonencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxonencumberance',NEW.taxonencumberance_id);
     end | 
  create trigger trg_address_update after update on  address 
    for each row 
@@ -784,11 +784,11 @@ create trigger trg_scope_insert after insert on scope
 --    begin 
 --      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
 --    end |
--- create trigger trg_ctageclass_insert after insert on  ctageclass 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctageclass',NEW.ctageclass_id);
---    end |
+ create trigger trg_ctageclass_insert after insert on  ctageclass 
+   for each row 
+    begin 
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctageclass',NEW.ctageclass_id);
+    end |
  create trigger trg_scopect_insert after insert on  scopect 
    for each row 
     begin 
@@ -808,27 +808,27 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_encumberance_insert after insert on  encumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'encumberance',NEW.encumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'encumberance',NEW.encumberance_id);
     end |
  create trigger trg_catitemencumberance_insert after insert on  catitemencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'catitemencumberance',NEW.catitemencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'catitemencumberance',NEW.catitemencumberance_id);
     end | 
  create trigger trg_attachmentencumberance_insert after insert on  attachmentencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'attachmentencumberance',NEW.attachmentencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'attachmentencumberance',NEW.attachmentencumberance_id);
     end | 
  create trigger trg_localityencumberance_insert after insert on  localityencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'localityencumberance',NEW.localityencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'localityencumberance',NEW.localityencumberance_id);
     end | 
  create trigger trg_taxonencumberance_insert after insert on  taxonencumberance 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'taxonencumberance',NEW.taxonencumberance_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'taxonencumberance',NEW.taxonencumberance_id);
     end | 
  create trigger trg_address_insert after insert on  address 
    for each row 
