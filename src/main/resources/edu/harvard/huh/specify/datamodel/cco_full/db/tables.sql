@@ -1714,7 +1714,8 @@ CREATE TABLE address (
   ordinal int(11) default null,   -- sort order for addresses 
   start_eventdate_id bigint default null,  -- date on which this address began to be used
   end_eventdate_id bigint default null,  -- date on which this address ceased to be used
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1722,6 +1723,7 @@ DEFAULT CHARSET=utf8;
 create unique index idx_address_u_startdateid on address(start_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_address_u_enddateid on address(end_eventdate_id);  --  Event dates should not be reused.
 
+alter table address add constraint fk_address_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:093
 CREATE INDEX idx_address_addagent_id on address(address_for_agent_id);
 

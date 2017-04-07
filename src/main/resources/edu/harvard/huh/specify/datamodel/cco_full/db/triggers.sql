@@ -347,7 +347,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_address_update after update on  address 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'address',NEW.address_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'address',NEW.address_id);
     end |
 -- create trigger trg_ctelectronicaddresstype_update after update on  ctelectronicaddresstype 
 --   for each row 
@@ -833,7 +833,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_address_insert after insert on  address 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'address',NEW.address_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'address',NEW.address_id);
     end |
 -- create trigger trg_ctelectronicaddresstype_insert after insert on  ctelectronicaddresstype 
 --   for each row 
