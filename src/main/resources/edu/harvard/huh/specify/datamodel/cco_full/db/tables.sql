@@ -1759,11 +1759,13 @@ CREATE TABLE electronicaddress (
    remarks text,
    is_current boolean default null,  -- true if this is a current contact number/email (no constraint preventing multiple current addresses).
    is_primary boolean default null,  -- true if this is the primary contact number/email for this agent 
-   ordinal int(11) default null   -- sort order for electronic addresses
+   ordinal int(11) default null,   -- sort order for electronic addresses
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table electronicaddress add constraint fk_electronicaddress_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (typename) references ctelectronicaddresstype (typename) on update cascade;
 -- changeset chicoreus:097
 ALTER TABLE electronicaddress add constraint fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
@@ -1791,12 +1793,14 @@ CREATE TABLE addressofrecord (
   postalcode varchar(32) default null,  -- postal code, zip code etc.
   state_province varchar(255) default null,  -- primary division for address
   country varchar(255) default null, 
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:099
+alter table addressofrecord add constraint fk_addressofrecord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE addressofrecord add constraint fk_aor_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade ; 
 
 -- Each addressofrecord is a preserved address for one and only one agent.
@@ -1872,11 +1876,13 @@ CREATE TABLE repositoryagreement (
   status varchar(32) default null,
   agreementwithagent_id bigint not null,   -- agent with whom this repository agreement has been made with
   scope_id bigint not null,  -- the scope within which this repository agreement record is visible
-  addressofrecord_id bigint default null  -- address of record for the agent with whom this repository agreement is with at the time of the agreement.
+  addressofrecord_id bigint default null,  -- address of record for the agent with whom this repository agreement is with at the time of the agreement.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table repositoryagreement add constraint fk_repositoryagreement_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each accession is under zero to one repositoryagreement.
 -- Each repositoryagreement applies to zero to many accessions.
 
@@ -1911,7 +1917,8 @@ CREATE TABLE accessionagent (
   role varchar(50) not null,
   accession_id bigint not null,
   agent_id bigint not null,
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1919,6 +1926,7 @@ DEFAULT CHARSET=utf8;
 ALTER TABLE accessionagent add constraint fk_accessionagent foreign key (agent_id) references agent (agent_id) on update cascade; 
 ALTER TABLE accessionagent add constraint fk_accessionforagent foreign key (accession_id) references accession (accession_id) on update cascade on delete cascade; 
 
+alter table accessionagent add constraint fk_accessionagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 --  an agent cannot have the same role twice in the same accession.
 CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role, accession_id); 
 
@@ -1945,11 +1953,13 @@ CREATE TABLE attachment (
   is_public boolean not null,
   mimetype varchar(64) default null,
   origfilename text not null,
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table attachment add constraint fk_attachment_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:112
 CREATE TABLE attachmentrelation (
   -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
@@ -1958,11 +1968,13 @@ CREATE TABLE attachmentrelation (
   for_table varchar(255) not null,
   primary_key_value bigint not null,
   ordinal int(11) not null,
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+alter table attachmentrelation add constraint fk_attachmentrelation_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table attachmentrelation add constraint fk_attrel_attid foreign key (attachment_id) references attachment (attachment_id) on update cascade;
 
 -- Each attachmentrelation involves one and only one attachment.

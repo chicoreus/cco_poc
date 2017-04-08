@@ -357,12 +357,12 @@ create trigger trg_scope_update after update on scope
  create trigger trg_electronicaddress_update after update on  electronicaddress 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'electronicaddress',NEW.electronicaddress_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'electronicaddress',NEW.electronicaddress_id);
     end | 
  create trigger trg_addressofrecord_update after update on  addressofrecord 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'addressofrecord',NEW.addressofrecord_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'addressofrecord',NEW.addressofrecord_id);
     end |
  create trigger trg_accession_update after update on  accession 
    for each row 
@@ -372,22 +372,22 @@ create trigger trg_scope_update after update on scope
  create trigger trg_repositoryagreement_update after update on  repositoryagreement 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'repositoryagreement',NEW.repositoryagreement_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'repositoryagreement',NEW.repositoryagreement_id);
     end |
  create trigger trg_accessionagent_update after update on  accessionagent 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'accessionagent',NEW.accessionagent_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'accessionagent',NEW.accessionagent_id);
     end |
  create trigger trg_attachment_update after update on  attachment 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'attachment',NEW.attachment_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'attachment',NEW.attachment_id);
     end |
  create trigger trg_attachmentrelation_update after update on  attachmentrelation 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'attachmentrelation',NEW.attachmentrelation_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'attachmentrelation',NEW.attachmentrelation_id);
     end |
  create trigger trg_collector_update after update on  collector 
    for each row 
