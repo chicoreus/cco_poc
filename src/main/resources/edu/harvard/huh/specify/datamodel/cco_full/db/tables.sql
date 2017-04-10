@@ -1432,11 +1432,14 @@ CREATE TABLE ctbiologicalattributetype (
     name varchar(255) not null primary key,   -- the name of the attribute type 
     valuecodetable varchar(60),  -- code table to use to restrict allowed values 
     unitscodetable varchar(60),   -- code table to use to restrict allowed units 
-    methodcodetable varchar(60)   -- code table to use to restrict allowed determination methods
+    methodcodetable varchar(60),   -- code table to use to restrict allowed determination methods
+    modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:074aFKModByAgent
+alter table ctbiologicalattributetype add constraint fk_ctbiolatttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:075
 CREATE TABLE ctlengthunit (
   -- Definition: controled vocabulary for units of length.

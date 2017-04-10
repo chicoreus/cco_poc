@@ -283,20 +283,20 @@ create trigger trg_scope_update after update on scope
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
 -- TODO: non numeric primary key
--- create trigger trg_ctbiologicalattributetype_update after update on  ctbiologicalattributetype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctbiologicalattributetype',NEW.ctbiologicalattributetype_id);
---    end |
+ create trigger trg_ctbiologicalattributetype_update after update on  ctbiologicalattributetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctbiologicalattributetype',NEW.name);
+    end |
 -- create trigger trg_ctlengthunit_update after update on  ctlengthunit 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctlengthunit',NEW.ctlengthunit_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctlengthunit',NEW.ctlengthunit_id);
 --    end |
 -- create trigger trg_ctmassunit_update after update on  ctmassunit 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
 --    end |
  create trigger trg_ctageclass_update after update on  ctageclass 
    for each row 
@@ -769,20 +769,20 @@ create trigger trg_scope_insert after insert on scope
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
 -- TODO: non numeric primary key
--- create trigger trg_ctbiologicalattributetype_insert after insert on  ctbiologicalattributetype 
---   for each row 
---    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctbiologicalattributetype',NEW.ctbiologicalattributetype_id);
---    end |
+ create trigger trg_ctbiologicalattributetype_insert after insert on  ctbiologicalattributetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctbiologicalattributetype',NEW.name);
+    end |
 -- create trigger trg_ctlengthunit_insert after insert on  ctlengthunit 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctlengthunit',NEW.ctlengthunit_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctlengthunit',NEW.ctlengthunit_id);
 --    end |
 -- create trigger trg_ctmassunit_insert after insert on  ctmassunit 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
 --    end |
  create trigger trg_ctageclass_insert after insert on  ctageclass 
    for each row 
