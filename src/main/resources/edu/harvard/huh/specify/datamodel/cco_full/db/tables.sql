@@ -1440,10 +1440,12 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:074aFKModByAgent
 alter table ctbiologicalattributetype add constraint fk_ctbiolatttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
 -- changeset chicoreus:075
 CREATE TABLE ctlengthunit (
-  -- Definition: controled vocabulary for units of length.
-  lengthunit varchar(255) not null primary key
+   -- Definition: controled vocabulary for units of length.
+   lengthunit varchar(255) not null primary key,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1451,16 +1453,22 @@ DEFAULT CHARSET=utf8;
 -- Each ctbiologicalattributetype has zero or one length unit in ctlengthunit.
 -- Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.
 
+-- changeset chicoreus:075aFKModByAgent
+alter table ctlengthunit add constraint fk_ctblengthunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:076
 CREATE TABLE ctmassunit (
-  -- Definition: controled vocabulary for units of mass.
-  massunit varchar(255) not null primary key
+   -- Definition: controled vocabulary for units of mass.
+   massunit varchar(255) not null primary key,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 -- Each ctbiologicalattributetype has zero or one mass unit in ctmassunit.
 -- Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.
+
+-- changeset chicoreus:076aFKModByAgent
+alter table ctmassunit add constraint fk_ctmassunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:077
 CREATE TABLE ctageclass (

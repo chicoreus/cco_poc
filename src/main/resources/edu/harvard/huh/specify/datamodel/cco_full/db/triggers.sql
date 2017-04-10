@@ -288,16 +288,16 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctbiologicalattributetype',NEW.name);
     end |
--- create trigger trg_ctlengthunit_update after update on  ctlengthunit 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctlengthunit',NEW.ctlengthunit_id);
---    end |
--- create trigger trg_ctmassunit_update after update on  ctmassunit 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
---    end |
+ create trigger trg_ctlengthunit_update after update on  ctlengthunit 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctlengthunit',NEW.lengthunit);
+    end |
+ create trigger trg_ctmassunit_update after update on  ctmassunit 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctmassunit',NEW.massunit);
+    end |
  create trigger trg_ctageclass_update after update on  ctageclass 
    for each row 
     begin 
@@ -317,7 +317,7 @@ create trigger trg_scope_update after update on scope
 -- create trigger trg_ctencumberancetype_update after update on  ctencumberancetype 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctencumberancetype',NEW.ctencumberancetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctencumberancetype',NEW.ctencumberancetype_id);
 --    end | 
  create trigger trg_encumberance_update after update on  encumberance 
    for each row 
@@ -352,7 +352,7 @@ create trigger trg_scope_update after update on scope
 -- create trigger trg_ctelectronicaddresstype_update after update on  ctelectronicaddresstype 
 --   for each row 
 --    begin 
---     insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
+--     insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
 --    end | 
  create trigger trg_electronicaddress_update after update on  electronicaddress 
    for each row 
@@ -397,7 +397,7 @@ create trigger trg_scope_update after update on scope
 -- create trigger trg_ctcoordinatetype_update after update on  ctcoordinatetype 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctcoordinatetype',NEW.ctcoordinatetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctcoordinatetype',NEW.ctcoordinatetype_id);
 --    end | 
  create trigger trg_coordinate_update after update on  coordinate 
    for each row 
@@ -774,16 +774,16 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctbiologicalattributetype',NEW.name);
     end |
--- create trigger trg_ctlengthunit_insert after insert on  ctlengthunit 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctlengthunit',NEW.ctlengthunit_id);
---    end |
--- create trigger trg_ctmassunit_insert after insert on  ctmassunit 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctmassunit',NEW.ctmassunit_id);
---    end |
+ create trigger trg_ctlengthunit_insert after insert on  ctlengthunit 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctlengthunit',NEW.lengthunit);
+    end |
+ create trigger trg_ctmassunit_insert after insert on  ctmassunit 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctmassunit',NEW.massunit);
+    end |
  create trigger trg_ctageclass_insert after insert on  ctageclass 
    for each row 
     begin 
@@ -803,7 +803,7 @@ create trigger trg_scope_insert after insert on scope
 -- create trigger trg_ctencumberancetype_insert after insert on  ctencumberancetype 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctencumberancetype',NEW.ctencumberancetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctencumberancetype',NEW.ctencumberancetype_id);
 --    end | 
  create trigger trg_encumberance_insert after insert on  encumberance 
    for each row 
@@ -838,7 +838,7 @@ create trigger trg_scope_insert after insert on scope
 -- create trigger trg_ctelectronicaddresstype_insert after insert on  ctelectronicaddresstype 
 --   for each row 
 --    begin 
---     insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
+--     insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
 --    end | 
  create trigger trg_electronicaddress_insert after insert on  electronicaddress 
    for each row 
@@ -883,7 +883,7 @@ create trigger trg_scope_insert after insert on scope
 -- create trigger trg_ctcoordinatetype_insert after insert on  ctcoordinatetype 
 --   for each row 
 --    begin 
---      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctcoordinatetype',NEW.ctcoordinatetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctcoordinatetype',NEW.ctcoordinatetype_id);
 --    end | 
  create trigger trg_coordinate_insert after insert on  coordinate 
    for each row 
