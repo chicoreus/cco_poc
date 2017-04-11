@@ -499,7 +499,8 @@ alter table journaltitle add constraint fk_journaltitle_jourid foreign key (jour
 -- changeset chicoreus:019
 CREATE TABLE ctjournaltitletype (
   -- Definition: controlled vocabulary for journal title types
-  title_type varchar(50) not null primary key  -- Type of journal title.
+  title_type varchar(50) not null primary key,  -- Type of journal title.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1094,6 +1095,7 @@ alter table catnumseriescollection add constraint fk_catnumseriescollection_mage
 alter table othernumber add constraint fk_othernumber_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journal add constraint fk_journal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journaltitle add constraint fk_journaltitle_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table ctjournaltitletype add constraint fk_ctjourtitletype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journalidentifier add constraint fk_journalidentifier_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table publicationidentifier add constraint fk_publident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;

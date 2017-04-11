@@ -283,6 +283,11 @@ create trigger trg_scope_update after update on scope
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
 -- TODO: non numeric primary key
+ create trigger trg_ctjournaltitletype_update after update on  ctjournaltitletype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctjournaltitletype',NEW.title_type);
+    end |
  create trigger trg_ctbiologicalattributetype_update after update on  ctbiologicalattributetype 
    for each row 
     begin 
@@ -317,7 +322,7 @@ create trigger trg_scope_update after update on scope
 -- create trigger trg_ctencumberancetype_update after update on  ctencumberancetype 
 --   for each row 
 --    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctencumberancetype',NEW.ctencumberancetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctencumberancetype',NEW.ctencumberancetype_id);
 --    end | 
  create trigger trg_encumberance_update after update on  encumberance 
    for each row 
@@ -352,7 +357,7 @@ create trigger trg_scope_update after update on scope
 -- create trigger trg_ctelectronicaddresstype_update after update on  ctelectronicaddresstype 
 --   for each row 
 --    begin 
---     insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
+--     insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
 --    end | 
  create trigger trg_electronicaddress_update after update on  electronicaddress 
    for each row 
@@ -397,7 +402,7 @@ create trigger trg_scope_update after update on scope
 -- create trigger trg_ctcoordinatetype_update after update on  ctcoordinatetype 
 --   for each row 
 --    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'ctcoordinatetype',NEW.ctcoordinatetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcoordinatetype',NEW.ctcoordinatetype_id);
 --    end | 
  create trigger trg_coordinate_update after update on  coordinate 
    for each row 
@@ -769,6 +774,11 @@ create trigger trg_scope_insert after insert on scope
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
 -- TODO: non numeric primary key
+ create trigger trg_ctjournaltitletype_insert after insert on  ctjournaltitletype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctjournaltitletype',NEW.title_type);
+    end |
  create trigger trg_ctbiologicalattributetype_insert after insert on  ctbiologicalattributetype 
    for each row 
     begin 
@@ -803,7 +813,7 @@ create trigger trg_scope_insert after insert on scope
 -- create trigger trg_ctencumberancetype_insert after insert on  ctencumberancetype 
 --   for each row 
 --    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctencumberancetype',NEW.ctencumberancetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctencumberancetype',NEW.ctencumberancetype_id);
 --    end | 
  create trigger trg_encumberance_insert after insert on  encumberance 
    for each row 
@@ -838,7 +848,7 @@ create trigger trg_scope_insert after insert on scope
 -- create trigger trg_ctelectronicaddresstype_insert after insert on  ctelectronicaddresstype 
 --   for each row 
 --    begin 
---     insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
+--     insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
 --    end | 
  create trigger trg_electronicaddress_insert after insert on  electronicaddress 
    for each row 
@@ -883,7 +893,7 @@ create trigger trg_scope_insert after insert on scope
 -- create trigger trg_ctcoordinatetype_insert after insert on  ctcoordinatetype 
 --   for each row 
 --    begin 
---      insert into auditlogvarchar(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'ctcoordinatetype',NEW.ctcoordinatetype_id);
+--      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcoordinatetype',NEW.ctcoordinatetype_id);
 --    end | 
  create trigger trg_coordinate_insert after insert on  coordinate 
    for each row 
