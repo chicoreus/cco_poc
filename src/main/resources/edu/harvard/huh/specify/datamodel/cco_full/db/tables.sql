@@ -531,7 +531,8 @@ alter table journalidentifier add constraint fk_journalidentifier_jourid foreign
 -- changeset chicoreus:021
 CREATE TABLE ctjournalidentifiertype (
   -- Definition: controlled vocabulary for journal identifier types.
-  identifier_type varchar(50) not null primary key  -- Type of journal identifier.
+  identifier_type varchar(50) not null primary key,  -- Type of journal identifier.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
