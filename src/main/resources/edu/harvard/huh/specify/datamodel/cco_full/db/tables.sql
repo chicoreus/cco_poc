@@ -579,7 +579,8 @@ alter table publication add constraint fk_publication_containid foreign key (con
 -- changeset chicoreus:023
 CREATE TABLE ctpublicationtype ( 
    -- Definition: Controled vocabulary for publication types (e.g. books, journal articles, monographs, etc).  
-   publication_type varchar(50) not null primary key
+   publication_type varchar(50) not null primary key,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1098,7 +1099,9 @@ alter table journal add constraint fk_journal_magentid foreign key (modified_by_
 alter table journaltitle add constraint fk_journaltitle_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table ctjournaltitletype add constraint fk_ctjourtitletype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table journalidentifier add constraint fk_journalidentifier_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table ctjournalidentifiertype add constraint fk_ctjouridenttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table publicationidentifier add constraint fk_publident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table ctpublicationtype add constraint fk_ctpublicationtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionitem add constraint fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table loan add constraint fk_loan_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
