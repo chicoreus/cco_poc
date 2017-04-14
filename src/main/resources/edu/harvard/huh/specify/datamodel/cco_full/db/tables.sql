@@ -610,7 +610,8 @@ alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign 
 -- changeset chicoreus:025
 CREATE TABLE ctpublicationidentifiertype (
   -- Definition: controlled vocabulary for publication identifier types.
-  identifier_type varchar(50) not null primary key  -- Type of publication identifier.
+  identifier_type varchar(50) not null primary key,  -- Type of publication identifier.
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1101,6 +1102,7 @@ alter table ctjournaltitletype add constraint fk_ctjourtitletype_magentid foreig
 alter table journalidentifier add constraint fk_journalidentifier_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table ctjournalidentifiertype add constraint fk_ctjouridenttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table publicationidentifier add constraint fk_publident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+alter table ctpublicationidentifiertype add constraint fk_ctpublidenttyp_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table ctpublicationtype add constraint fk_ctpublicationtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table transactionitem add constraint fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
