@@ -1287,13 +1287,15 @@ create fulltext index ft_collectorname on agentname(name);
 CREATE TABLE ctagentnametype (
    -- Definition: controled vocabulary for agent name types.
    type varchar(35) not null,  -- The type of agent name (e.g. full name).
-   ordinal int  -- An order which can be used to present this name type in a picklist or by which a name can be selected.
+   ordinal int,  -- An order which can be used to present this name type in a picklist or by which a name can be selected.
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 alter table agentname add constraint fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
 
+alter table ctagentnametype add constraint fk_ctagentnametype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:066
 CREATE TABLE agentrelation (
    -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
