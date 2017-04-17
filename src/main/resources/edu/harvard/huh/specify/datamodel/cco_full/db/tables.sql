@@ -2040,11 +2040,14 @@ ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collecto
 -- changeset chicoreus:117
 CREATE TABLE ctcoordinatetype ( 
    -- Definition: Controled vocabulary of vocabulary types.
-   coordinatetype varchar(50) not null primary key,  -- allowed coordinate types for table coordinate
-   fieldprefix varchar(5) not null  -- prefix for field names that apply for this coordinate type
+   coordinate_type varchar(50) not null primary key,  -- allowed coordinate types for table coordinate
+   fieldprefix varchar(5) not null,  -- prefix for field names that apply for this coordinate type
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table ctcoordinatetype add constraint fk_ctcoordtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each coordinate is of one and only one (ct)coordinatetype.
 -- Each (ct)coordintetype is the type for zero to many coordinates.
@@ -2058,7 +2061,7 @@ CREATE TABLE coordinate (
    remarks text default null, -- any additional information needed to interpret the coordinate
    cordinatesource varchar(255) default null, -- source for this coordinate (e.g. field notes, gps, field map)
    locality_id bigint not null,  -- the locality that this coordinate describes 
-   coordinatetype varchar(50) not null default 'decimal degrees',  -- which standard form of a coordinate is this, determines which fields apply 
+   coordinate_type varchar(50) not null default 'decimal degrees',  -- which standard form of a coordinate is this, determines which fields apply 
    utmzone varchar(3) default null,  -- utm/ups zone number and optinal letter,
    utmeasting int default null,  -- utm easting in meters
    utmnorthing int default null, -- utm northing in meters 
@@ -2095,7 +2098,11 @@ CREATE TABLE coordinate (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-create unique index idx_coord_u_typelocalityid on coordinate(coordinatetype, locality_id);  --  Localities are limited to one coordinate of a given type.
+create unique index idx_coord_u_typelocalityid on coordinate(coordinate_type, locality_id);  --  Localities are limited to one coordinate of a given type.
+
+-- changeset chicoreus:118acoordinateFK
+
+alter table coordinate add constraint fk_coordtype_ctcoordtype foreign key (coordinate_type) references ctcoordinatetype(coordinate_type) on update cascade;
 
 -- Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type]
 -- Each coordinate is for one and only one locality.

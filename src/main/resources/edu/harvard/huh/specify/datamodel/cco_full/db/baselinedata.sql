@@ -284,15 +284,15 @@ INSERT INTO ctelectronicaddresstype (typename) VALUES ('phone');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('fax');
 INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
 -- changeset chicoreus:180
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('utm/ups','utm');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('decimal degrees','ddg');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees minutes seconds','dms');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('degrees decimal minutes','ddm');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('mgrs','grid');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('osgb','grid');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('rikets nät, rt 90','xy');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('swiss grid','xy');
-INSERT INTO ctcoordinatetype (coordinatetype, fieldprefix) VALUES ('public land survey system (township section range)','plss');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('utm/ups','utm');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('decimal degrees','ddg');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('degrees minutes seconds','dms');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('degrees decimal minutes','ddm');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('mgrs','grid');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('osgb','grid');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('rikets nät, rt 90','xy');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('swiss grid','xy');
+INSERT INTO ctcoordinatetype (coordinate_type, fieldprefix) VALUES ('public land survey system (township section range)','plss');
 
 -- changeset chicoreus:181
 INSERT INTO geographytreedef (geographytreedef_id,full_name_direction,name) VALUES (1,-1,'geopolitical heirarchy');

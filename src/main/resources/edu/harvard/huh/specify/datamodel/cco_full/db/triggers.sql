@@ -419,11 +419,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collector',NEW.collector_id);
     end |
--- create trigger trg_ctcoordinatetype_update after update on  ctcoordinatetype 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcoordinatetype',NEW.ctcoordinatetype_id);
---    end | 
+ create trigger trg_ctcoordinatetype_update after update on  ctcoordinatetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcoordinatetype',NEW.coordinate_type);
+    end | 
  create trigger trg_coordinate_update after update on  coordinate 
    for each row 
     begin 
@@ -930,11 +930,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'collector',NEW.collector_id);
     end |
--- create trigger trg_ctcoordinatetype_insert after insert on  ctcoordinatetype 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcoordinatetype',NEW.ctcoordinatetype_id);
---    end | 
+ create trigger trg_ctcoordinatetype_insert after insert on  ctcoordinatetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcoordinatetype',NEW.coordinate_type);
+    end | 
  create trigger trg_coordinate_insert after insert on  coordinate 
    for each row 
     begin 
