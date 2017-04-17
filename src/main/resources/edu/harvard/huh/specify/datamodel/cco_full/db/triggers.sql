@@ -374,11 +374,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'address',NEW.address_id);
     end |
--- create trigger trg_ctelectronicaddresstype_update after update on  ctelectronicaddresstype 
---   for each row 
---    begin 
---     insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
---    end | 
+ create trigger trg_ctelectronicaddresstype_update after update on  ctelectronicaddresstype 
+   for each row 
+    begin 
+     insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctelectronicaddresstype',NEW.typename);
+    end | 
  create trigger trg_electronicaddress_update after update on  electronicaddress 
    for each row 
     begin 
@@ -885,11 +885,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'address',NEW.address_id);
     end |
--- create trigger trg_ctelectronicaddresstype_insert after insert on  ctelectronicaddresstype 
---   for each row 
---    begin 
---     insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctelectronicaddresstype',NEW.ctelectronicaddresstype_id);
---    end | 
+ create trigger trg_ctelectronicaddresstype_insert after insert on  ctelectronicaddresstype 
+   for each row 
+    begin 
+     insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctelectronicaddresstype',NEW.typename);
+    end | 
  create trigger trg_electronicaddress_insert after insert on  electronicaddress 
    for each row 
     begin 

@@ -1765,10 +1765,13 @@ ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_i
 -- changeset chicoreus:095
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
-   typename varchar(255) not null primary key 
+   typename varchar(255) not null primary key,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+alter table ctelectronicaddresstype add constraint fk_ctelecaddresstype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:096
 CREATE TABLE electronicaddress ( 
