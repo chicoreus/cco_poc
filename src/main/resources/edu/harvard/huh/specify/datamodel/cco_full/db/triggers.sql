@@ -427,7 +427,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_coordinate_update after update on  coordinate 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'coordinate',NEW.coordinate_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'coordinate',NEW.coordinate_id);
     end | 
  create trigger trg_georeference_update after update on  georeference 
    for each row 
@@ -938,7 +938,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_coordinate_insert after insert on  coordinate 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'coordinate',NEW.coordinate_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'coordinate',NEW.coordinate_id);
     end | 
  create trigger trg_georeference_insert after insert on  georeference 
    for each row 

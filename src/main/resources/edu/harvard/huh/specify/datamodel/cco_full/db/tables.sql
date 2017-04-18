@@ -2093,7 +2093,8 @@ CREATE TABLE coordinate (
    plssrange int default null, -- plss range line number
    plssrangedirection varchar(1) default null, -- plss range offset direction
    plsssection int default null, -- plss section number
-   plsssectionpart varchar(50) default null -- plss section subdivisions (e.g. sw 1/4; sw 1/4 ne 1/4).
+   plsssectionpart varchar(50) default null, -- plss section subdivisions (e.g. sw 1/4; sw 1/4 ne 1/4).
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2102,6 +2103,7 @@ create unique index idx_coord_u_typelocalityid on coordinate(coordinate_type, lo
 
 -- changeset chicoreus:118acoordinateFK
 
+alter table coordinate add constraint fk_coord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 alter table coordinate add constraint fk_coordtype_ctcoordtype foreign key (coordinate_type) references ctcoordinatetype(coordinate_type) on update cascade;
 
 -- Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type]
