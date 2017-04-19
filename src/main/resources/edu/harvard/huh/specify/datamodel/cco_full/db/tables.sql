@@ -2148,7 +2148,8 @@ CREATE TABLE georeference (
   verbatim_elevation varchar(50) default null,
   verbatim_latitude varchar(50) default null,
   verbatim_longitude varchar(50) default null,
-  remarks text
+  remarks text,
+  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2157,6 +2158,7 @@ DEFAULT CHARSET=utf8;
 create unique index idx_georef_u_dategeorefid on georeference(georeference_eventdate_id);  --  Event dates should not be reused.
 
 -- changeset chicoreus:121
+alter table georeference add constraint fk_georef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE georeference add constraint fk_gr_byagent foreign key (by_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:122
 ALTER TABLE georeference add constraint fk_gr_geography foreign key (locality_id) references locality (locality_id) on update cascade;

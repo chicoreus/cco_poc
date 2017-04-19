@@ -432,7 +432,7 @@ create trigger trg_scope_update after update on scope
  create trigger trg_georeference_update after update on  georeference 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),null,'georeference',NEW.georeference_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'georeference',NEW.georeference_id);
     end |
  create trigger trg_geography_update after update on  geography 
    for each row 
@@ -913,12 +913,12 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_accessionagent_insert after insert on  accessionagent 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'accessionagent',NEW.accessionagent_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'accessionagent',NEW.accessionagent_id);
     end |
  create trigger trg_attachment_insert after insert on  attachment 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'attachment',NEW.attachment_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'attachment',NEW.attachment_id);
     end |
  create trigger trg_attachmentrelation_insert after insert on  attachmentrelation 
    for each row 
@@ -943,7 +943,7 @@ create trigger trg_scope_insert after insert on scope
  create trigger trg_georeference_insert after insert on  georeference 
    for each row 
     begin 
-      insert into auditlog(action,timestamptouched,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),null,'georeference',NEW.georeference_id);
+      insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'georeference',NEW.georeference_id);
     end |
  create trigger trg_geography_insert after insert on  geography 
    for each row 
