@@ -339,11 +339,11 @@ create trigger trg_scope_update after update on scope
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'biologicalattribute',NEW.biologicalattribute_id);
       -- TODO: one and only one of identifiableitem_id and part_id must be not_null.
     end |
--- create trigger trg_ctencumberancetype_update after update on  ctencumberancetype 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctencumberancetype',NEW.ctencumberancetype_id);
---    end | 
+ create trigger trg_ctencumberancetype_update after update on  ctencumberancetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctencumberancetype',NEW.encumberance_type);
+    end | 
  create trigger trg_encumberance_update after update on  encumberance 
    for each row 
     begin 
@@ -850,11 +850,11 @@ create trigger trg_scope_insert after insert on scope
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'biologicalattribute',NEW.biologicalattribute_id);
       -- TODO: one and only one of identifiableitem_id and part_id must be not_null.
     end |
--- create trigger trg_ctencumberancetype_insert after insert on  ctencumberancetype 
---   for each row 
---    begin 
---      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctencumberancetype',NEW.ctencumberancetype_id);
---    end | 
+ create trigger trg_ctencumberancetype_insert after insert on  ctencumberancetype 
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctencumberancetype',NEW.encumberance_type);
+    end | 
  create trigger trg_encumberance_insert after insert on  encumberance 
    for each row 
     begin 

@@ -1609,7 +1609,8 @@ ALTER TABLE auditlogvarchar add constraint fk_auditlogvcagent_id foreign key (ag
 -- changeset chicoreus:084
 CREATE TABLE ctencumberancetype ( 
    -- Definition: controled vocabulary of encumberance types.
-   encumberance_type varchar(50) not null primary key
+   encumberance_type varchar(50) not null primary key,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
