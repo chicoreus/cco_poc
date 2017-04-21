@@ -4,9 +4,6 @@
 delimiter |
 -- changeset chicoreus:158 endDelimiter:\| dbms:mysql
 
---  TODO: Fill in trigger logic to write data to the audit log.
---  TODO: add auditlog.dbusername and add lastmodifiedagentid to tables to obtain agent_id for audit log.
-
 create trigger trg_scope_update after update on scope 
   for each row 
     begin 
@@ -282,6 +279,11 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'cttextattributetype',NEW.key_name);
     end |
+ create trigger trg_ctcatnumseriespolicy_update after update on  ctcatnumseriespolicy
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcatnumseriespolicy',NEW.policy);
+    end |
  create trigger trg_textattribute_update after update on  textattribute 
    for each row 
     begin 
@@ -302,7 +304,6 @@ create trigger trg_scope_update after update on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('update',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
--- TODO: non numeric primary key
  create trigger trg_ctjournaltitletype_update after update on  ctjournaltitletype 
    for each row 
     begin 
@@ -793,6 +794,11 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'cttextattributeype',NEW.key_name);
     end |
+ create trigger trg_ctcatnumseriespolicy_insert after insert on  ctcatnumseriespolicy
+   for each row 
+    begin 
+      insert into auditlogvarchar(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'ctcatnumseriespolicy',NEW.policy);
+    end |
  create trigger trg_textattribute_insert after insert on  textattribute 
    for each row 
     begin 
@@ -813,7 +819,6 @@ create trigger trg_scope_insert after insert on scope
     begin 
       insert into auditlog(action,timestamptouched,dbusername,username,agent_id,for_table,primary_key_value) values ('insert',now(),user(),getAgentName(NEW.modified_by_agent_id),NEW.modified_by_agent_id,'numericattribute',NEW.numericattribute_id);
     end |
--- TODO: non numeric primary key
  create trigger trg_ctjournaltitletype_insert after insert on  ctjournaltitletype 
    for each row 
     begin 

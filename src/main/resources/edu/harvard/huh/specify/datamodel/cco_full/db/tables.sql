@@ -700,7 +700,8 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:030
 CREATE TABLE ctcatnumseriespolicy (
-   policy varchar(50) not null primary key
+   policy varchar(50) not null primary key,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
