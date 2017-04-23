@@ -129,13 +129,13 @@ ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_i
 
 -- changeset chicoreus:007
 CREATE TABLE picklistitemint (
-    -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
-    picklistitemint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    picklistitem_id bigint not null, -- the picklistitem which for which this is an internationalization
-    lang varchar(10) not null default 'en-gb',  -- language for this record
-    title_lang varchar(255),  -- translation of value to be shown to users into lang
-    definition text,  -- definition of name in lang
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: internationalization for picklist items, allows use of a single language key in picklist items, provides translations of that key and definitions for that key in an arbitrary number of languages.  Because picklistitems have scopes and picklists, picklist.title is not expectd to be unique, and thus the same key for different picklists or scopes may have different definitions, thus picklistitem internationalization needs to relate to picklistitem by primary key.  
+   picklistitemint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   picklistitem_id bigint not null, -- the picklistitem which for which this is an internationalization
+   lang varchar(10) not null default 'en-gb',  -- language for this record
+   title_lang varchar(255),  -- translation of value to be shown to users into lang
+   definition text,  -- definition of name in lang
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -148,15 +148,15 @@ ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (
 
 -- changeset chicoreus:008
 CREATE TABLE codetableint ( 
-    -- Definition: internationalization for code tables (where , allows use of a single language key in code tables, provides
-    -- translations of that key and definitions for that key in an arbitrary number of languages.  Applies to code tables 
-    codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    key_name varchar(255) not null, -- name/key in code table.  (e.g. miles in a length unit code table.
-    codetable varchar(255) not null, -- code table (table name prefixed ct) in which name is found.
-    lang varchar(10) not null default 'en-gb',  -- language for this record
-    key_name_lang varchar(255),  -- translation of name into lang
-    definition_lang text,  -- definition of key_name in lang
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: internationalization for code tables (where , allows use of a single language key in code tables, provides
+   -- translations of that key and definitions for that key in an arbitrary number of languages.  Applies to code tables 
+   codetableint_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   key_name varchar(255) not null, -- name/key in code table.  (e.g. miles in a length unit code table.
+   codetable varchar(255) not null, -- code table (table name prefixed ct) in which name is found.
+   lang varchar(10) not null default 'en-gb',  -- language for this record
+   key_name_lang varchar(255),  -- translation of name into lang
+   definition_lang text,  -- definition of key_name in lang
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1042,34 +1042,34 @@ create unique index idx_transagent_u_roletransagent on transactionagent(role, ag
 
 -- changeset chicoreus:051
 CREATE TABLE agent (
-    -- Definition: a person or organization with some role related to natural science collections.
-    agent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    agent_type enum ('individual','team','organization','software agent') default 'individual',  --  foaf:person,group,organization
-    curated boolean not null default false, -- has this agent record been curated 
-    preferred_name_string text,     -- foaf:name xml:lang=en, only name for teams, organizations, and software agents combined parts of names for individuals, name for organizations and teams.
-    abbreviated_name_string varchar(50) DEFAULT NULL,  -- typically for organizations
-    -- semi-atomic parts of names of individuals.
-    prefix varchar(32),  -- approximates foaf:title or honorificprefix
-    suffix varchar(32),
-    first_name varchar(255),   -- name of the individual 
-    middle_names varchar(255),  -- middle names of the individual
-    family_names varchar(255),  -- matronymic and patronymic familial names 
-    sameas_guid varchar(900),  --  owl:sameas  external guid for this record.
-    uuid char(43),         --  rdf:about   guid for this record
-    biography text,        
-    notes text,  -- remarks about this agent 
-    taxonomic_groups varchar(900),
-    collections_at varchar(900),
-    not_otherwise_specified boolean default false,
-    mbox_sha1sum char(40), -- foaf:mbox_sha1sum note foaf spec, include mailto: prefix, but no trailing whitespace when computing.
-    yearofbirth int,  -- Year of birth of an individual. Note that only birth and death years are recorded, not dates.   
-    yearofbirthmodifier varchar(12) default '',
-    yearofdeath int,  -- Year of death of an individual.
-    yearofdeathmodifier varchar(12) default '',
-    startyearactive int,  -- First year for a team, organization, or software agent.  For an individual, may be used for first known collection or publication.
-    endyearactive int,    -- Last year for a team, organization, or software agent. 
-    living enum('Yes','No','?') not null default '?',
-    modified_by_agent_id bigint not null default 1
+   -- Definition: a person or organization with some role related to natural science collections.
+   agent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   agent_type enum ('individual','team','organization','software agent') default 'individual',  --  foaf:person,group,organization
+   curated boolean not null default false, -- has this agent record been curated 
+   preferred_name_string text,     -- foaf:name xml:lang=en, only name for teams, organizations, and software agents combined parts of names for individuals, name for organizations and teams.
+   abbreviated_name_string varchar(50) DEFAULT NULL,  -- typically for organizations
+   -- semi-atomic parts of names of individuals.
+   prefix varchar(32),  -- approximates foaf:title or honorificprefix
+   suffix varchar(32),
+   first_name varchar(255),   -- name of the individual 
+   middle_names varchar(255),  -- middle names of the individual
+   family_names varchar(255),  -- matronymic and patronymic familial names 
+   sameas_guid varchar(900),  --  owl:sameas  external guid for this record.
+   uuid char(43),         --  rdf:about   guid for this record
+   biography text,        
+   notes text,  -- remarks about this agent 
+   taxonomic_groups varchar(900),
+   collections_at varchar(900),
+   not_otherwise_specified boolean default false,
+   mbox_sha1sum char(40), -- foaf:mbox_sha1sum note foaf spec, include mailto: prefix, but no trailing whitespace when computing.
+   yearofbirth int,  -- Year of birth of an individual. Note that only birth and death years are recorded, not dates.   
+   yearofbirthmodifier varchar(12) default '',
+   yearofdeath int,  -- Year of death of an individual.
+   yearofdeathmodifier varchar(12) default '',
+   startyearactive int,  -- First year for a team, organization, or software agent.  For an individual, may be used for first known collection or publication.
+   endyearactive int,    -- Last year for a team, organization, or software agent. 
+   living enum('Yes','No','?') not null default '?',
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1350,10 +1350,10 @@ alter table agentspeciality add constraint fk_agentspeci_taxonid foreign key (ta
 
 -- changeset chicoreus:069
 CREATE TABLE cttextattributetype (
-    -- Definition: types of text attributes
-    key_name varchar(255) not null primary key,  -- the name of the attribute type
-    scope varchar(900),  -- list of tables to which this attribute type applies
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: types of text attributes
+   key_name varchar(255) not null primary key,  -- the name of the attribute type
+   scope varchar(900),  -- list of tables to which this attribute type applies
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1362,13 +1362,13 @@ alter table cttextattributetype add constraint fk_cttextatt_magentid foreign key
 
 -- changeset chicoreus:070
 CREATE TABLE textattribute (
-    -- Definition: a generic typed text attribute that can be added to any table.
-    textattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    key_name varchar(255) not null,   -- the type of attribute
-    value varchar(900) not null,  -- the value of the attribute
-    for_table varchar(255) not null,  -- table to which this attribute is applied 
-    primary_key_value bigint not null,  -- row in for_table to which this attribute is applied
-    modified_by_agent_id bigint not null default 1
+   -- Definition: a generic typed text attribute that can be added to any table.
+   textattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   key_name varchar(255) not null,   -- the type of attribute
+   value varchar(900) not null,  -- the value of the attribute
+   for_table varchar(255) not null,  -- table to which this attribute is applied 
+   primary_key_value bigint not null,  -- row in for_table to which this attribute is applied
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1384,15 +1384,15 @@ alter table textattribute add constraint fk_textattribute_magentid foreign key (
 
 -- changeset chicoreus:071
 CREATE TABLE inference (
-    -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
-    inference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    inference text not null,  -- the interpreter's description of the inference tha was made
-    by_agent_id bigint not null, -- who (most recently) made the inference
-    ondate timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
-    for_table varchar(255) not null,  -- table to which this interpretation was applied
-    for_field varchar(255) not null,  -- field in the table to which this intepretation was applied
-    primary_key_value bigint not null,  -- row in for_table to which this interpretation was applied
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition:  metadata description of the basis of an inference made in interpreting a value in any field in any table
+   inference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   inference text not null,  -- the interpreter's description of the inference tha was made
+   by_agent_id bigint not null, -- who (most recently) made the inference
+   ondate timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
+   for_table varchar(255) not null,  -- table to which this interpretation was applied
+   for_field varchar(255) not null,  -- field in the table to which this intepretation was applied
+   primary_key_value bigint not null,  -- row in for_table to which this interpretation was applied
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1405,10 +1405,10 @@ CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,
 
 -- changeset chicoreus:072
 CREATE TABLE ctnumericattributetype (
-    -- Definition: types of numeric attributes
-    name varchar(255) not null primary key,  -- the name of the attribute type
-    scope varchar(900),  -- list of tables to which this attribute type applies
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: types of numeric attributes
+   name varchar(255) not null primary key,  -- the name of the attribute type
+   scope varchar(900),  -- list of tables to which this attribute type applies
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1417,14 +1417,14 @@ alter table ctnumericattributetype add constraint fk_numatt_magentid foreign key
 
 -- changeset chicoreus:073
 CREATE TABLE numericattribute (
-    -- Definition: a generic typed numeric attribute that can be added to any table.
-    numericattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    name varchar(255) not null,   -- the type of attribute
-    value float(20,10) not null,  -- the value of the attribute
-    units varchar(255),           -- units, if any to be ascribed to the attribute
-    for_table varchar(255) not null,
-    primary_key_value bigint not null,
-    modified_by_agent_id bigint not null default 1
+   -- Definition: a generic typed numeric attribute that can be added to any table.
+   numericattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(255) not null,   -- the type of attribute
+   value float(20,10) not null,  -- the value of the attribute
+   units varchar(255),           -- units, if any to be ascribed to the attribute
+   for_table varchar(255) not null,
+   primary_key_value bigint not null,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1439,12 +1439,12 @@ alter table numericattribute add constraint fk_numericattribute_magentid foreign
 
 -- changeset chicoreus:074
 CREATE TABLE ctbiologicalattributetype (
-    -- Definition: types of biological attributes 
-    name varchar(255) not null primary key,   -- the name of the attribute type 
-    valuecodetable varchar(60),  -- code table to use to restrict allowed values 
-    unitscodetable varchar(60),   -- code table to use to restrict allowed units 
-    methodcodetable varchar(60),   -- code table to use to restrict allowed determination methods
-    modified_by_agent_id bigint not null default 1
+   -- Definition: types of biological attributes 
+   name varchar(255) not null primary key,   -- the name of the attribute type 
+   valuecodetable varchar(60),  -- code table to use to restrict allowed values 
+   unitscodetable varchar(60),   -- code table to use to restrict allowed units 
+   methodcodetable varchar(60),   -- code table to use to restrict allowed determination methods
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1497,13 +1497,13 @@ alter table ctageclass add constraint fk_ctageclass_magentid foreign key (modifi
 
 -- changeset chicoreus:078
 CREATE TABLE scopect (
-    -- Definition: relationship between a key in a code table and a scope, the scope within which a code table applies.
-    scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    key_name varchar(255) not null,  -- key which has the scope 
-    ct_table_name varchar(255) not null,  -- table in which key is found
-    scope_id bigint not null,  -- scope for the key 
-    biolattrib_relation_limit enum('part','identifiableitem') default null, -- if ct_table_name is biologicalattribue, limitation on which relation (to part or to identifiable item) this key can be applied to in this scope (e.g. in a lot based collection, scope for sex might be limited to part, in a specimen based collection, it might be limited to identifiable item), if null, no limitation.
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: relationship between a key in a code table and a scope, the scope within which a code table applies.
+   scopect_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   key_name varchar(255) not null,  -- key which has the scope 
+   ct_table_name varchar(255) not null,  -- table in which key is found
+   scope_id bigint not null,  -- scope for the key 
+   biolattrib_relation_limit enum('part','identifiableitem') default null, -- if ct_table_name is biologicalattribue, limitation on which relation (to part or to identifiable item) this key can be applied to in this scope (e.g. in a lot based collection, scope for sex might be limited to part, in a specimen based collection, it might be limited to identifiable item), if null, no limitation.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1524,19 +1524,19 @@ alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) ref
 
 -- changeset chicoreus:080
 CREATE TABLE biologicalattribute (
-    -- Definition: a generic typed attribute for biological characteristics of organisms, 
-    --  including metadata about who determined the attribute value when.
-    biologicalattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    name varchar(255) not null,  -- restricted by ctbiologicalattributetype
-    value varchar(900) not null, -- value for attribute, may be restricted by value code table specified in ctbiologicalattributetype
-    units varchar(255) not null default '', -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
-    determinationmethod varchar(255) not null default '',
-    remarks text,
-    determiningagent_id bigint,
-    datedetermined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
-    identifiableitem_id bigint,  -- the identifiableitem to which this biological attribute applies (typical for specimen based collections)
-    part_id bigint,  -- the part to which this biological attribute applies (typical for lot based collections)
-    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a generic typed attribute for biological characteristics of organisms, 
+   --  including metadata about who determined the attribute value when.
+   biologicalattribute_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(255) not null,  -- restricted by ctbiologicalattributetype
+   value varchar(900) not null, -- value for attribute, may be restricted by value code table specified in ctbiologicalattributetype
+   units varchar(255) not null default '', -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
+   determinationmethod varchar(255) not null default '',
+   remarks text,
+   determiningagent_id bigint,
+   datedetermined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
+   identifiableitem_id bigint,  -- the identifiableitem to which this biological attribute applies (typical for specimen based collections)
+   part_id bigint,  -- the part to which this biological attribute applies (typical for lot based collections)
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1560,16 +1560,16 @@ ALTER TABLE biologicalattribute add constraint fk_biolattpart foreign key (part_
 
 -- changeset chicoreus:082
 CREATE TABLE auditlog ( 
-    -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  Maintained with triggers on each table.
-    auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    action varchar(50),  -- action carried out, insert, delete, update 
-    timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
-    -- TODO: add a dbusername, switch existing triggers to use that, add modifiedbyagentid to each table to obtain agent_id in trigger.
-    dbusername varchar(255),   -- username of current logged in database user  TODO: Make not null 
-    username varchar(255) not null,   -- username of current logged in user, retained even if agent record is edited
-    agent_id bigint default null,      -- agent_id of the user who made the change
-    for_table varchar(255) not null,   -- table in which primary_key_value is found
-    primary_key_value bigint not null  
+   -- Definition: timestamps and users who have inserted, deleted, or updated data in each table.  Maintained with triggers on each table.
+   auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   action varchar(50),  -- action carried out, insert, delete, update 
+   timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
+   -- TODO: add a dbusername, switch existing triggers to use that, add modifiedbyagentid to each table to obtain agent_id in trigger.
+   dbusername varchar(255),   -- username of current logged in database user  TODO: Make not null 
+   username varchar(255) not null,   -- username of current logged in user, retained even if agent record is edited
+   agent_id bigint default null,      -- agent_id of the user who made the change
+   for_table varchar(255) not null,   -- table in which primary_key_value is found
+   primary_key_value bigint not null  
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1582,15 +1582,15 @@ ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) r
 
 -- changeset chicoreus:auditlogvarchar
 CREATE TABLE auditlogvarchar ( 
-    -- Definition: timestamps and users who have inserted, deleted, or updated data in each table where the primary key is a varchar (typically controled vocabulary tables).  Maintained with triggers on each applicable table.
-    auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-    action varchar(50),  -- action carried out, insert, delete, update 
-    timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
-    dbusername varchar(255) not null,   -- username of current logged in database user
-    username varchar(255) default null,   -- username of current logged in user, retained even if agent record is edited
-    agent_id bigint default null,      -- agent_id of the user who made the change
-    for_table varchar(255) not null,   -- table in which primary_key_value is found
-    primary_key_value varchar(255) not null  
+   -- Definition: timestamps and users who have inserted, deleted, or updated data in each table where the primary key is a varchar (typically controled vocabulary tables).  Maintained with triggers on each applicable table.
+   auditlog_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   action varchar(50),  -- action carried out, insert, delete, update 
+   timestamptouched datetime not null,  -- timestamp of the modification, datetime rather than timestamp to support import of data from previous systems.
+   dbusername varchar(255) not null,   -- username of current logged in database user
+   username varchar(255) default null,   -- username of current logged in user, retained even if agent record is edited
+   agent_id bigint default null,      -- agent_id of the user who made the change
+   for_table varchar(255) not null,   -- table in which primary_key_value is found
+   primary_key_value varchar(255) not null  
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1894,13 +1894,13 @@ alter table accession add constraint fk_acc_scope_id foreign key (scope_id) refe
 CREATE TABLE repositoryagreement (
    -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
    repositoryagreement_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-   datereceived date default null,  -- date at which the repository agreement document was received.
-   enddate date default null,  -- date at which this repository agreement ends.
+   date_received date default null,  -- date at which the repository agreement document was received.
+   end_date date default null,  -- date at which this repository agreement ends.
    remarks text,
    repositoryagreementnumber varchar(60) not null,  
-   startdate date default null,  -- date at which this reposoitory agreement becomes effective 
+   start_date date default null,  -- date at which this reposoitory agreement becomes effective 
    status varchar(32) default null,
-   agreementwithagent_id bigint not null,   -- agent with whom this repository agreement has been made with
+   agreement_with_agent_id bigint not null,   -- agent with whom this repository agreement has been made with
    scope_id bigint not null,  -- the scope within which this repository agreement record is visible
    addressofrecord_id bigint default null,  -- address of record for the agent with whom this repository agreement is with at the time of the agreement.
    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
@@ -1923,7 +1923,7 @@ ALTER TABLE accession add constraint fk_acc_addresofrecrod foreign key (addresso
 -- changeset chicoreus:107
 alter table repositoryagreement add constraint fk_ra_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
 -- changeset chicoreus:108
-ALTER TABLE repositoryagreement add constraint fk_ra_agreementwith foreign key (agreementwithagent_id) references agent (agent_id) on update cascade;
+ALTER TABLE repositoryagreement add constraint fk_ra_agreementwith foreign key (agreement_with_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:109
 ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade;
 
@@ -1969,16 +1969,16 @@ CREATE TABLE attachment (
    attachment_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    title varchar(255) default null,  
    iri varchar(2000) default null,  -- iri from which the attachment can be retrieved (e.g. from a digital asset management system).
-   copyrightdate varchar(64) default null,
-   copyrightholder varchar(64) default null,
+   copyright_date varchar(64) default null,
+   copyright_holder varchar(64) default null,
    license varchar(64) default null,
    credit varchar(64) default null,
-   dateimaged varchar(64) default null,
-   filecreateddate date default null,
+   date_imaged varchar(64) default null,
+   file_created_date date default null,
    guid varchar(128) default null,
    is_public boolean not null,
    mimetype varchar(64) default null,
-   origfilename text not null,
+   orig_filename text not null,
    remarks text,
    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
@@ -2043,7 +2043,7 @@ ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collecto
 CREATE TABLE ctcoordinatetype ( 
    -- Definition: Controled vocabulary of vocabulary types.
    coordinate_type varchar(50) not null primary key,  -- allowed coordinate types for table coordinate
-   fieldprefix varchar(5) not null,  -- prefix for field names that apply for this coordinate type
+   field_prefix varchar(5) not null,  -- prefix for field names that apply for this coordinate type
    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
@@ -2116,7 +2116,7 @@ CREATE TABLE georeference (
    -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined, interpreted from textual locality and coordinate information.
    georeference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    locality_id bigint not null, -- the locality to which this georeference applies 
-   acceptedflag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
+   accepted_flag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
    fieldverifiedflag boolean not null,  -- set true if verified by the collector in the field
    decimal_latitude decimal(12,10) not null,  -- the latitude in decimal degrees >= -90 and <= 90.
    decimal_longitude decimal(13,10) not null, -- the longitude in decimal degrees > -180 and <= 180. 
