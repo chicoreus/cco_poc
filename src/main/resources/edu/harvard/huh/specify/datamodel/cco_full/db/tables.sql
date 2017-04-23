@@ -86,16 +86,16 @@ alter table systemuserprincipal add constraint fk_supr_principalid foreign key (
 -- Picklist handling, picklist/picklistitem handle bindings for specific fields, other ct (code tables) handle bindings for more generic attribute types. Includes internationalization - translations for picklist items.  
 
 CREATE TABLE picklist (
-  -- Definition: describes the binding of controled vocabularies (picklistitem) to specific database fields.
-  picklist_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  name varchar(64) not null,  -- a name for the picklist 
-  table_name varchar(64) not null,  -- the table to which this picklist applies
-  field_name varchar(64) not null,  -- the field name in table to which this picklist applies
-  read_only boolean not null default 0, -- picklist items should not be editable through a picklist editor ui, true for picklists corresponding to enum data types.
-  size_limit int(11) default null,   
-  picklist_order_hint enum('ordinal','alphabetic','numeric') not null default 'ordinal', -- hint to the UI on what order to apply for the items in the picklist.
-  picklist_type_hint enum('select','filtering','radio') not null default 'select', -- hint to the UI of what sort of control to use to render the picklist.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: describes the binding of controled vocabularies (picklistitem) to specific database fields.
+   picklist_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(64) not null,  -- a name for the picklist 
+   table_name varchar(64) not null,  -- the table to which this picklist applies
+   field_name varchar(64) not null,  -- the field name in table to which this picklist applies
+   read_only boolean not null default 0, -- picklist items should not be editable through a picklist editor ui, true for picklists corresponding to enum data types.
+   size_limit int(11) default null,   
+   picklist_order_hint enum('ordinal','alphabetic','numeric') not null default 'ordinal', -- hint to the UI on what order to apply for the items in the picklist.
+   picklist_type_hint enum('select','filtering','radio') not null default 'select', -- hint to the UI of what sort of control to use to render the picklist.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -108,14 +108,14 @@ CREATE UNIQUE INDEX idx_picklist_u_tablefield ON picklist (table_name,field_name
 
 -- changeset chicoreus:006
 CREATE TABLE picklistitem (
-  -- Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
-  picklistitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  picklist_id bigint not null,  -- the picklist to which this picklist item belongs
-  scope_id bigint default null,  -- if not null, only show this picklist item in this context (e.g. limit 'egg' as an age class to ornithology).
-  ordinal int(11) default null,  -- sort order for picklist items
-  title varchar(64) not null,  -- option to show to users (e.g. 'yes', 'no', 'juvenile')
-  value varchar(64) default null, -- value to store in database (e.g. 1, 0, 'juvenile'), should be different from title only if field type is numeric (e.g. yes=1).
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: code table defining context sensitive controled vocabularies for specific fields in the database.
+   picklistitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   picklist_id bigint not null,  -- the picklist to which this picklist item belongs
+   scope_id bigint default null,  -- if not null, only show this picklist item in this context (e.g. limit 'egg' as an age class to ornithology).
+   ordinal int(11) default null,  -- sort order for picklist items
+   title varchar(64) not null,  -- option to show to users (e.g. 'yes', 'no', 'juvenile')
+   value varchar(64) default null, -- value to store in database (e.g. 1, 0, 'juvenile'), should be different from title only if field type is numeric (e.g. yes=1).
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -165,14 +165,14 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:009
 CREATE TABLE unit (
-  -- Definition: logical unit that was collected or observed in a collecting event.
-  unit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  unit_field_number varchar(255),  -- number assigned by the collector to this collection at the collecting event, see also collectingevent.event_field_number
-  materialsample_id bigint,
-  verbatim_collection_description text,
-  collectingevent_id bigint not null,
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: logical unit that was collected or observed in a collecting event.
+   unit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   unit_field_number varchar(255),  -- number assigned by the collector to this collection at the collecting event, see also collectingevent.event_field_number
+   materialsample_id bigint,
+   verbatim_collection_description text,
+   collectingevent_id bigint not null,
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -190,16 +190,16 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:010
 CREATE TABLE identifiableitem (
-  -- Definition: a component of a unit for which a scientific identification can be made.
-  identifiableitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  occurrence_guid varchar(900),  -- dwc:occurrenceId
-  unit_id bigint not null,  -- the unit in which this identifiable item was collected,
-  catalogeditem_id bigint,
-  individual_count int,
-  individual_count_modifier varchar(50),  -- e.g. +
-  individual_count_units varchar(50),      -- e.g. valves
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: a component of a unit for which a scientific identification can be made.
+   identifiableitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   occurrence_guid varchar(900),  -- dwc:occurrenceId
+   unit_id bigint not null,  -- the unit in which this identifiable item was collected,
+   catalogeditem_id bigint,
+   individual_count int,
+   individual_count_modifier varchar(50),  -- e.g. +
+   individual_count_units varchar(50),      -- e.g. valves
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -215,29 +215,29 @@ ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_i
 -- changeset chicoreus:t_biol_individ
 
 CREATE TABLE biologicalindividual (
-  -- Definition: An individual organism that is specifically known and identified and known as that individual to have been observed or sampled.
-  biologicalindividual_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  biologicalindividual_guid varchar(900), -- guid for the biological individual darwinsw:{term}
-  name varchar(900), -- human readable identifier for the biological individual
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: An individual organism that is specifically known and identified and known as that individual to have been observed or sampled.
+   biologicalindividual_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   biologicalindividual_guid varchar(900), -- guid for the biological individual darwinsw:{term}
+   name varchar(900), -- human readable identifier for the biological individual
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:011
 CREATE TABLE part ( 
-  -- Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
-  part_id bigint not null primary key auto_increment,  -- surrogae numeric primary key 
-  identifiableitem_id bigint not null,  -- the identification of the organism that this part is of
-  preparation_id bigint not null, -- the preparation this part is in/on/is.
-  part_name varchar(50) not null, -- the name of this part
-  lot_count int(11) default 1,     -- the number of items comprising this part (e.g. number of specimens in a lot)
-  lot_count_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
-  biologicalindividual_id bigint, -- biological individual this is a part of
-  coordinates varchar(255), -- for parts that require representation of location on a preparation (e.g. an x,y coordinate on a slide).
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition:  Associative entity between identifiable items and preparations.  Generally parts of organisms that comprise preparations.  Parts are biologically logical components of organisms.
+   part_id bigint not null primary key auto_increment,  -- surrogae numeric primary key 
+   identifiableitem_id bigint not null,  -- the identification of the organism that this part is of
+   preparation_id bigint not null, -- the preparation this part is in/on/is.
+   part_name varchar(50) not null, -- the name of this part
+   lot_count int(11) default 1,     -- the number of items comprising this part (e.g. number of specimens in a lot)
+   lot_count_modifier varchar(50) default '',  -- a modifier for the lot count (fragments, valves, ca., ?).
+   biologicalindividual_id bigint, -- biological individual this is a part of
+   coordinates varchar(255), -- for parts that require representation of location on a preparation (e.g. an x,y coordinate on a slide).
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -245,21 +245,21 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:012
 CREATE TABLE preparation (
-  -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts (to allow for records of observations, allow for preparations that form non-physical vouchers or records of the observation).
-  -- note: does not specify preparation history or conservation history, additional entities are needed for these.
-  preparation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  prep_exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, or if the preparation is a digital record of an observation, otherwise true).
-  catalogeditem_id bigint,
-  materialsample_id bigint,
-  preparation_type varchar(50),
-  preservation_type varchar(50),
-  conservation_status varchar(255),
-  parent_preparation_id bigint,   -- the preparation from which this preparation was derived. 
-  status varchar(32) default 'in collection',
-  description text default null,
-  storage_id bigint default null,  -- The current storage location for this preparation, if any.
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: an existing or previous physical artifact that could participate in a transaction, e.g. be sent in a loan.   Preparations are physically stored sets of parts (to allow for records of observations, allow for preparations that form non-physical vouchers or records of the observation).
+   -- note: does not specify preparation history or conservation history, additional entities are needed for these.
+   preparation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   prep_exists boolean not null default TRUE, -- does this preparation still exist as a physical loanable artifact (false if the preparation has been entirely split into child preparations, or if the preparation has otherwise been destroyed, or if the preparation is a digital record of an observation, otherwise true).
+   catalogeditem_id bigint,
+   materialsample_id bigint,
+   preparation_type varchar(50),
+   preservation_type varchar(50),
+   conservation_status varchar(255),
+   parent_preparation_id bigint,   -- the preparation from which this preparation was derived. 
+   status varchar(32) default 'in collection',
+   description text default null,
+   storage_id bigint default null,  -- The current storage location for this preparation, if any.
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -408,12 +408,12 @@ alter table taxon add constraint fk_taxon_parentid foreign key (parent_id) refer
 
 -- changeset chicoreus:015
 CREATE TABLE taxontreedef (
-  -- Definition: Definition of a taxonomic tree
-  taxontreedef_id bigint NOT NULL primary key AUTO_INCREMENT,
-  full_name_direction int(11) DEFAULT -1,  -- direction of assembly of full name
-  name varchar(64) NOT NULL, -- name of the taxon tree
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: Definition of a taxonomic tree
+   taxontreedef_id bigint NOT NULL primary key AUTO_INCREMENT,
+   full_name_direction int(11) DEFAULT -1,  -- direction of assembly of full name
+   name varchar(64) NOT NULL, -- name of the taxon tree
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -421,19 +421,19 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:016
 CREATE TABLE taxontreedefitem (
-  -- Definition: Definition of ranks within a taxon tree.  NOTE: Because Phylum is used for animals and Division for plants, and it is expected that both are defined in a single tree, the definitions form a map rather than a tree, so parentid and parentage aren't used.  A sort on values for rank_id is needed to find the next higher or next lower rank definition.
-  taxontreedefitem_id bigint NOT NULL primary key AUTO_INCREMENT,
-  full_name_separator varchar(32) not null default ' ', -- separator to use between this element and any lower rank taxon when assembling full name
-  is_enforced boolean not null default FALSE, -- Must be included in tree for any node at this or lower (larger rank_id) rank
-  is_in_full_name boolean not null DEFAULT FALSE,  -- Must be included in full name for any node at this 
-  name varchar(64) NOT NULL,  -- the name of this rank
-  nomenclatural_code varchar(20) not null default 'Any',  -- the nomenclatural code in which this rank is used
-  rank_id int(11) NOT NULL,  -- Root of tree is zero.  Numerically higher ranks are lower in the taxonomic tree.  
-  text_after varchar(64) DEFAULT NULL, -- text to include before this element when using in full name 
-  text_before varchar(64) DEFAULT NULL, -- text to include after this element when using in full name
-  taxontreedef_id bigint NOT NULL,  -- The taxon tree to which this rank definition applies
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: Definition of ranks within a taxon tree.  NOTE: Because Phylum is used for animals and Division for plants, and it is expected that both are defined in a single tree, the definitions form a map rather than a tree, so parentid and parentage aren't used.  A sort on values for rank_id is needed to find the next higher or next lower rank definition.
+   taxontreedefitem_id bigint NOT NULL primary key AUTO_INCREMENT,
+   full_name_separator varchar(32) not null default ' ', -- separator to use between this element and any lower rank taxon when assembling full name
+   is_enforced boolean not null default FALSE, -- Must be included in tree for any node at this or lower (larger rank_id) rank
+   is_in_full_name boolean not null DEFAULT FALSE,  -- Must be included in full name for any node at this 
+   name varchar(64) NOT NULL,  -- the name of this rank
+   nomenclatural_code varchar(20) not null default 'Any',  -- the nomenclatural code in which this rank is used
+   rank_id int(11) NOT NULL,  -- Root of tree is zero.  Numerically higher ranks are lower in the taxonomic tree.  
+   text_after varchar(64) DEFAULT NULL, -- text to include before this element when using in full name 
+   text_before varchar(64) DEFAULT NULL, -- text to include after this element when using in full name
+   taxontreedef_id bigint NOT NULL,  -- The taxon tree to which this rank definition applies
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -452,17 +452,17 @@ ALTER TABLE taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) r
 
 -- changeset chicoreus:017
 CREATE TABLE journal (
-  -- Definition: A serial work.
-  journal_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
-  bhl_record varchar(244),  -- The url for the bibliographic record for this journal in BHL e.g. http://www.biodiversitylibrary.org/bibliography/62169
-  publisher varchar(64) default null,
-  place_of_publication varchar(255) default null,
-  first_year_published int,  -- The first year in which this serial was published.
-  last_year_published int,  -- The last year in which this serial was published.
-  remarks text,
-  preceding_journal_id bigint default null,
-  succeeding_journal_id bigint default null,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A serial work.
+   journal_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
+   bhl_record varchar(244),  -- The url for the bibliographic record for this journal in BHL e.g. http://www.biodiversitylibrary.org/bibliography/62169
+   publisher varchar(64) default null,
+   place_of_publication varchar(255) default null,
+   first_year_published int,  -- The first year in which this serial was published.
+   last_year_published int,  -- The last year in which this serial was published.
+   remarks text,
+   preceding_journal_id bigint default null,
+   succeeding_journal_id bigint default null,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -478,12 +478,12 @@ alter table journal add constraint fk_journal_succeedingid foreign key (succeedi
 
 -- changeset chicoreus:018
 CREATE TABLE journaltitle (
-  -- Definition: Titles of serial works.
-  journaltitle_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
-  journal_id bigint not null,  -- The serial work for which this is a title.
-  title text,  --  The title of the work.
-  title_type varchar(50) not null,  -- The kind of title.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: Titles of serial works.
+   journaltitle_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
+   journal_id bigint not null,  -- The serial work for which this is a title.
+   title text,  --  The title of the work.
+   title_type varchar(50) not null,  -- The kind of title.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;
@@ -498,9 +498,9 @@ alter table journaltitle add constraint fk_journaltitle_jourid foreign key (jour
 
 -- changeset chicoreus:019
 CREATE TABLE ctjournaltitletype (
-  -- Definition: controlled vocabulary for journal title types
-  title_type varchar(50) not null primary key,  -- Type of journal title.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: controlled vocabulary for journal title types
+   title_type varchar(50) not null primary key,  -- Type of journal title.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -513,12 +513,12 @@ alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title
 
 -- changeset chicoreus:020
 CREATE TABLE journalidentifier (
-  -- Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
-  journalidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
-  journal_id bigint not null,  -- The serial work to which this identifier applies
-  identifier varchar(255),     -- the identifier for this 
-  identifier_type varchar(50) not null,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A unique identifier for a serial work (e.g. ISSN, OCLC, TL2, library call number, etc.).
+   journalidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
+   journal_id bigint not null,  -- The serial work to which this identifier applies
+   identifier varchar(255),     -- the identifier for this 
+   identifier_type varchar(50) not null,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -530,9 +530,9 @@ alter table journalidentifier add constraint fk_journalidentifier_jourid foreign
 
 -- changeset chicoreus:021
 CREATE TABLE ctjournalidentifiertype (
-  -- Definition: controlled vocabulary for journal identifier types.
-  identifier_type varchar(50) not null primary key,  -- Type of journal identifier.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: controlled vocabulary for journal identifier types.
+   identifier_type varchar(50) not null primary key,  -- Type of journal identifier.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -545,30 +545,30 @@ alter table journalidentifier add constraint fk_journalidentifiertype foreign ke
 
 -- changeset chicoreus:022
 CREATE TABLE publication (
-  -- Definition: A published work (e.g. a journal article, monograph, or book).
-  publication_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
-  publication_type varchar(50) not null,
-  first_page_url_in_bhl varchar(900),  -- The location for the first page of this work in BHL.
-  guid varchar(128) default null,    -- The guid for this publication record
-  is_published bit(1) default null,  -- Flag to indicate if this is a published work or an unpublished manuscript.
-  actual_year_of_publication int default null,  -- The year on which this work was published.
-  year_of_publication varchar(25) default null,  -- The year (or range of years, or purported and actual year) on which this work was published.
-  edition varchar(50) default null,
-  title varchar(900) default null,   -- The title of the work
-  place_of_publication varchar(255) default null,
-  publisher varchar(255) default null,
-  volume varchar(50) default null,
-  issue varchar(50) default null,
-  number varchar(50) default null,
-  series varchar(50) default null,
-  section varchar(50) default null,
-  start_page int default null,     -- The page number of the first page (for use with page turned objects).
-  end_page int default null,       -- The page number of the last page (for use with page turned objects).
-  pages varchar(50) default null,  -- Pages, front matter, plates, figures, maps, etc. for inclusion in a citation.
-  remarks text,
-  journal_id bigint default null,  -- The journal of which this publication is a part
-  contained_in_publication_id bigint default null,  -- A publication within which this publication is contained "In".
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A published work (e.g. a journal article, monograph, or book).
+   publication_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
+   publication_type varchar(50) not null,
+   first_page_url_in_bhl varchar(900),  -- The location for the first page of this work in BHL.
+   guid varchar(128) default null,    -- The guid for this publication record
+   is_published bit(1) default null,  -- Flag to indicate if this is a published work or an unpublished manuscript.
+   actual_year_of_publication int default null,  -- The year on which this work was published.
+   year_of_publication varchar(25) default null,  -- The year (or range of years, or purported and actual year) on which this work was published.
+   edition varchar(50) default null,
+   title varchar(900) default null,   -- The title of the work
+   place_of_publication varchar(255) default null,
+   publisher varchar(255) default null,
+   volume varchar(50) default null,
+   issue varchar(50) default null,
+   number varchar(50) default null,
+   series varchar(50) default null,
+   section varchar(50) default null,
+   start_page int default null,     -- The page number of the first page (for use with page turned objects).
+   end_page int default null,       -- The page number of the last page (for use with page turned objects).
+   pages varchar(50) default null,  -- Pages, front matter, plates, figures, maps, etc. for inclusion in a citation.
+   remarks text,
+   journal_id bigint default null,  -- The journal of which this publication is a part
+   contained_in_publication_id bigint default null,  -- A publication within which this publication is contained "In".
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -592,12 +592,12 @@ alter table publication add constraint fk_publicationtype foreign key (journal_i
 
 -- changeset chicoreus:024
 CREATE TABLE publicationidentifier (
-  -- Definition: A unique identifier for a publication.
-  publicationidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
-  publication_id bigint not null,  -- The work to which this identifier applies
-  identifier varchar(255),     -- The identifier for this work.
-  identifier_type varchar(50) not null,  -- The type of identifier (e.g. ISBN).
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A unique identifier for a publication.
+   publicationidentifier_id bigint not null primary key auto_increment, -- Surrogate numeric primary key
+   publication_id bigint not null,  -- The work to which this identifier applies
+   identifier varchar(255),     -- The identifier for this work.
+   identifier_type varchar(50) not null,  -- The type of identifier (e.g. ISBN).
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -609,9 +609,9 @@ alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign 
 
 -- changeset chicoreus:025
 CREATE TABLE ctpublicationidentifiertype (
-  -- Definition: controlled vocabulary for publication identifier types.
-  identifier_type varchar(50) not null primary key,  -- Type of publication identifier.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: controlled vocabulary for publication identifier types.
+   identifier_type varchar(50) not null primary key,  -- Type of publication identifier.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -624,14 +624,14 @@ alter table publicationidentifier add constraint fk_pubidentifiertype foreign ke
 
 -- changeset chicoreus:026
 CREATE TABLE author (
-  -- Definition: Names of authors and editors of publications.
-  author_id bigint not null primary key auto_increment, -- Surrogate numeric primary key 
-  ordinal int not null,  -- The order of the author in a list of authors.
-  role enum ('author','editor','in author'),  -- Whether the author's role is as author or editor.
-  publication_id bigint not null,  -- The publication for which this is an author.
-  agentname_id bigint not null,  -- The name of the author/editor
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: Names of authors and editors of publications.
+   author_id bigint not null primary key auto_increment, -- Surrogate numeric primary key 
+   ordinal int not null,  -- The order of the author in a list of authors.
+   role enum ('author','editor','in author'),  -- Whether the author's role is as author or editor.
+   publication_id bigint not null,  -- The publication for which this is an author.
+   agentname_id bigint not null,  -- The name of the author/editor
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -733,19 +733,19 @@ alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key
 -- changeset chicoreus:033
 CREATE TABLE collectingevent (
    -- Definition: an event in which an occurrance was observed in the wild, and typically, for a natural science collection, a voucher was collected, time at which a collector visited a locality and collected one or more collected units using a single sampling method.
-  collectingevent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  locality_id bigint default null,
-  collector_id bigint not null, -- the collector who collected in this collecting event.
-  sampling_method varchar(50) default null,  -- the sampling method that was applied in this collecting event
-  event_field_number varchar(255) default null,  -- a number assigned by the collector to the collecting event, this might be called a field number or a station number or a collector number, but the semantics for this number must be that it applies to the collecting event.
-  date_collected_eventdate_id bigint default null, -- date or date range within which this collecting event occurred
-  guid varchar(128) default null,
-  paleocontext_id bigint default null,
-  expedition varchar(900) default null,  -- named expedition that this collecting event was part of
-  vessel varchar(900) default null,  -- RV, ship or other vessel that this collecting event was made from
-  platform varchar(900) default null, -- submersible, ROV, or other platform that this collecting event was made from
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   collectingevent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   locality_id bigint default null,
+   collector_id bigint not null, -- the collector who collected in this collecting event.
+   sampling_method varchar(50) default null,  -- the sampling method that was applied in this collecting event
+   event_field_number varchar(255) default null,  -- a number assigned by the collector to the collecting event, this might be called a field number or a station number or a collector number, but the semantics for this number must be that it applies to the collecting event.
+   date_collected_eventdate_id bigint default null, -- date or date range within which this collecting event occurred
+   guid varchar(128) default null,
+   paleocontext_id bigint default null,
+   expedition varchar(900) default null,  -- named expedition that this collecting event was part of
+   vessel varchar(900) default null,  -- RV, ship or other vessel that this collecting event was made from
+   platform varchar(900) default null, -- submersible, ROV, or other platform that this collecting event was made from
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -806,31 +806,31 @@ ALTER TABLE identification add constraint fk_ident_verdate foreign key (date_ver
 
 -- changeset chicoreus:041
 CREATE TABLE locality (
-  -- Definition: a location
-  locality_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  verbatim_locality text not null, -- the complete verbatim description of the locality
-  specificlocality text not null, -- a textual description of the locality
-  locality_name varchar(255) not null default '',  -- a name given to this locality
-  locality_number varchar(255) not null default '', -- an identifying number assigned to this locality independent of time, applying to any sampling event from this locality.
-  short_name varchar(32) default null,  -- a short form of a name given to this locality
-  named_place varchar(255) default null,  -- a named place near the locality
-  relation_to_named_place varchar(120) default null,  -- description of the offset from the named place to the locality 
-  verbatim_coordinate text,  -- a verbatim coordinate for the locality, use coordinate to split into atomic parts, use georeference for standard form.
-  verbatim_coordinatesystem varchar(255),  -- the coordinate system used in the verbatim coordinate (osgb, swiss grid, utm/ups, lat/long, etc).
-  verbatim_datum varchar(255) default null,
-  verbatim_elevation varchar(255) default null, -- elevation of the ground or water surface relative to a horizontal datum
-  orginal_elevation_unit varchar(50) default null,  -- units for the verbatim elevation (feet, meters, etc.)
-  verbatim_depth varchar(255) default null,  -- verbatim depth below a water surface
-  original_depth_unit varchar(50) default null,  -- units (feet, meters, fathoms, etc.) for verbatim depth.
-  verbatim_offset_from_surface varchar(255) default null, -- verbatim description of offset from the surface described by the elevation, could describe meters up into the tree canopy, or meters down a core, use for offsets other than into water, value should indicate if above or below surface.  
-  original_offset_from_surface_unit varchar(50) default null, -- units for the offset from the surface
-  guid varchar(128) default null,
-  locality_according_to varchar(900),  -- source(s) for the information about this locality
-  remarks text,
-  paleocontext_id bigint default null,  -- a geological context for this locality
-  geopolitical_geography_id bigint default null,  -- the political context for this locality (country/primary division/secondary division/municipality)
-  geographic_geography_id bigint default null, -- the geographic context  for this locality (ocean, ocean region, ocean subregion, sea, continent, etc.),
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a location
+   locality_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   verbatim_locality text not null, -- the complete verbatim description of the locality
+   specificlocality text not null, -- a textual description of the locality
+   locality_name varchar(255) not null default '',  -- a name given to this locality
+   locality_number varchar(255) not null default '', -- an identifying number assigned to this locality independent of time, applying to any sampling event from this locality.
+   short_name varchar(32) default null,  -- a short form of a name given to this locality
+   named_place varchar(255) default null,  -- a named place near the locality
+   relation_to_named_place varchar(120) default null,  -- description of the offset from the named place to the locality 
+   verbatim_coordinate text,  -- a verbatim coordinate for the locality, use coordinate to split into atomic parts, use georeference for standard form.
+   verbatim_coordinatesystem varchar(255),  -- the coordinate system used in the verbatim coordinate (osgb, swiss grid, utm/ups, lat/long, etc).
+   verbatim_datum varchar(255) default null,
+   verbatim_elevation varchar(255) default null, -- elevation of the ground or water surface relative to a horizontal datum
+   orginal_elevation_unit varchar(50) default null,  -- units for the verbatim elevation (feet, meters, etc.)
+   verbatim_depth varchar(255) default null,  -- verbatim depth below a water surface
+   original_depth_unit varchar(50) default null,  -- units (feet, meters, fathoms, etc.) for verbatim depth.
+   verbatim_offset_from_surface varchar(255) default null, -- verbatim description of offset from the surface described by the elevation, could describe meters up into the tree canopy, or meters down a core, use for offsets other than into water, value should indicate if above or below surface.  
+   original_offset_from_surface_unit varchar(50) default null, -- units for the offset from the surface
+   guid varchar(128) default null,
+   locality_according_to varchar(900),  -- source(s) for the information about this locality
+   remarks text,
+   paleocontext_id bigint default null,  -- a geological context for this locality
+   geopolitical_geography_id bigint default null,  -- the political context for this locality (country/primary division/secondary division/municipality)
+   geographic_geography_id bigint default null, -- the geographic context  for this locality (ocean, ocean region, ocean subregion, sea, continent, etc.),
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -909,28 +909,28 @@ ALTER TABLE transactionitem add constraint fk_transid foreign key (transactionc_
 
 -- changeset chicoreus:045
 CREATE TABLE loan (
-  -- Definition: A record of a returnable movement of a set of specimens out of a collection 
-  loan_id bigint NOT NULL primary key AUTO_INCREMENT,
-  transactionc_id bigint not null,
-  loan_type varchar(50) not null DEFAULT 'returnable',  
-  loan_date  date, -- the date on which the loan was made 
-  original_due_date date DEFAULT NULL,
-  current_due_date date DEFAULT NULL,
-  date_received date DEFAULT NULL,  -- date recieved by recipient 
-  date_closed date DEFAULT NULL,
-  is_closed boolean not null DEFAULT false,
-  insurance_value varchar(255) DEFAULT NULL,
-  insurance_conditions text default NULL,
-  overdue_notice_date date DEFAULT NULL,  -- date of most recent overdue notification 
-  overdue_notfication_history text DEFAULT NULL,  -- history of overdue notifications 
-  purpose_of_loan varchar(64) DEFAULT NULL, -- Recipient's description of the purpose for the loan
-  received_comments varchar(255) DEFAULT NULL,
-  conditions text DEFAULT null,  -- conditions for shipment, handling of material, etc imposed upon the borrower.
-  source_geography text DEFAULT null,  -- Countries of origin of the material.   
-  source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.  
-  destination_country_code varchar(3) not null,  -- The country code to which this loan is being sent.
-  recipient_addressofrecord_id bigint DEFAULT NULL,  -- address to which this loan was sent 
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A record of a returnable movement of a set of specimens out of a collection 
+   loan_id bigint NOT NULL primary key AUTO_INCREMENT,
+   transactionc_id bigint not null,
+   loan_type varchar(50) not null DEFAULT 'returnable',  
+   loan_date  date, -- the date on which the loan was made 
+   original_due_date date DEFAULT NULL,
+   current_due_date date DEFAULT NULL,
+   date_received date DEFAULT NULL,  -- date recieved by recipient 
+   date_closed date DEFAULT NULL,
+   is_closed boolean not null DEFAULT false,
+   insurance_value varchar(255) DEFAULT NULL,
+   insurance_conditions text default NULL,
+   overdue_notice_date date DEFAULT NULL,  -- date of most recent overdue notification 
+   overdue_notfication_history text DEFAULT NULL,  -- history of overdue notifications 
+   purpose_of_loan varchar(64) DEFAULT NULL, -- Recipient's description of the purpose for the loan
+   received_comments varchar(255) DEFAULT NULL,
+   conditions text DEFAULT null,  -- conditions for shipment, handling of material, etc imposed upon the borrower.
+   source_geography text DEFAULT null,  -- Countries of origin of the material.   
+   source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.  
+   destination_country_code varchar(3) not null,  -- The country code to which this loan is being sent.
+   recipient_addressofrecord_id bigint DEFAULT NULL,  -- address to which this loan was sent 
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -943,14 +943,14 @@ ALTER TABLE loan add constraint fk_loantransid foreign key (transactionc_id) ref
 
 -- changeset chicoreus:046
 CREATE TABLE gift (
-  -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to another insitution
-  gift_id bigint not null primary key AUTO_INCREMENT,
-  transactionc_id bigint not null,
-  summary_description varchar(255) not null, -- brief description of the material involved in the gift.
-  sent_date  date, -- the date on which the loan was made 
-  destination_country_code varchar(3) not null,  -- The country code to which this gift is being sent.
-  recipient_addressofrecord_id bigint DEFAULT NULL,  -- address to which this gift was sent 
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to another insitution
+   gift_id bigint not null primary key AUTO_INCREMENT,
+   transactionc_id bigint not null,
+   summary_description varchar(255) not null, -- brief description of the material involved in the gift.
+   sent_date  date, -- the date on which the loan was made 
+   destination_country_code varchar(3) not null,  -- The country code to which this gift is being sent.
+   recipient_addressofrecord_id bigint DEFAULT NULL,  -- address to which this gift was sent 
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -963,31 +963,31 @@ ALTER TABLE gift add constraint fk_gifttransid foreign key (transactionc_id) ref
 
 -- changeset chicoreus:047
 CREATE TABLE borrow (
-  -- Definition: Loan records kept by this insititution for material borrowed from other insititutions. 
-  borrow_id bigint not null primary key AUTO_INCREMENT,
-  transactionc_id bigint not null,  -- transaction id for this borrow.
-  borrow_type varchar(50) not null DEFAULT 'returnable',  
-  borrow_date  date, -- the date on which the loan was made by the loaning institution 
-  original_due_date date DEFAULT NULL, -- the original date on which the borrow was due to be returned to the loaning institution
-  current_due_date date DEFAULT NULL, -- 
-  source_inst_loan_number varchar(2000),  -- loan number assigned to this borrow by the source institution 
-  date_received date DEFAULT NULL,  -- date borrow was recieved by this institution 
-  borrow_period int not null,  -- the original period of the borrow
-  borrow_period_units enum ('days','months','years') not null default 'months', 
-  return_date date, -- the date on which the borrow was returned 
-  purpose_of_borrow varchar(64) DEFAULT NULL, -- Recipient's description of the purpose for the borrow
-  conditions text,  -- conditions for shipment, handling of material, etc imposed by the loaning institution.
-  overdue_notice_date date DEFAULT NULL,  -- date of most recent overdue notification 
-  overdue_notfication_history text DEFAULT NULL,  -- history of overdue notifications 
-  insurance_value varchar(255) DEFAULT NULL,
-  insurance_conditions text default NULL,
-  is_closed boolean not null DEFAULT false,
-  date_closed date DEFAULT NULL,
-  origin_country_code varchar(3) not null,  -- The country code from which this borrow was sent.
-  source_geography text DEFAULT null,  -- Countries of origin of the material.
-  source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.
-  sender_addressofrecord_id bigint DEFAULT NULL,  -- address to which this borrow was expected to be returned.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: Loan records kept by this insititution for material borrowed from other insititutions. 
+   borrow_id bigint not null primary key AUTO_INCREMENT,
+   transactionc_id bigint not null,  -- transaction id for this borrow.
+   borrow_type varchar(50) not null DEFAULT 'returnable',  
+   borrow_date  date, -- the date on which the loan was made by the loaning institution 
+   original_due_date date DEFAULT NULL, -- the original date on which the borrow was due to be returned to the loaning institution
+   current_due_date date DEFAULT NULL, -- 
+   source_inst_loan_number varchar(2000),  -- loan number assigned to this borrow by the source institution 
+   date_received date DEFAULT NULL,  -- date borrow was recieved by this institution 
+   borrow_period int not null,  -- the original period of the borrow
+   borrow_period_units enum ('days','months','years') not null default 'months', 
+   return_date date, -- the date on which the borrow was returned 
+   purpose_of_borrow varchar(64) DEFAULT NULL, -- Recipient's description of the purpose for the borrow
+   conditions text,  -- conditions for shipment, handling of material, etc imposed by the loaning institution.
+   overdue_notice_date date DEFAULT NULL,  -- date of most recent overdue notification 
+   overdue_notfication_history text DEFAULT NULL,  -- history of overdue notifications 
+   insurance_value varchar(255) DEFAULT NULL,
+   insurance_conditions text default NULL,
+   is_closed boolean not null DEFAULT false,
+   date_closed date DEFAULT NULL,
+   origin_country_code varchar(3) not null,  -- The country code from which this borrow was sent.
+   source_geography text DEFAULT null,  -- Countries of origin of the material.
+   source_taxonomy text DEFAULT NULL,   -- Taxa included in the material.
+   sender_addressofrecord_id bigint DEFAULT NULL,  -- address to which this borrow was expected to be returned.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1000,13 +1000,13 @@ ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id)
 
 -- changeset chicoreus:048
 CREATE TABLE deaccession (
-  -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to outside of institutional care
-  deaccession_id bigint not null primary key AUTO_INCREMENT,
-  transactionc_id bigint not null,
-  summary_description varchar(255) not null, -- brief description of the material involved in the deaccesison.
-  deaccession_date  date, -- the date on which the material was deaccessioned.
-  deaccession_reason text, -- reason why this material was deaccessioned
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: A record of a non-returnable movement of a set of specimens out of a collection to outside of institutional care
+   deaccession_id bigint not null primary key AUTO_INCREMENT,
+   transactionc_id bigint not null,
+   summary_description varchar(255) not null, -- brief description of the material involved in the deaccesison.
+   deaccession_date  date, -- the date on which the material was deaccessioned.
+   deaccession_reason text, -- reason why this material was deaccessioned
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1019,13 +1019,13 @@ ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transacti
 
 -- changeset chicoreus:049
 CREATE TABLE transactionagent (
-  -- Definition: the participation of an agent in a transaction in some defined role (e.g. the agent who gave approval for some loan).
-  transactionagent_id bigint NOT NULL primary key AUTO_INCREMENT,
-  agent_id bigint not null,  -- the agent involved in this transaction 
-  transactionc_id bigint not null, -- the transaction the agent is involved in
-  role varchar(50) not null,  -- the role of the agent in the transaction
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: the participation of an agent in a transaction in some defined role (e.g. the agent who gave approval for some loan).
+   transactionagent_id bigint NOT NULL primary key AUTO_INCREMENT,
+   agent_id bigint not null,  -- the agent involved in this transaction 
+   transactionc_id bigint not null, -- the transaction the agent is involved in
+   role varchar(50) not null,  -- the role of the agent in the transaction
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1316,14 +1316,14 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:067
 CREATE TABLE agentgeography (
-  -- Definition:  relationships of agents with geographies (as collector, author, etc).
-  agentgeography_id bigint NOT NULL primary key AUTO_INCREMENT,
-  role varchar(64) DEFAULT NULL,  -- the role of the agent with respect to the geography (e.g. author on, collector in).
-  agent_id bigint NOT NULL,  -- the agent with a relattion to geography
-  geography_id bigint NOT NULL,  -- the geography the agent has a relationship to.
-  remarks text,
-  modified_by_agent_id bigint not null default 1,
-  foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
+   -- Definition:  relationships of agents with geographies (as collector, author, etc).
+   agentgeography_id bigint NOT NULL primary key AUTO_INCREMENT,
+   role varchar(64) DEFAULT NULL,  -- the role of the agent with respect to the geography (e.g. author on, collector in).
+   agent_id bigint NOT NULL,  -- the agent with a relattion to geography
+   geography_id bigint NOT NULL,  -- the geography the agent has a relationship to.
+   remarks text,
+   modified_by_agent_id bigint not null default 1,
+   foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1332,15 +1332,15 @@ alter table agentgeography add constraint fk_agentgeog_agentid foreign key (agen
 
 -- changeset chicoreus:068
 CREATE TABLE agentspeciality (
-  -- Definition: Knowledge of particular agents in particular taxa.
-  agentspeciality_id bigint NOT NULL primary key AUTO_INCREMENT,
-  agent_id bigint not null, -- the agent with this speciality
-  ordinal int(11) NOT NULL, -- ordering of specialities
-  skill_level varchar(50) DEFAULT NULL, -- skill level of agent in speciality (e.g. global expert, regional expert, etc.).
-  taxon_id bigint not null, -- the taxon that the agent has a speciality in.
-  remarks text,
-  modified_by_agent_id bigint not null default 1,
-  foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
+   -- Definition: Knowledge of particular agents in particular taxa.
+   agentspeciality_id bigint NOT NULL primary key AUTO_INCREMENT,
+   agent_id bigint not null, -- the agent with this speciality
+   ordinal int(11) NOT NULL, -- ordering of specialities
+   skill_level varchar(50) DEFAULT NULL, -- skill level of agent in speciality (e.g. global expert, regional expert, etc.).
+   taxon_id bigint not null, -- the taxon that the agent has a speciality in.
+   remarks text,
+   modified_by_agent_id bigint not null default 1,
+   foreign key (modified_by_agent_id) references agent(agent_id) on update cascade
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -1483,10 +1483,10 @@ alter table ctmassunit add constraint fk_ctmassunit_magentid foreign key (modifi
 
 -- changeset chicoreus:077
 CREATE TABLE ctageclass (
-  -- Definition: controled vocabulary for age classes.
-  ctageclass_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  ageclass varchar(255) not null,
-  modified_by_agent_id bigint not null default 1
+   -- Definition: controled vocabulary for age classes.
+   ctageclass_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   ageclass varchar(255) not null,
+   modified_by_agent_id bigint not null default 1
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1719,26 +1719,26 @@ alter table taxonencumberance add constraint fk_taxonencumberance_magentid forei
 
 -- changeset chicoreus:092
 CREATE TABLE address (
-  -- Definition: an address for an agent
-  address_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  address_for_agent_id bigint not null,  -- agent for which this is an address
-  address_line_1 varchar(255) not null,
-  address_line_2 varchar(255) default null,
-  address_line_3 varchar(255) default null,
-  address_line_4 varchar(255) default null,
-  address_line_5 varchar(255) default null,
-  city varchar(255) default null,
-  postalcode varchar(32) default null,
-  state_province varchar(255) default null,
-  country varchar(255) default null,
-  is_current boolean default null,  -- true if this is a current address 
-  is_primary boolean default null,  -- true if this is the primary address for this agent
-  is_shipping boolean default null, -- true if this is an address to which shipments can be sent
-  ordinal int(11) default null,   -- sort order for addresses 
-  start_eventdate_id bigint default null,  -- date on which this address began to be used
-  end_eventdate_id bigint default null,  -- date on which this address ceased to be used
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: an address for an agent
+   address_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   address_for_agent_id bigint not null,  -- agent for which this is an address
+   address_line_1 varchar(255) not null,
+   address_line_2 varchar(255) default null,
+   address_line_3 varchar(255) default null,
+   address_line_4 varchar(255) default null,
+   address_line_5 varchar(255) default null,
+   city varchar(255) default null,
+   postalcode varchar(32) default null,
+   state_province varchar(255) default null,
+   country varchar(255) default null,
+   is_current boolean default null,  -- true if this is a current address 
+   is_primary boolean default null,  -- true if this is the primary address for this agent
+   is_shipping boolean default null, -- true if this is an address to which shipments can be sent
+   ordinal int(11) default null,   -- sort order for addresses 
+   start_eventdate_id bigint default null,  -- date on which this address began to be used
+   end_eventdate_id bigint default null,  -- date on which this address ceased to be used
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1806,21 +1806,21 @@ create unique index idx_eaddress_u_agentprimary on electronicaddress(address_for
 
 -- changeset chicoreus:098
 CREATE TABLE addressofrecord (
-  -- Definition: an address to which something was sent, which must be preserved even as an agent changes their current address.
-  addressofrecord_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  address_for_agent_id bigint default null,  -- agent for which this is an address of record for some shipment.
-  adressee_agent_name varchar(244) not null,   -- name of agent at time address became address of record.
-  address_line_1 varchar(255) not null,
-  address_line_2 varchar(255) default null,
-  address_line_3 varchar(255) default null,
-  address_line_4 varchar(255) default null,
-  address_line_5 varchar(255) default null,
-  city varchar(255) default null,
-  postalcode varchar(32) default null,  -- postal code, zip code etc.
-  state_province varchar(255) default null,  -- primary division for address
-  country varchar(255) default null, 
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: an address to which something was sent, which must be preserved even as an agent changes their current address.
+   addressofrecord_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   address_for_agent_id bigint default null,  -- agent for which this is an address of record for some shipment.
+   adressee_agent_name varchar(244) not null,   -- name of agent at time address became address of record.
+   address_line_1 varchar(255) not null,
+   address_line_2 varchar(255) default null,
+   address_line_3 varchar(255) default null,
+   address_line_4 varchar(255) default null,
+   address_line_5 varchar(255) default null,
+   city varchar(255) default null,
+   postalcode varchar(32) default null,  -- postal code, zip code etc.
+   state_province varchar(255) default null,  -- primary division for address
+   country varchar(255) default null, 
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1848,24 +1848,24 @@ ALTER TABLE borrow add constraint fk_borrow_senderaddress foreign key (sender_ad
 
 -- changeset chicoreus:101
 CREATE TABLE accession (
-  -- Definition: a record of the acceptance of a set of collection objects into the care of an institution.
-  --  forms a record of the legal ownership of the material, unless the material is being held for another organization
-  --  under a repository agreement, where legal ownership is retained by the other organization, but the accepting institution
-  --  agrees to be a repository for the material.
-  accession_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  accessionnumber varchar(255) not null,
-  date_accessioned_eventdate_id bigint default null, -- date of this accession
-  date_acknowledged_eventdate_id bigint default null,  -- date on which this accession was acknowledged
-  date_received_eventdate_id bigint default null, -- date on which this accessioned material was received
-  accession_condition varchar(255) default null,  -- conditions or restrictions applied to this accession
-  remarks text,
-  status varchar(32) default null,
-  accessiontype varchar(32) default null,
-  verbatim_accession_info varchar(50) default null, -- verbatim information on which this accession is based (for legacy accessions created from other forms of records).
-  addressofrecord_id bigint default null,  -- address from which this accession was recieved 
-  repositoryagreement_id bigint default null,  -- repository agreement which governs this accession
-  scope_id bigint not null,  -- the scope within which this accession record is visible
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a record of the acceptance of a set of collection objects into the care of an institution.
+   --  forms a record of the legal ownership of the material, unless the material is being held for another organization
+   --  under a repository agreement, where legal ownership is retained by the other organization, but the accepting institution
+   --  agrees to be a repository for the material.
+   accession_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   accessionnumber varchar(255) not null,
+   date_accessioned_eventdate_id bigint default null, -- date of this accession
+   date_acknowledged_eventdate_id bigint default null,  -- date on which this accession was acknowledged
+   date_received_eventdate_id bigint default null, -- date on which this accessioned material was received
+   accession_condition varchar(255) default null,  -- conditions or restrictions applied to this accession
+   remarks text,
+   status varchar(32) default null,
+   accessiontype varchar(32) default null,
+   verbatim_accession_info varchar(50) default null, -- verbatim information on which this accession is based (for legacy accessions created from other forms of records).
+   addressofrecord_id bigint default null,  -- address from which this accession was recieved 
+   repositoryagreement_id bigint default null,  -- repository agreement which governs this accession
+   scope_id bigint not null,  -- the scope within which this accession record is visible
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1892,18 +1892,18 @@ alter table accession add constraint fk_acc_scope_id foreign key (scope_id) refe
 
 -- changeset chicoreus:104
 CREATE TABLE repositoryagreement (
-  -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
-  repositoryagreement_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  datereceived date default null,  -- date at which the repository agreement document was received.
-  enddate date default null,  -- date at which this repository agreement ends.
-  remarks text,
-  repositoryagreementnumber varchar(60) not null,  
-  startdate date default null,  -- date at which this reposoitory agreement becomes effective 
-  status varchar(32) default null,
-  agreementwithagent_id bigint not null,   -- agent with whom this repository agreement has been made with
-  scope_id bigint not null,  -- the scope within which this repository agreement record is visible
-  addressofrecord_id bigint default null,  -- address of record for the agent with whom this repository agreement is with at the time of the agreement.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: an agreement under which one institution agrees to be the repository for material that is owned by another organization.
+   repositoryagreement_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   datereceived date default null,  -- date at which the repository agreement document was received.
+   enddate date default null,  -- date at which this repository agreement ends.
+   remarks text,
+   repositoryagreementnumber varchar(60) not null,  
+   startdate date default null,  -- date at which this reposoitory agreement becomes effective 
+   status varchar(32) default null,
+   agreementwithagent_id bigint not null,   -- agent with whom this repository agreement has been made with
+   scope_id bigint not null,  -- the scope within which this repository agreement record is visible
+   addressofrecord_id bigint default null,  -- address of record for the agent with whom this repository agreement is with at the time of the agreement.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1938,13 +1938,13 @@ ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key
 
 -- changeset chicoreus:110
 CREATE TABLE accessionagent (
-  -- Definition: The participation of an agent in an accession in some defined role (e.g. the agent who approved some accession).
-  accessionagent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  role varchar(50) not null,
-  accession_id bigint not null,
-  agent_id bigint not null,
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: The participation of an agent in an accession in some defined role (e.g. the agent who approved some accession).
+   accessionagent_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   role varchar(50) not null,
+   accession_id bigint not null,
+   agent_id bigint not null,
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1965,22 +1965,22 @@ CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role,
 
 -- changeset chicoreus:111
 CREATE TABLE attachment (
-  -- Definition: Metadata concerning a media object that can be attached to a data object
-  attachment_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  title varchar(255) default null,  
-  iri varchar(2000) default null,  -- iri from which the attachment can be retrieved (e.g. from a digital asset management system).
-  copyrightdate varchar(64) default null,
-  copyrightholder varchar(64) default null,
-  license varchar(64) default null,
-  credit varchar(64) default null,
-  dateimaged varchar(64) default null,
-  filecreateddate date default null,
-  guid varchar(128) default null,
-  is_public boolean not null,
-  mimetype varchar(64) default null,
-  origfilename text not null,
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: Metadata concerning a media object that can be attached to a data object
+   attachment_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   title varchar(255) default null,  
+   iri varchar(2000) default null,  -- iri from which the attachment can be retrieved (e.g. from a digital asset management system).
+   copyrightdate varchar(64) default null,
+   copyrightholder varchar(64) default null,
+   license varchar(64) default null,
+   credit varchar(64) default null,
+   dateimaged varchar(64) default null,
+   filecreateddate date default null,
+   guid varchar(128) default null,
+   is_public boolean not null,
+   mimetype varchar(64) default null,
+   origfilename text not null,
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -1988,14 +1988,14 @@ DEFAULT CHARSET=utf8;
 alter table attachment add constraint fk_attachment_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:112
 CREATE TABLE attachmentrelation (
-  -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
-  attachmentrelation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  attachment_id bigint not null,
-  for_table varchar(255) not null,
-  primary_key_value bigint not null,
-  ordinal int(11) not null,
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
+   attachmentrelation_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   attachment_id bigint not null,
+   for_table varchar(255) not null,
+   primary_key_value bigint not null,
+   ordinal int(11) not null,
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2011,14 +2011,14 @@ alter table attachmentrelation add constraint fk_attrel_attid foreign key (attac
 
 -- changeset chicoreus:113
 CREATE TABLE collector (
-  -- Definition: The relation of an agent, possibly with additional un-named agents, to a collecting event (supports a workflow where collectors are transcribed verbatim and then subsequently parsed into known agent teams.
-  collector_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  verbatim_collector text,  -- the verbatim transcribed text for the collector 
-  agent_id bigint,  -- the agent (individual or group) that has been identified as the collector.
-  primary_collector_agent_id bigint,  -- the agent (individual) that has been identified as the primary collector (who's number series is used in the collecting event).
-  etal text, -- unnamed individuals and groups that were part of the collecting team.  examples: and students; and native guide.
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: The relation of an agent, possibly with additional un-named agents, to a collecting event (supports a workflow where collectors are transcribed verbatim and then subsequently parsed into known agent teams.
+   collector_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   verbatim_collector text,  -- the verbatim transcribed text for the collector 
+   agent_id bigint,  -- the agent (individual or group) that has been identified as the collector.
+   primary_collector_agent_id bigint,  -- the agent (individual) that has been identified as the primary collector (who's number series is used in the collecting event).
+   etal text, -- unnamed individuals and groups that were part of the collecting team.  examples: and students; and native guide.
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2113,45 +2113,45 @@ alter table coordinate add constraint fk_coordtype_ctcoordtype foreign key (coor
 
 -- changeset chicoreus:119
 CREATE TABLE georeference (
-  -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined, interpreted from textual locality and coordinate information.
-  georeference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  locality_id bigint not null, -- the locality to which this georeference applies 
-  acceptedflag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
-  fieldverifiedflag boolean not null,  -- set true if verified by the collector in the field
-  decimal_latitude decimal(12,10) not null,  -- the latitude in decimal degrees >= -90 and <= 90.
-  decimal_longitude decimal(13,10) not null, -- the longitude in decimal degrees > -180 and <= 180. 
-  coordinateuncertantymeters int not null,  -- an uncertanty radius in meters around the decimal latitude and longitude within which the locality falls.
-  geodeticdatum varchar(50) not null default 'not recorded (forced wgs84)', -- common name (wgs84, ed50, nad27, osgb36 etc) for the geodetic datum, using a controled vocabulary.
-  srs varchar(50) default null, -- epsg code for the spatial reference system for this coordinate.
-  georeference_source varchar(900),  -- source for the georeference (e.g. collector, gazetter, etc).
-  georeference_protocol varchar(900),  -- protocol that was followed for recording the georeference.
-  georeference_method varchar(900), -- method by which the georeference was determined.
-  verificationstatus varchar(40), -- verification of this georeference
-  gnss_accuracy decimal(8,3) default null, -- accuracy metadata provided by gps, if source was a gps/gnss reciever
-  by_agent_id bigint not null,  -- agent who determined the georeference.
-  georeference_eventdate_id bigint default null,  -- event date on which the georeference was determined.
-  maxelevation_meters double default null,  -- elevation of the locality, or the surface of the water (e.g. elevation of the water surface of a lake)
-  minelevation_meters double default null,
-  elevationaccuracy double default null,
-  elevation_method varchar(50) default null,
-  mindepth_meters double default null, -- minumum depth below the surface of a water body for this locality in meters.
-  maxdepth_meters double default null,
-  depthaccuracy double default null,
-  depth_method varchar(50) default null, -- method for determining the depth
-  mindistanceabovesurface_meters double default null, -- the lesser distance in a range of distance from a reference surface in the vertical direction, in meters. use positive values for locations above the surface, negative values for locations below. if depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation.
-  maxdistanceabovesurface_meters double default null, -- the greater distance in a range of distance from a reference surface in the vertical direction, in meters. use positive values for locations above the surface, negative values for locations below. if depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation
-  distanceabovesurfaceaccuracy double default null,
-  distanceabovesurfacemethod varchar(50) default null, -- method for determining the offset distance from the surface.
-  horizontal_datum varchar(255) not null default 'not recorded',
-  footprint_wkt text,  -- a well known text representation of the spatial extent of the georeference, if other than point/radius
-  guid varchar(128) default null,
-  latlong_accuracy double default null,
-  orginal_elevation_unit varchar(50) default null,
-  verbatim_elevation varchar(50) default null,
-  verbatim_latitude varchar(50) default null,
-  verbatim_longitude varchar(50) default null,
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a three dimensional description of a location in standard form of decimal degress with elevation and depth, with metadata about the georeference and how it was determined, interpreted from textual locality and coordinate information.
+   georeference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   locality_id bigint not null, -- the locality to which this georeference applies 
+   acceptedflag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
+   fieldverifiedflag boolean not null,  -- set true if verified by the collector in the field
+   decimal_latitude decimal(12,10) not null,  -- the latitude in decimal degrees >= -90 and <= 90.
+   decimal_longitude decimal(13,10) not null, -- the longitude in decimal degrees > -180 and <= 180. 
+   coordinateuncertantymeters int not null,  -- an uncertanty radius in meters around the decimal latitude and longitude within which the locality falls.
+   geodeticdatum varchar(50) not null default 'not recorded (forced wgs84)', -- common name (wgs84, ed50, nad27, osgb36 etc) for the geodetic datum, using a controled vocabulary.
+   srs varchar(50) default null, -- epsg code for the spatial reference system for this coordinate.
+   georeference_source varchar(900),  -- source for the georeference (e.g. collector, gazetter, etc).
+   georeference_protocol varchar(900),  -- protocol that was followed for recording the georeference.
+   georeference_method varchar(900), -- method by which the georeference was determined.
+   verificationstatus varchar(40), -- verification of this georeference
+   gnss_accuracy decimal(8,3) default null, -- accuracy metadata provided by gps, if source was a gps/gnss reciever
+   by_agent_id bigint not null,  -- agent who determined the georeference.
+   georeference_eventdate_id bigint default null,  -- event date on which the georeference was determined.
+   maxelevation_meters double default null,  -- elevation of the locality, or the surface of the water (e.g. elevation of the water surface of a lake)
+   minelevation_meters double default null,
+   elevationaccuracy double default null,
+   elevation_method varchar(50) default null,
+   mindepth_meters double default null, -- minumum depth below the surface of a water body for this locality in meters.
+   maxdepth_meters double default null,
+   depthaccuracy double default null,
+   depth_method varchar(50) default null, -- method for determining the depth
+   mindistanceabovesurface_meters double default null, -- the lesser distance in a range of distance from a reference surface in the vertical direction, in meters. use positive values for locations above the surface, negative values for locations below. if depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation.
+   maxdistanceabovesurface_meters double default null, -- the greater distance in a range of distance from a reference surface in the vertical direction, in meters. use positive values for locations above the surface, negative values for locations below. if depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation
+   distanceabovesurfaceaccuracy double default null,
+   distanceabovesurfacemethod varchar(50) default null, -- method for determining the offset distance from the surface.
+   horizontal_datum varchar(255) not null default 'not recorded',
+   footprint_wkt text,  -- a well known text representation of the spatial extent of the georeference, if other than point/radius
+   guid varchar(128) default null,
+   latlong_accuracy double default null,
+   orginal_elevation_unit varchar(50) default null,
+   verbatim_elevation varchar(50) default null,
+   verbatim_latitude varchar(50) default null,
+   verbatim_longitude varchar(50) default null,
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2180,26 +2180,26 @@ ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeferen
 
 -- changeset chicoreus:124
 CREATE TABLE geography (
-  -- Definition: heriarchically nested higher geographical entities 
-  geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  name varchar(255) not null,
-  full_name varchar(900) default null,
-  parent_id bigint default null,
-  parentage varchar(2000), -- the path from the root of the tree to this geography node, maintaned by a trigger.  Starts with /, ends with the parent_id of the current node. 
-  remarks text,
-  abbreviation varchar(16) default null,
-  centroid_lat decimal(19,2) default null,
-  centroid_long decimal(19,2) default null,
-  common_name varchar(128) default null,
-  geography_code varchar(24) default null,  -- standard code for the geography (e.g. country code, fips code).
-  geography_code_type varchar(24) default null, -- which standard code is used for the geography_code.
-  guid varchar(128) default null,
-  is_accepted boolean not null default true,  -- is a locally accepted value 
-  accepted_id bigint default null,  -- if not accepted, which is the accepted geography entry to use instead.
-  is_current boolean not null default true, -- is a current geopolitical entity 
-  geographytreedef_id bigint not null,  -- which geography tree is this geography placed in    ??Redundant??
-  geographytreedefitem_id bigint not null, -- which node definition applies to this node.
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: heriarchically nested higher geographical entities 
+   geography_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(255) not null,
+   full_name varchar(900) default null,
+   parent_id bigint default null,
+   parentage varchar(2000), -- the path from the root of the tree to this geography node, maintaned by a trigger.  Starts with /, ends with the parent_id of the current node. 
+   remarks text,
+   abbreviation varchar(16) default null,
+   centroid_lat decimal(19,2) default null,
+   centroid_long decimal(19,2) default null,
+   common_name varchar(128) default null,
+   geography_code varchar(24) default null,  -- standard code for the geography (e.g. country code, fips code).
+   geography_code_type varchar(24) default null, -- which standard code is used for the geography_code.
+   guid varchar(128) default null,
+   is_accepted boolean not null default true,  -- is a locally accepted value 
+   accepted_id bigint default null,  -- if not accepted, which is the accepted geography entry to use instead.
+   is_current boolean not null default true, -- is a current geopolitical entity 
+   geographytreedef_id bigint not null,  -- which geography tree is this geography placed in    ??Redundant??
+   geographytreedefitem_id bigint not null, -- which node definition applies to this node.
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2217,31 +2217,31 @@ alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id
 
 -- changeset chicoreus:125
 CREATE TABLE geographytreedef (
-  -- Definition: Definition of a geography tree
-  geographytreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  full_name_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
-  name varchar(64) not null,  -- name of the geographic tree
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text  
+   -- Definition: Definition of a geography tree
+   geographytreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   full_name_direction int(11) default null,  -- negative for higher to lower reading right to left, positive for higher to lower reading left to right
+   name varchar(64) not null,  -- name of the geographic tree
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text  
 ) 
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:126
 CREATE TABLE geographytreedefitem (
-  -- Definition: Definition of a node in a geography tree
-  geographytreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  full_name_separator varchar(32) default null,
-  is_enforced boolean default null,
-  is_in_full_name boolean default null,
-  name varchar(64) not null,
-  rank_id int(11) not null,   
-  text_after varchar(64) default null,
-  text_before varchar(64) default null,
-  title varchar(64) default null,
-  geographytreedef_id bigint not null,
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: Definition of a node in a geography tree
+   geographytreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   full_name_separator varchar(32) default null,
+   is_enforced boolean default null,
+   is_in_full_name boolean default null,
+   name varchar(64) not null,
+   rank_id int(11) not null,   
+   text_after varchar(64) default null,
+   text_before varchar(64) default null,
+   title varchar(64) default null,
+   geographytreedef_id bigint not null,
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2272,21 +2272,21 @@ alter table geographytreedefitem add constraint fk_geographytreedefitem_magentid
 
 -- changeset chicoreus:131
 CREATE TABLE collection (
-  -- Definition: a managed set of collection objects that corresponds to an entity to which a dwc:collectionId is assigned.  Collection manages metadata about the collection, scope is for access control, and catalognumberseries links to sets of data within a collection.
-  collection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  collection_name varchar(900) default null,
-  institution_code varchar(900) default null,  -- dwc:institutionCode
-  institution_guid varchar(900) default null,  -- dwc:institutionId
-  collection_code varchar(900) default null,  -- dwc:collectionCode
-  collection_type varchar(32) default null,
-  collection_guid varchar(900) default null,  -- dwc:collectionId (guid for this collection, if any)
-  description text,
-  estimated_size int(11) default null,
-  estimated_size_units varchar(50) default 'specimens',
-  scope_id varchar(900) default null,  -- the scope into which this collection falls 
-  remarks text,
-  website_iri varchar(255) default null,  -- website providing more information about this collection
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a managed set of collection objects that corresponds to an entity to which a dwc:collectionId is assigned.  Collection manages metadata about the collection, scope is for access control, and catalognumberseries links to sets of data within a collection.
+   collection_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   collection_name varchar(900) default null,
+   institution_code varchar(900) default null,  -- dwc:institutionCode
+   institution_guid varchar(900) default null,  -- dwc:institutionId
+   collection_code varchar(900) default null,  -- dwc:collectionCode
+   collection_type varchar(32) default null,
+   collection_guid varchar(900) default null,  -- dwc:collectionId (guid for this collection, if any)
+   description text,
+   estimated_size int(11) default null,
+   estimated_size_units varchar(50) default 'specimens',
+   scope_id varchar(900) default null,  -- the scope into which this collection falls 
+   remarks text,
+   website_iri varchar(255) default null,  -- website providing more information about this collection
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -2308,31 +2308,31 @@ ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (co
 -- storage and changes to preparation
 -- changeset chicoreus:134
 CREATE TABLE storagetreedef (
-  -- Definition: Definitions for storage trees 
-  storagetreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  full_name_direction int(11) default null,
-  name varchar(64) not null,
-  remarks text,
-  disciplineid bigint,  -- scope of the tree
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: Definitions for storage trees 
+   storagetreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   full_name_direction int(11) default null,
+   name varchar(64) not null,
+   remarks text,
+   disciplineid bigint,  -- scope of the tree
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:135
 CREATE TABLE storagetreedefitem (
-  -- Definition: definition of ranks within a storage heirarchy 
-  storagetreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  storagetreedef_id bigint not null,  -- tree for which this is a node
-  name varchar(64) not null,
-  full_name_separator varchar(32) default null,
-  is_enforced boolean default null,  -- if true, then must be present in the path to root for any child node
-  is_in_full_name boolean default null,
-  rank_id int(11) not null,  -- container rank heirarchy, larger numbers are lower ranks, lower ranks nest in higher ranks
-  text_after varchar(64) default null,
-  text_before varchar(64) default null,
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: definition of ranks within a storage heirarchy 
+   storagetreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   storagetreedef_id bigint not null,  -- tree for which this is a node
+   name varchar(64) not null,
+   full_name_separator varchar(32) default null,
+   is_enforced boolean default null,  -- if true, then must be present in the path to root for any child node
+   is_in_full_name boolean default null,
+   rank_id int(11) not null,  -- container rank heirarchy, larger numbers are lower ranks, lower ranks nest in higher ranks
+   text_after varchar(64) default null,
+   text_before varchar(64) default null,
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2344,18 +2344,18 @@ ALTER TABLE storagetreedefitem add constraint fk_stdi_treeid foreign key (storag
 
 -- changeset chicoreus:136
 CREATE TABLE storage (
-  -- Definition: location where zero or more preparations are stored 
-  storage_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  name varchar(64) not null,  -- the name of this storage location
-  barcode varchar(900) not null,  -- barcoded identifier of this storage location
-  abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
-  full_name varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
-  parent_id bigint default null, -- the parent node for this tree in the storage heirarchy
-  parentage varchar(2000),  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with parent_id of current node.  Maintained with a trigger.
-  scope_id bigint not null,  
-  storagetreedefitem_id bigint not null,  -- node definition that applies to this storage 
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: location where zero or more preparations are stored 
+   storage_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(64) not null,  -- the name of this storage location
+   barcode varchar(900) not null,  -- barcoded identifier of this storage location
+   abbreviation varchar(16) not null default '', -- an abbreviated name for this storage location
+   full_name varchar(255) default null,  -- a constructed full name for this storage location built from the rules in the node definition
+   parent_id bigint default null, -- the parent node for this tree in the storage heirarchy
+   parentage varchar(2000),  -- the list of nodes from this node to the root of the tree, separator is '/', starts with separator, ends with parent_id of current node.  Maintained with a trigger.
+   scope_id bigint not null,  
+   storagetreedefitem_id bigint not null,  -- node definition that applies to this storage 
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -2393,18 +2393,18 @@ ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_i
 -- changeset chicoreus:138
 
 CREATE TABLE rocktimeunit (
-  -- Definition: a geological time, rock, or rock/time unit (lithostratigraphic unit, chronostratigraphic unit.
-  rocktimeunit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  name varchar(64) not null,
-  parent_id bigint default null,  -- the immediate parent of this node, null for root.
-  parentage varchar(2000), -- path from the current node to root, Starts with /, ends with the parent_id of the current node.  Maintained with a trigger.
-  accepted_id bigint default null,
-  full_name varchar(255) default null,
-  guid varchar(128) default null,
-  remarks text,
-  standard varchar(64) default null,
-  rocktimeunittreedefitem_id int(11) not null,  -- the definition for this node 
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a geological time, rock, or rock/time unit (lithostratigraphic unit, chronostratigraphic unit.
+   rocktimeunit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(64) not null,
+   parent_id bigint default null,  -- the immediate parent of this node, null for root.
+   parentage varchar(2000), -- path from the current node to root, Starts with /, ends with the parent_id of the current node.  Maintained with a trigger.
+   accepted_id bigint default null,
+   full_name varchar(255) default null,
+   guid varchar(128) default null,
+   remarks text,
+   standard varchar(64) default null,
+   rocktimeunittreedefitem_id int(11) not null,  -- the definition for this node 
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2418,12 +2418,12 @@ alter table rocktimeunit add constraint fk_geoltp_accepted_id foreign key (accep
 
 -- changeset chicoreus:139
 CREATE TABLE rocktimeunittreedef (
-  -- Definition: geologic rock/time unit trees
-  rocktimeunittreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  full_name_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
-  name varchar(64) not null,  -- name 
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text
+   -- Definition: geologic rock/time unit trees
+   rocktimeunittreedef_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   full_name_direction int(11) default null, -- assembly order for full name, negative for high to low as left to right.
+   name varchar(64) not null,  -- name 
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
@@ -2432,18 +2432,18 @@ CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON rocktimeunittreedef (name);
 
 -- changeset chicoreus:140
 CREATE TABLE rocktimeunittreedefitem (
-  -- Definition: a definition of a rank in a geologic rock/time unit tree
-  rocktimeunittreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
-  name varchar(64) not null,  -- name for this rank 
-  rank_id int(11) not null, -- rank for this name in the tree, larger numbers are lower ranks.
-  full_name_separator varchar(32) not null default ':',
-  is_enforced boolean not null default 0, -- if true, then this rank must be present in the path from any lower node to root.
-  is_in_full_name boolean not null default 1, -- include this element when assembling full name 
-  text_after varchar(64) default null,  -- text to place after the name of a node at this rank when assembling the name
-  text_before varchar(64) default null, -- text to place before the name of a node at this rank when assembling the name
-  rocktimeunittreedef_id int(11) not null,
-  modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
-  remarks text  -- remarks concerning the item definition
+   -- Definition: a definition of a rank in a geologic rock/time unit tree
+   rocktimeunittreedefitem_id bigint not null primary key auto_increment, -- surrogate numeric primary key
+   name varchar(64) not null,  -- name for this rank 
+   rank_id int(11) not null, -- rank for this name in the tree, larger numbers are lower ranks.
+   full_name_separator varchar(32) not null default ':',
+   is_enforced boolean not null default 0, -- if true, then this rank must be present in the path from any lower node to root.
+   is_in_full_name boolean not null default 1, -- include this element when assembling full name 
+   text_after varchar(64) default null,  -- text to place after the name of a node at this rank when assembling the name
+   text_before varchar(64) default null, -- text to place before the name of a node at this rank when assembling the name
+   rocktimeunittreedef_id int(11) not null,
+   modified_by_agent_id bigint not null default 1, -- agent to last modify row in this table
+   remarks text  -- remarks concerning the item definition
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
@@ -2461,20 +2461,20 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:141
 CREATE TABLE paleocontext (
-  -- Definition: a geological context from which some material was collected.
-  paleocontext_id bigint NOT NULL primary key AUTO_INCREMENT,
-  paleocontext_name varchar(80) DEFAULT NULL,  -- in case context is named
-  verbatim_geologic_context varchar(900) not null default '',
-  verbatim_lithology varchar(900) not null default '',  -- verbatim description of the lithology 
-  lithology varchar(255) default null,  -- lithology using a controled vocabulary
-  biostratigraphic_unit varchar(255) default null,  -- Biostratigraphic unit for this paleocontext: superzone, biozone, subzone, or biohorizion, or historically zonule.
-  is_float enum ('Yes','No','Unknown') default 'Unknown',  -- sample was collected as float on the surface and may come from elsewhere in the section
-  measured_location_in_section varchar(900) not null default '',  -- description of the measured location in the section at which the material was collected.
-  earlyest_geochronologic_unit_id bigint DEFAULT NULL, -- earlest geochronlological unit for this paleocontext
-  latest_geochronologic_unit_id bigint DEFAULT NULL,   -- latest geochronological unit for this paleocontext
-  lithostratigraphic_unit_id bigint DEFAULT NULL,  -- lithological unit for paleocontext 
-  remarks text,
-  modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
+   -- Definition: a geological context from which some material was collected.
+   paleocontext_id bigint NOT NULL primary key AUTO_INCREMENT,
+   paleocontext_name varchar(80) DEFAULT NULL,  -- in case context is named
+   verbatim_geologic_context varchar(900) not null default '',
+   verbatim_lithology varchar(900) not null default '',  -- verbatim description of the lithology 
+   lithology varchar(255) default null,  -- lithology using a controled vocabulary
+   biostratigraphic_unit varchar(255) default null,  -- Biostratigraphic unit for this paleocontext: superzone, biozone, subzone, or biohorizion, or historically zonule.
+   is_float enum ('Yes','No','Unknown') default 'Unknown',  -- sample was collected as float on the surface and may come from elsewhere in the section
+   measured_location_in_section varchar(900) not null default '',  -- description of the measured location in the section at which the material was collected.
+   earlyest_geochronologic_unit_id bigint DEFAULT NULL, -- earlest geochronlological unit for this paleocontext
+   latest_geochronologic_unit_id bigint DEFAULT NULL,   -- latest geochronological unit for this paleocontext
+   lithostratigraphic_unit_id bigint DEFAULT NULL,  -- lithological unit for paleocontext 
+   remarks text,
+   modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
