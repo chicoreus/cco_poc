@@ -809,7 +809,7 @@ CREATE TABLE locality (
    -- Definition: a location
    locality_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    verbatim_locality text not null, -- the complete verbatim description of the locality
-   specificlocality text not null, -- a textual description of the locality
+   specific_locality text not null, -- a textual description of the locality
    locality_name varchar(255) not null default '',  -- a name given to this locality
    locality_number varchar(255) not null default '', -- an identifying number assigned to this locality independent of time, applying to any sampling event from this locality.
    short_name varchar(32) default null,  -- a short form of a name given to this locality
