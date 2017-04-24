@@ -1066,8 +1066,8 @@ CREATE TABLE agent (
    yearofbirthmodifier varchar(12) default '',
    yearofdeath int,  -- Year of death of an individual.
    yearofdeathmodifier varchar(12) default '',
-   startyearactive int,  -- First year for a team, organization, or software agent.  For an individual, may be used for first known collection or publication.
-   endyearactive int,    -- Last year for a team, organization, or software agent. 
+   start_year_active int,  -- First year for a team, organization, or software agent.  For an individual, may be used for first known collection or publication.
+   end_year_active int,    -- Last year for a team, organization, or software agent. 
    living enum('Yes','No','?') not null default '?',
    modified_by_agent_id bigint not null default 1
 )
@@ -1186,8 +1186,8 @@ CREATE TABLE agentnumberpattern (
    number_type varchar(50) default 'collector number',  -- The type of number pattern
    number_pattern varchar(255),  --  regular expression for numbers that conform with this pattern
    number_pattern_description varchar(900),  -- human readable description of the number pattern
-   startyear int, --  year for first known occurrence of this number pattern
-   endyear int,   --  year for last knon occurrenc of this number pattern
+   start_year int, --  year for first known occurrence of this number pattern
+   end_year int,   --  year for last knon occurrenc of this number pattern
    integerincrement int, -- does number have an integer increment 
    notes text,
    modified_by_agent_id bigint not null default 1
