@@ -1188,7 +1188,7 @@ CREATE TABLE agentnumberpattern (
    number_pattern_description varchar(900),  -- human readable description of the number pattern
    start_year int, --  year for first known occurrence of this number pattern
    end_year int,   --  year for last knon occurrenc of this number pattern
-   integerincrement int, -- does number have an integer increment 
+   integer_increment int, -- does number have an integer increment 
    notes text,
    modified_by_agent_id bigint not null default 1
 )
@@ -1388,7 +1388,7 @@ CREATE TABLE inference (
    inference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    inference text not null,  -- the interpreter's description of the inference tha was made
    by_agent_id bigint not null, -- who (most recently) made the inference
-   ondate timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
+   on_date timestamp not null default CURRENT_TIMESTAMP, -- date of most recent change to this inference, inferences added in this system, so can use date instead of eventdate.
    for_table varchar(255) not null,  -- table to which this interpretation was applied
    for_field varchar(255) not null,  -- field in the table to which this intepretation was applied
    primary_key_value bigint not null,  -- row in for_table to which this interpretation was applied
@@ -1530,10 +1530,10 @@ CREATE TABLE biologicalattribute (
    name varchar(255) not null,  -- restricted by ctbiologicalattributetype
    value varchar(900) not null, -- value for attribute, may be restricted by value code table specified in ctbiologicalattributetype
    units varchar(255) not null default '', -- units for attribute, may be restricted by unit code table specified in ctbiologicalattributetype
-   determinationmethod varchar(255) not null default '',
+   determination_method varchar(255) not null default '',
    remarks text,
    determiningagent_id bigint,
-   datedetermined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
+   date_determined varchar(50),    --  iso date for date/date ranged determined, may be just year, may be unknown
    identifiableitem_id bigint,  -- the identifiableitem to which this biological attribute applies (typical for specimen based collections)
    part_id bigint,  -- the part to which this biological attribute applies (typical for lot based collections)
    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
@@ -1728,7 +1728,7 @@ CREATE TABLE address (
    address_line_4 varchar(255) default null,
    address_line_5 varchar(255) default null,
    city varchar(255) default null,
-   postalcode varchar(32) default null,
+   postal_code varchar(32) default null,
    state_province varchar(255) default null,
    country varchar(255) default null,
    is_current boolean default null,  -- true if this is a current address 
@@ -1816,7 +1816,7 @@ CREATE TABLE addressofrecord (
    address_line_4 varchar(255) default null,
    address_line_5 varchar(255) default null,
    city varchar(255) default null,
-   postalcode varchar(32) default null,  -- postal code, zip code etc.
+   postal_code varchar(32) default null,  -- postal code, zip code etc.
    state_province varchar(255) default null,  -- primary division for address
    country varchar(255) default null, 
    remarks text,
@@ -1860,7 +1860,7 @@ CREATE TABLE accession (
    accession_condition varchar(255) default null,  -- conditions or restrictions applied to this accession
    remarks text,
    status varchar(32) default null,
-   accessiontype varchar(32) default null,
+   accession_type varchar(32) default null,
    verbatim_accession_info varchar(50) default null, -- verbatim information on which this accession is based (for legacy accessions created from other forms of records).
    addressofrecord_id bigint default null,  -- address from which this accession was recieved 
    repositoryagreement_id bigint default null,  -- repository agreement which governs this accession
