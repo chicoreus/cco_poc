@@ -2117,7 +2117,7 @@ CREATE TABLE georeference (
    georeference_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    locality_id bigint not null, -- the locality to which this georeference applies 
    accepted_flag boolean not null,  -- the single georeference which is regarded as the primary/accepted georeference for the locality
-   fieldverifiedflag boolean not null,  -- set true if verified by the collector in the field
+   field_verified_flag boolean not null,  -- set true if verified by the collector in the field
    decimal_latitude decimal(12,10) not null,  -- the latitude in decimal degrees >= -90 and <= 90.
    decimal_longitude decimal(13,10) not null, -- the longitude in decimal degrees > -180 and <= 180. 
    coordinateuncertantymeters int not null,  -- an uncertanty radius in meters around the decimal latitude and longitude within which the locality falls.
@@ -2132,11 +2132,11 @@ CREATE TABLE georeference (
    georeference_eventdate_id bigint default null,  -- event date on which the georeference was determined.
    maxelevation_meters double default null,  -- elevation of the locality, or the surface of the water (e.g. elevation of the water surface of a lake)
    minelevation_meters double default null,
-   elevationaccuracy double default null,
+   elevation_accuracy double default null,
    elevation_method varchar(50) default null,
    mindepth_meters double default null, -- minumum depth below the surface of a water body for this locality in meters.
    maxdepth_meters double default null,
-   depthaccuracy double default null,
+   depth_accuracy double default null,
    depth_method varchar(50) default null, -- method for determining the depth
    mindistanceabovesurface_meters double default null, -- the lesser distance in a range of distance from a reference surface in the vertical direction, in meters. use positive values for locations above the surface, negative values for locations below. if depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation.
    maxdistanceabovesurface_meters double default null, -- the greater distance in a range of distance from a reference surface in the vertical direction, in meters. use positive values for locations above the surface, negative values for locations below. if depth measures are given, the reference surface is the location given by the depth, otherwise the reference surface is the location given by the elevation
