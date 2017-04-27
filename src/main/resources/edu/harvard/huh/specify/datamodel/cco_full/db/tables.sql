@@ -1265,7 +1265,7 @@ CREATE TABLE agentname (
 ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;  
 
-create unique index idx_agentname_u_idtypename on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
+create unique index idx_agentname_u_idtype_name on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
 
 -- Can't create this foreign key relation, as agentname uses the myisam index for access to full text indexing.
 -- alter table author add constraint fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
@@ -1767,7 +1767,7 @@ ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_i
 -- changeset chicoreus:095
 CREATE TABLE ctelectronicaddresstype ( 
    -- controled vocabulary for allowed types of electronic addresses
-   typename varchar(255) not null primary key,
+   type_name varchar(255) not null primary key,
    modified_by_agent_id bigint not null default 1 -- agent to last modify row in this table
 )
 ENGINE=InnoDB 
@@ -1780,7 +1780,7 @@ CREATE TABLE electronicaddress (
    -- Definition: email, phone, fax, or other electronic contact address for an agent
    electronicaddress_id bigint not null primary key auto_increment, -- surrogate numeric primary key
    address_for_agent_id bigint not null,  -- agent for which this is an address
-   typename varchar(255) not null,
+   type_name varchar(255) not null,
    address varchar(255) not null,
    remarks text,
    is_current boolean default null,  -- true if this is a current contact number/email (no constraint preventing multiple current addresses).
@@ -1792,7 +1792,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 alter table electronicaddress add constraint fk_electronicaddress_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (typename) references ctelectronicaddresstype (typename) on update cascade;
+ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (type_name) references ctelectronicaddresstype (type_name) on update cascade;
 -- changeset chicoreus:097
 ALTER TABLE electronicaddress add constraint fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
 

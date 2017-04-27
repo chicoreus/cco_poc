@@ -280,9 +280,9 @@ INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record'); -- Do
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('redact locality');  -- Redact coordinate, georeference, elevation, and detailed locality information associated with this record.  
 INSERT INTO ctencumberancetype (encumberance_type) VALUES ('mask record and relations'); -- Do not show the encumbered record or related data object (e.g. for a taxon, hide units that use this taxon in an identificaiton; or for a media record hide the meida record and associated unit data).
 -- changeset chicoreus:179
-INSERT INTO ctelectronicaddresstype (typename) VALUES ('phone');
-INSERT INTO ctelectronicaddresstype (typename) VALUES ('fax');
-INSERT INTO ctelectronicaddresstype (typename) VALUES ('email');
+INSERT INTO ctelectronicaddresstype (type_name) VALUES ('phone');
+INSERT INTO ctelectronicaddresstype (type_name) VALUES ('fax');
+INSERT INTO ctelectronicaddresstype (type_name) VALUES ('email');
 -- changeset chicoreus:180
 INSERT INTO ctcoordinatetype (coordinate_type, field_prefix) VALUES ('utm/ups','utm');
 INSERT INTO ctcoordinatetype (coordinate_type, field_prefix) VALUES ('decimal degrees','ddg');
