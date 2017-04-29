@@ -214,7 +214,6 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:010iiConstraints
-
 ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
 
 -- Each identifiable item comes from one and only one unit
@@ -225,7 +224,6 @@ ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_i
 
 -- changeset chicoreus:t_biol_individ
 
--- changeset chicoreus:010a
 CREATE TABLE biologicalindividual (
    -- Definition: An individual organism that is specifically known and identified and known as that individual to have been observed or sampled.
    biologicalindividual_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -417,6 +415,7 @@ DEFAULT CHARSET=utf8;
 -- Each taxon was created in a nomenclatural act published in zero or one publication.
 -- Each publication contains zero to many nomenlcatural acts creating taxa.
 
+-- changeset chicoreus:014TaxonConstraints
 create index idx_taxon_acceptaxonid on taxon (accepted_taxon_id); 
 alter table taxon add constraint fk_taxon_acceptedid foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
 alter table taxon add constraint fk_taxon_parentid foreign key (parent_id) references taxon (taxon_id) on update cascade;
@@ -453,6 +452,7 @@ CREATE TABLE taxontreedefitem (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:016ttdiConstraints
 alter table taxontreedefitem add constraint fk_ttdefitem_ttreedef foreign key (taxontreedef_id) references taxontreedef (taxontreedef_id) on update cascade;
 
 alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedefitem_id)  references taxontreedefitem (taxontreedefitem_id) on update cascade;
@@ -482,6 +482,7 @@ CREATE TABLE journal (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:017JournalConstaints
 alter table journal add constraint fk_journal_precedingid foreign key (preceding_journal_id) references journal (journal_id) on update cascade;
 alter table journal add constraint fk_journal_succeedingid foreign key (succeeding_journal_id) references journal (journal_id) on update cascade;
 
@@ -503,6 +504,7 @@ CREATE TABLE journaltitle (
 ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:018journaltitleConstraints
 create fulltext index ft_journaltitle on journaltitle(title);
 create unique index ft_journaltitlety on journaltitle(title_type,journal_id);
 
@@ -520,6 +522,7 @@ CREATE TABLE ctjournaltitletype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:019ctjttConstraints
 alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title_type) references ctjournaltitletype (title_type) on update cascade;
 
 -- Each jouurnaltitle has one and only one (ct)journaltitletype.
@@ -538,6 +541,7 @@ CREATE TABLE journalidentifier (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:020jiConstraints
 alter table journalidentifier add constraint fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
 -- Each journal has zero to many journalidenitifers.
@@ -552,7 +556,7 @@ CREATE TABLE ctjournalidentifiertype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-
+-- changeset chicoreus:021jiConstraints
 alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) references ctjournalidentifiertype (identifier_type) on update cascade;
 
 -- Each journalidentifier has one and only one (ct)journalidentifiertype.
@@ -588,8 +592,13 @@ CREATE TABLE publication (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:022publicationConstraints
 alter table publication add constraint fk_publication_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 alter table publication add constraint fk_publication_containid foreign key (contained_in_publication_id) references publication (publication_id) on update cascade;
+alter table publication add constraint fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
+
+-- Each publication has one and only one publicationtype.
+-- Each publicationtype is for zero to many publications.
 
 -- changeset chicoreus:023
 CREATE TABLE ctpublicationtype ( 
@@ -599,11 +608,6 @@ CREATE TABLE ctpublicationtype (
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
-
-alter table publication add constraint fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
-
--- Each publication has one and only one publicationtype.
--- Each publicationtype is for zero to many publications.
 
 -- changeset chicoreus:024
 CREATE TABLE publicationidentifier (
@@ -617,6 +621,7 @@ CREATE TABLE publicationidentifier (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:024pidConstraints
 alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_id) references publication (publication_id) on update cascade;
 
 -- Each publication has zero to many publicationidenitifers.
@@ -631,11 +636,13 @@ CREATE TABLE ctpublicationidentifiertype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-
 -- Each publicationidentifier has one and only one (ct)publicationidentifiertype.
 -- Each (ct)publicationidentifiertype is for zero to many publicationsidentifiers.
 
+-- changeset chicoreus:025ctpubidtConstraints
 alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) references ctpublicationidentifiertype (identifier_type) on update cascade;
+
+
 
 -- changeset chicoreus:026
 CREATE TABLE author (
