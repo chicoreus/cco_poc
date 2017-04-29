@@ -17,6 +17,7 @@ CREATE TABLE scope (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:001scopeConstraints
 -- Force combination of name and parent to be unique.
 create unique index idx_scope_u_scopeparname on scope(name, parent_scope_id);
 alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
@@ -37,6 +38,7 @@ CREATE TABLE principal (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:002principalconstraints
 create unique index idx_principal_u_scopename on principal(principal_name, scope_id);
 alter table principal add constraint fk_principal_scopeid foreign key (scope_id) references scope(scope_id) on update cascade;
 -- Each principal has one and only one scope
@@ -57,6 +59,7 @@ CREATE TABLE systemuser (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:003systemuserconstraints
 create unique index idx_sysuser_u_username on systemuser (username);
 
 -- changeset chicoreus:004
@@ -70,6 +73,7 @@ CREATE TABLE systemuserprincipal (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:004supConstraints
 create unique index idx_syuspr_u_sysuserprincipal on systemuserprincipal(systemuser_id, principal_id);
 
 alter table systemuserprincipal add constraint fk_supr_sysuserid foreign key (systemuser_id) references systemuser(systemuser_id) on update cascade;
@@ -100,6 +104,8 @@ CREATE TABLE picklist (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:005picklistConstraints
+
 CREATE INDEX idx_picklist_name ON picklist(name); 
 CREATE UNIQUE INDEX idx_picklist_u_tablefield ON picklist (table_name,field_name); -- one picklist for a field in a table, scope is per item.
 
@@ -119,6 +125,8 @@ CREATE TABLE picklistitem (
 ) 
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
+
+-- changeset chicoreus:006piConstraints
 
 ALTER TABLE picklistitem add constraint fk_pklstit_picklist_id foreign key (picklist_id) references picklist(picklist_id) on update cascade on delete cascade;  
 ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_id) references scope(scope_id) on update cascade;  
@@ -140,6 +148,7 @@ CREATE TABLE picklistitemint (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:007piiConstraints
 ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (picklistitem_id) references picklistitem(picklistitem_id) on update cascade;  
 -- Each picklistitem has zero to many translations in picklistitemint
 -- Each picklistitemint is a translation for one and only one picklistitem 
@@ -204,6 +213,8 @@ CREATE TABLE identifiableitem (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:010iiConstraints
+
 ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
 
 -- Each identifiable item comes from one and only one unit
@@ -214,6 +225,7 @@ ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_i
 
 -- changeset chicoreus:t_biol_individ
 
+-- changeset chicoreus:010a
 CREATE TABLE biologicalindividual (
    -- Definition: An individual organism that is specifically known and identified and known as that individual to have been observed or sampled.
    biologicalindividual_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -273,6 +285,8 @@ DEFAULT CHARSET=utf8;
 -- Each part is prepared as as one and only one preparation.
 -- Each preparation is composed of one to many parts
 
+-- changeset chicoreus:012PrepConstraints
+
 ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
 
 --  aleternative relations not used:
@@ -315,6 +329,7 @@ CREATE TABLE identification (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:013IdentConstraints
 create unique index idx_ident_u_dateidentid on identification(date_determined_eventdate_id);  --  Event dates should not be reused.
 create unique index idx_ident_u_dateverifid on identification(date_verified_eventdate_id);  --  Event dates should not be reused.
 
