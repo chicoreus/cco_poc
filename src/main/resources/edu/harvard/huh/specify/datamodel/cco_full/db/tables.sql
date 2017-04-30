@@ -658,6 +658,7 @@ CREATE TABLE author (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:026authorConstraints
 alter table author add constraint fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
 
 create unique index idx_u_author_puborderrole on author(publication_id, ordinal, role);
@@ -680,6 +681,7 @@ CREATE TABLE catalogeditem (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:027catitemConstraints
 create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_eventdate_id);  --  Event dates should not be reused.
 
 
@@ -702,6 +704,7 @@ CREATE TABLE materialsample(
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:028matsampConstraints
 create unique index idx_matsamp_u_datesampid on materialsample(date_sampled_eventdate_id);  --  Event dates should not be reused.
 
 -- changeset chicoreus:029
@@ -745,6 +748,7 @@ CREATE TABLE catnumseriescollection (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:032cnsConstraints
 create unique index idx_cnsc_u_catnumsercollid on catnumseriescollection(catalognumberseries_id, collection_id); 
 
 alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key (catalognumberseries_id) references catalognumberseries(catalognumberseries_id) on update cascade;
@@ -857,6 +861,7 @@ CREATE TABLE locality (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:041localityIndices
 create index idx_local_name on locality(locality_name);
 create index idx_local_num on locality(locality_number);
 create index idx_local_shortname on locality(short_name);
@@ -879,6 +884,7 @@ DEFAULT CHARSET=utf8;
 -- Each [arbitrary table (unit, identifieableitem, part, preparation)] has zero to many othernumbers.
 -- Each othernumber is for one and ony one [arbitrary table].
 
+-- changeset chicoreus:042otherNumberIndex
 CREATE UNIQUE INDEX idx_tablepk on othernumber(target_table, pk);
 
 -- tables supporting transactions 
@@ -919,6 +925,7 @@ CREATE TABLE transactionc (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:044transConstraints
 create unique index idx_coltra_u_numserscope on transactionc (trans_number, trans_number_series, scope_id);  
 
 -- Each transactionitem is zero or one preparation.
@@ -960,6 +967,7 @@ DEFAULT CHARSET=utf8;
 -- Each transaction(c) is zero or one loan.
 -- Each loan is one and only one transaction(c).
 
+-- changeset chicoreus:045loanConstraints
 create unique index idx_loan_transid on loan (transactionc_id);  
 ALTER TABLE loan add constraint fk_loantransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
@@ -980,6 +988,7 @@ DEFAULT CHARSET=utf8;
 -- Each transaction(c) is zero or one gift.
 -- Each gift is one and only one transaction(c).
 
+-- changeset chicoreus:046giftConstraints
 create unique index idx_gift_transid on gift (transactionc_id);  
 ALTER TABLE gift add constraint fk_gifttransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
@@ -1017,6 +1026,7 @@ DEFAULT CHARSET=utf8;
 -- Each transaction(c) is zero or one borrow.
 -- Each borrow is one and only one transaction(c).
 
+-- changeset chicoreus:047borrowConstraints
 create unique index idx_borrow_transid on borrow (transactionc_id);  
 ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
@@ -1036,6 +1046,7 @@ DEFAULT CHARSET=utf8;
 -- Each transaction(c) is zero or one deaccession.
 -- Each deacession is one and only one transaction(c).
 
+-- changeset chicoreus:048deaccConstraints
 create unique index idx_deaccession_transid on deaccession (transactionc_id);  
 ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
@@ -1060,7 +1071,6 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:050
 create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
-
 
 -- changeset chicoreus:051
 CREATE TABLE agent (
