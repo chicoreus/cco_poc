@@ -19,8 +19,8 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:001scopeConstraints
 -- Force combination of name and parent to be unique.
-create unique index idx_scope_u_scopeparname on scope(name, parent_scope_id);
-alter table scope add constraint fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
+CREATE UNIQUE INDEX idx_scope_u_scopeparname on scope(name, parent_scope_id);
+ALTER TABLE scope ADD CONSTRAINT fk_scope_parentscopeid foreign key (parent_scope_id) references scope(scope_id) on update cascade;
 
 -- Each scope has zero to one parent scope
 -- Each scope is the parent for zero to many scopes
@@ -39,8 +39,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:002principalconstraints
-create unique index idx_principal_u_scopename on principal(principal_name, scope_id);
-alter table principal add constraint fk_principal_scopeid foreign key (scope_id) references scope(scope_id) on update cascade;
+CREATE UNIQUE INDEX idx_principal_u_scopename on principal(principal_name, scope_id);
+ALTER TABLE principal ADD CONSTRAINT fk_principal_scopeid foreign key (scope_id) references scope(scope_id) on update cascade;
 -- Each principal has one and only one scope
 -- Each scope is for zero to many principals
 
@@ -60,7 +60,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:003systemuserconstraints
-create unique index idx_sysuser_u_username on systemuser (username);
+CREATE UNIQUE INDEX idx_sysuser_u_username on systemuser (username);
 
 -- changeset chicoreus:004
 CREATE TABLE systemuserprincipal (
@@ -74,10 +74,10 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:004supConstraints
-create unique index idx_syuspr_u_sysuserprincipal on systemuserprincipal(systemuser_id, principal_id);
+CREATE UNIQUE INDEX idx_syuspr_u_sysuserprincipal on systemuserprincipal(systemuser_id, principal_id);
 
-alter table systemuserprincipal add constraint fk_supr_sysuserid foreign key (systemuser_id) references systemuser(systemuser_id) on update cascade;
-alter table systemuserprincipal add constraint fk_supr_principalid foreign key (principal_id) references principal(principal_id) on update cascade;
+ALTER TABLE systemuserprincipal ADD CONSTRAINT fk_supr_sysuserid foreign key (systemuser_id) references systemuser(systemuser_id) on update cascade;
+ALTER TABLE systemuserprincipal ADD CONSTRAINT fk_supr_principalid foreign key (principal_id) references principal(principal_id) on update cascade;
 -- Each systemuser has zero to many principals
 -- Each principal is for zero to many systemusers
 -- Each systemuserprincipal is for one and only one principal 
@@ -128,8 +128,8 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:006piConstraints
 
-ALTER TABLE picklistitem add constraint fk_pklstit_picklist_id foreign key (picklist_id) references picklist(picklist_id) on update cascade on delete cascade;  
-ALTER TABLE picklistitem add constraint fk_pklstit_scope_id foreign key (scope_id) references scope(scope_id) on update cascade;  
+ALTER TABLE picklistitem ADD CONSTRAINT fk_pklstit_picklist_id foreign key (picklist_id) references picklist(picklist_id) on update cascade on delete cascade;  
+ALTER TABLE picklistitem ADD CONSTRAINT fk_pklstit_scope_id foreign key (scope_id) references scope(scope_id) on update cascade;  
 -- Each picklist has zero to many picklistitems
 -- Each picklistitem is on one and only one picklist 
 -- Each ctpiclistitem is in zero to one scope (where zero scopes means the picklistitem applies in any scope)
@@ -149,7 +149,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:007piiConstraints
-ALTER TABLE picklistitemint add constraint fk_pklstitint_pklstitid foreign key (picklistitem_id) references picklistitem(picklistitem_id) on update cascade;  
+ALTER TABLE picklistitemint ADD CONSTRAINT fk_pklstitint_pklstitid foreign key (picklistitem_id) references picklistitem(picklistitem_id) on update cascade;  
 -- Each picklistitem has zero to many translations in picklistitemint
 -- Each picklistitemint is a translation for one and only one picklistitem 
 
@@ -214,7 +214,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:010iiConstraints
-ALTER TABLE identifiableitem add constraint fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
+ALTER TABLE identifiableitem ADD CONSTRAINT fk_iditem_unitid foreign key (unit_id) references unit (unit_id) on update cascade;  
 
 -- Each identifiable item comes from one and only one unit
 -- Each unit has zero to many identifiable items
@@ -285,16 +285,16 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:012PrepConstraints
 
-ALTER TABLE preparation add constraint fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
+ALTER TABLE preparation ADD CONSTRAINT fk_parentprep foreign key (parent_preparation_id) references preparation (preparation_id) on update cascade; 
 
 --  aleternative relations not used:
---  ALTER TABLE preparation add constraint fk_deritentitem foreign key (derived_from_identifiable_item_id) references identifiableitem (identifiableitem_id) on update cascade;
---  ALTER TABLE preparation add constraint fk_prepofitem foreign key (preparation_of_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade;
+--  ALTER TABLE preparation ADD CONSTRAINT fk_deritentitem foreign key (derived_from_identifiable_item_id) references identifiableitem (identifiableitem_id) on update cascade;
+--  ALTER TABLE preparation ADD CONSTRAINT fk_prepofitem foreign key (preparation_of_identifiable_item_id references identifiableitem (identifiableitem_id) on update cascade;
 
-ALTER TABLE identifiableitem add constraint fk_item_unitid foreign key (unit_id) references unit(unit_id) on update cascade;  
+ALTER TABLE identifiableitem ADD CONSTRAINT fk_item_unitid foreign key (unit_id) references unit(unit_id) on update cascade;  
 
-ALTER TABLE part add constraint fk_item_prepid foreign key (preparation_id) references preparation (preparation_id) on update cascade;
-ALTER TABLE part add constraint fk_item_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
+ALTER TABLE part ADD CONSTRAINT fk_item_prepid foreign key (preparation_id) references preparation (preparation_id) on update cascade;
+ALTER TABLE part ADD CONSTRAINT fk_item_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
 
 -- Each preparation may be a preparation of zero or one identifiable item.
 -- Each identifiable item may be prepared into zero to many preparations.
@@ -328,10 +328,10 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:013IdentConstraints
-create unique index idx_ident_u_dateidentid on identification(date_determined_eventdate_id);  --  Event dates should not be reused.
-create unique index idx_ident_u_dateverifid on identification(date_verified_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_ident_u_dateidentid on identification(date_determined_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_ident_u_dateverifid on identification(date_verified_eventdate_id);  --  Event dates should not be reused.
 
-ALTER TABLE identification add constraint fk_ident_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
+ALTER TABLE identification ADD CONSTRAINT fk_ident_itemid foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade;
 -- Each identifiableitem has zero to many identifications.
 -- Each identification is of one and only one identifiable item. 
 
@@ -416,9 +416,9 @@ DEFAULT CHARSET=utf8;
 -- Each publication contains zero to many nomenlcatural acts creating taxa.
 
 -- changeset chicoreus:014TaxonConstraints
-create index idx_taxon_acceptaxonid on taxon (accepted_taxon_id); 
-alter table taxon add constraint fk_taxon_acceptedid foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
-alter table taxon add constraint fk_taxon_parentid foreign key (parent_id) references taxon (taxon_id) on update cascade;
+CREATE INDEX idx_taxon_acceptaxonid on taxon (accepted_taxon_id); 
+ALTER TABLE taxon ADD CONSTRAINT fk_taxon_acceptedid foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT fk_taxon_parentid foreign key (parent_id) references taxon (taxon_id) on update cascade;
 
 -- changeset chicoreus:015
 CREATE TABLE taxontreedef (
@@ -453,16 +453,16 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:016ttdiConstraints
-alter table taxontreedefitem add constraint fk_ttdefitem_ttreedef foreign key (taxontreedef_id) references taxontreedef (taxontreedef_id) on update cascade;
+ALTER TABLE taxontreedefitem ADD CONSTRAINT fk_ttdefitem_ttreedef foreign key (taxontreedef_id) references taxontreedef (taxontreedef_id) on update cascade;
 
-alter table taxon add constraint fk_taxon_ttdefitem_id foreign key (taxontreedefitem_id)  references taxontreedefitem (taxontreedefitem_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT fk_taxon_ttdefitem_id foreign key (taxontreedefitem_id)  references taxontreedefitem (taxontreedefitem_id) on update cascade;
 
 -- Each taxontreedef is the tree for zero to many taxontreedefitem nodes.
 -- Each taxontreedefitem is a node in one and only one taxontreedef.
 
-ALTER TABLE identification add constraint fk_idtaxon foreign key (taxon_id) references taxon (taxon_id) on update cascade;
-ALTER TABLE taxon add constraint fk_idparent foreign key (parent_id) references taxon (taxon_id) on update cascade;
-ALTER TABLE taxon add constraint fk_idaccepted foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
+ALTER TABLE identification ADD CONSTRAINT fk_idtaxon foreign key (taxon_id) references taxon (taxon_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT fk_idparent foreign key (parent_id) references taxon (taxon_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT fk_idaccepted foreign key (accepted_taxon_id) references taxon (taxon_id) on update cascade;
 
 
 -- changeset chicoreus:017
@@ -483,8 +483,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:017JournalConstaints
-alter table journal add constraint fk_journal_precedingid foreign key (preceding_journal_id) references journal (journal_id) on update cascade;
-alter table journal add constraint fk_journal_succeedingid foreign key (succeeding_journal_id) references journal (journal_id) on update cascade;
+ALTER TABLE journal ADD CONSTRAINT fk_journal_precedingid foreign key (preceding_journal_id) references journal (journal_id) on update cascade;
+ALTER TABLE journal ADD CONSTRAINT fk_journal_succeedingid foreign key (succeeding_journal_id) references journal (journal_id) on update cascade;
 
 -- Each journal is preceded by zero or one preceding journal.
 -- Each journal is the preceding journal for zero to many journals.
@@ -506,9 +506,9 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:018journaltitleConstraints
 create fulltext index ft_journaltitle on journaltitle(title);
-create unique index ft_journaltitlety on journaltitle(title_type,journal_id);
+CREATE UNIQUE INDEX ft_journaltitlety on journaltitle(title_type,journal_id);
 
-alter table journaltitle add constraint fk_journaltitle_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
+ALTER TABLE journaltitle ADD CONSTRAINT fk_journaltitle_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
 -- Each journal has zero to many titles.
 -- Each title is for one and only one journal.
@@ -523,7 +523,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:019ctjttConstraints
-alter table journaltitle add constraint fk_jtjournaltitletype foreign key (title_type) references ctjournaltitletype (title_type) on update cascade;
+ALTER TABLE journaltitle ADD CONSTRAINT fk_jtjournaltitletype foreign key (title_type) references ctjournaltitletype (title_type) on update cascade;
 
 -- Each jouurnaltitle has one and only one (ct)journaltitletype.
 -- Each (ct)journaltitletype is for zero to many journalstitle.
@@ -542,7 +542,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:020jiConstraints
-alter table journalidentifier add constraint fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
+ALTER TABLE journalidentifier ADD CONSTRAINT fk_journalidentifier_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
 
 -- Each journal has zero to many journalidenitifers.
 -- Each journalidentifier is for one and only one journal.
@@ -557,7 +557,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:021jiConstraints
-alter table journalidentifier add constraint fk_journalidentifiertype foreign key (identifier_type) references ctjournalidentifiertype (identifier_type) on update cascade;
+ALTER TABLE journalidentifier ADD CONSTRAINT fk_journalidentifiertype foreign key (identifier_type) references ctjournalidentifiertype (identifier_type) on update cascade;
 
 -- Each journalidentifier has one and only one (ct)journalidentifiertype.
 -- Each (ct)journalidentifiertype is for zero to many journalsidentifiers.
@@ -593,9 +593,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:022publicationConstraints
-alter table publication add constraint fk_publication_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
-alter table publication add constraint fk_publication_containid foreign key (contained_in_publication_id) references publication (publication_id) on update cascade;
-alter table publication add constraint fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
+ALTER TABLE publication ADD CONSTRAINT fk_publication_jourid foreign key (journal_id) references journal (journal_id) on update cascade;
+ALTER TABLE publication ADD CONSTRAINT fk_publication_containid foreign key (contained_in_publication_id) references publication (publication_id) on update cascade;
+ALTER TABLE publication ADD CONSTRAINT fk_publicationtype foreign key (journal_id) references journal (journal_id) on update cascade;
 
 -- Each publication has one and only one publicationtype.
 -- Each publicationtype is for zero to many publications.
@@ -622,7 +622,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:024pidConstraints
-alter table publicationidentifier add constraint fk_pubidentifier_pubid foreign key (publication_id) references publication (publication_id) on update cascade;
+ALTER TABLE publicationidentifier ADD CONSTRAINT fk_pubidentifier_pubid foreign key (publication_id) references publication (publication_id) on update cascade;
 
 -- Each publication has zero to many publicationidenitifers.
 -- Each publicationidentifier is for one and only one publication.
@@ -640,7 +640,7 @@ DEFAULT CHARSET=utf8;
 -- Each (ct)publicationidentifiertype is for zero to many publicationsidentifiers.
 
 -- changeset chicoreus:025ctpubidtConstraints
-alter table publicationidentifier add constraint fk_pubidentifiertype foreign key (identifier_type) references ctpublicationidentifiertype (identifier_type) on update cascade;
+ALTER TABLE publicationidentifier ADD CONSTRAINT fk_pubidentifiertype foreign key (identifier_type) references ctpublicationidentifiertype (identifier_type) on update cascade;
 
 
 
@@ -659,9 +659,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:026authorConstraints
-alter table author add constraint fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
+ALTER TABLE author ADD CONSTRAINT fk_authorpub foreign key (publication_id) references publication (publication_id) on update cascade;
 
-create unique index idx_u_author_puborderrole on author(publication_id, ordinal, role);
+CREATE UNIQUE INDEX idx_u_author_puborderrole on author(publication_id, ordinal, role);
 
 -- Each publication has zero to many authors.
 -- Each author is for one and only one publication.
@@ -682,7 +682,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:027catitemConstraints
-create unique index idx_catitem_u_datecatid on catalogeditem(date_cataloged_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_catitem_u_datecatid on catalogeditem(date_cataloged_eventdate_id);  --  Event dates should not be reused.
 
 
 -- Each catalogeditem is the catalog record for zero or one identifiableitem.
@@ -705,7 +705,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:028matsampConstraints
-create unique index idx_matsamp_u_datesampid on materialsample(date_sampled_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_matsamp_u_datesampid on materialsample(date_sampled_eventdate_id);  --  Event dates should not be reused.
 
 -- changeset chicoreus:029
 CREATE TABLE catalognumberseries ( 
@@ -733,7 +733,7 @@ DEFAULT CHARSET=utf8;
 
 
 -- changeset chicoreus:031
-ALTER TABLE catalognumberseries add constraint fk_cns_policy foreign key (policy) references ctcatnumseriespolicy (policy) on update cascade;
+ALTER TABLE catalognumberseries ADD CONSTRAINT fk_cns_policy foreign key (policy) references ctcatnumseriespolicy (policy) on update cascade;
 
 -- Each catalogeditem is cataloged in one and only one catalognumberseries.
 -- Each catalognumberseries is used for zero to many catalogeditems.
@@ -749,9 +749,9 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:032cnsConstraints
-create unique index idx_cnsc_u_catnumsercollid on catnumseriescollection(catalognumberseries_id, collection_id); 
+CREATE UNIQUE INDEX idx_cnsc_u_catnumsercollid on catnumseriescollection(catalognumberseries_id, collection_id); 
 
-alter table catnumseriescollection add constraint fk_cnsc_canumserid foreign key (catalognumberseries_id) references catalognumberseries(catalognumberseries_id) on update cascade;
+ALTER TABLE catnumseriescollection ADD CONSTRAINT fk_cnsc_canumserid foreign key (catalognumberseries_id) references catalognumberseries(catalognumberseries_id) on update cascade;
 
 -- Each catalognumberseries is used in zero to many collections (a catalog number series can span more than one collection).
 -- Each collection uses zero to many catalognumberseries.
@@ -782,10 +782,10 @@ DEFAULT CHARSET=utf8;
 -- Each locality is the site of zero to many collecting events.
 
 -- changeset chicoreus:034
-create unique index idx_colev_u_datecollid on collectingevent(date_collected_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_colev_u_datecollid on collectingevent(date_collected_eventdate_id);  --  Event dates should not be reused.
 -- changeset chicoreus:035
-alter table unit add constraint fk_unit_colleventid foreign key (collectingevent_id) references collectingevent(collectingevent_id) on update cascade;
-alter table unit add constraint fk_unit_matsampid foreign key (materialsample_id) references materialsample(materialsample_id) on update cascade;
+ALTER TABLE unit ADD CONSTRAINT fk_unit_colleventid foreign key (collectingevent_id) references collectingevent(collectingevent_id) on update cascade;
+ALTER TABLE unit ADD CONSTRAINT fk_unit_matsampid foreign key (materialsample_id) references materialsample(materialsample_id) on update cascade;
 
 -- changeset chicoreus:036
 CREATE TABLE eventdate ( 
@@ -821,14 +821,14 @@ DEFAULT CHARSET=utf8;
 -- Each identification has a date verified of zero or one eventdate.
 
 -- changeset chicoreus:037
-ALTER TABLE collectingevent add constraint fk_colevent_cdate foreign key (date_collected_eventdate_id) references eventdate (eventdate_id) on update cascade;
+ALTER TABLE collectingevent ADD CONSTRAINT fk_colevent_cdate foreign key (date_collected_eventdate_id) references eventdate (eventdate_id) on update cascade;
 -- changeset chicoreus:038
-ALTER TABLE materialsample add constraint fk_matsamp_samdate foreign key (date_sampled_eventdate_id) references eventdate (eventdate_id) on update cascade;
+ALTER TABLE materialsample ADD CONSTRAINT fk_matsamp_samdate foreign key (date_sampled_eventdate_id) references eventdate (eventdate_id) on update cascade;
 -- changeset chicoreus:039
-ALTER TABLE catalogeditem add constraint fk_catitem_catdate foreign key (date_cataloged_eventdate_id) references eventdate (eventdate_id) on update cascade;
+ALTER TABLE catalogeditem ADD CONSTRAINT fk_catitem_catdate foreign key (date_cataloged_eventdate_id) references eventdate (eventdate_id) on update cascade;
 -- changeset chicoreus:040
-ALTER TABLE identification add constraint fk_ident_detdate foreign key (date_determined_eventdate_id) references eventdate (eventdate_id) on update cascade;
-ALTER TABLE identification add constraint fk_ident_verdate foreign key (date_verified_eventdate_id) references eventdate (eventdate_id) on update cascade;
+ALTER TABLE identification ADD CONSTRAINT fk_ident_detdate foreign key (date_determined_eventdate_id) references eventdate (eventdate_id) on update cascade;
+ALTER TABLE identification ADD CONSTRAINT fk_ident_verdate foreign key (date_verified_eventdate_id) references eventdate (eventdate_id) on update cascade;
 
 -- changeset chicoreus:041
 CREATE TABLE locality (
@@ -862,11 +862,11 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:041localityIndices
-create index idx_local_name on locality(locality_name);
-create index idx_local_num on locality(locality_number);
-create index idx_local_shortname on locality(short_name);
-create index idx_local_namedplace on locality(named_place);
-create index idx_local_namedplacerel on locality(relation_to_named_place);
+CREATE INDEX idx_local_name on locality(locality_name);
+CREATE INDEX idx_local_num on locality(locality_number);
+CREATE INDEX idx_local_shortname on locality(short_name);
+CREATE INDEX idx_local_namedplace on locality(named_place);
+CREATE INDEX idx_local_namedplacerel on locality(relation_to_named_place);
 
 -- changeset chicoreus:042
 CREATE TABLE othernumber (
@@ -926,7 +926,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:044transConstraints
-create unique index idx_coltra_u_numserscope on transactionc (trans_number, trans_number_series, scope_id);  
+CREATE UNIQUE INDEX idx_coltra_u_numserscope on transactionc (trans_number, trans_number_series, scope_id);  
 
 -- Each transactionitem is zero or one preparation.
 -- Each preparation is zero to many transactionitems.
@@ -934,7 +934,7 @@ create unique index idx_coltra_u_numserscope on transactionc (trans_number, tran
 -- Each transactionitem is in one and only one transaction(c).
 -- Each transaction(c) consists of zero to many transaction items.
 
-ALTER TABLE transactionitem add constraint fk_transid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+ALTER TABLE transactionitem ADD CONSTRAINT fk_transid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 -- changeset chicoreus:045
 CREATE TABLE loan (
@@ -968,8 +968,8 @@ DEFAULT CHARSET=utf8;
 -- Each loan is one and only one transaction(c).
 
 -- changeset chicoreus:045loanConstraints
-create unique index idx_loan_transid on loan (transactionc_id);  
-ALTER TABLE loan add constraint fk_loantransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+CREATE UNIQUE INDEX idx_loan_transid on loan (transactionc_id);  
+ALTER TABLE loan ADD CONSTRAINT fk_loantransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 -- changeset chicoreus:046
 CREATE TABLE gift (
@@ -989,8 +989,8 @@ DEFAULT CHARSET=utf8;
 -- Each gift is one and only one transaction(c).
 
 -- changeset chicoreus:046giftConstraints
-create unique index idx_gift_transid on gift (transactionc_id);  
-ALTER TABLE gift add constraint fk_gifttransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+CREATE UNIQUE INDEX idx_gift_transid on gift (transactionc_id);  
+ALTER TABLE gift ADD CONSTRAINT fk_gifttransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 -- changeset chicoreus:047
 CREATE TABLE borrow (
@@ -1027,8 +1027,8 @@ DEFAULT CHARSET=utf8;
 -- Each borrow is one and only one transaction(c).
 
 -- changeset chicoreus:047borrowConstraints
-create unique index idx_borrow_transid on borrow (transactionc_id);  
-ALTER TABLE borrow add constraint fk_borrowtransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+CREATE UNIQUE INDEX idx_borrow_transid on borrow (transactionc_id);  
+ALTER TABLE borrow ADD CONSTRAINT fk_borrowtransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 -- changeset chicoreus:048
 CREATE TABLE deaccession (
@@ -1047,8 +1047,8 @@ DEFAULT CHARSET=utf8;
 -- Each deacession is one and only one transaction(c).
 
 -- changeset chicoreus:048deaccConstraints
-create unique index idx_deaccession_transid on deaccession (transactionc_id);  
-ALTER TABLE deaccession add constraint fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
+CREATE UNIQUE INDEX idx_deaccession_transid on deaccession (transactionc_id);  
+ALTER TABLE deaccession ADD CONSTRAINT fk_deaccesstransid foreign key (transactionc_id) references transactionc (transactionc_id) on update cascade;
 
 -- changeset chicoreus:049
 CREATE TABLE transactionagent (
@@ -1070,7 +1070,7 @@ DEFAULT CHARSET=utf8;
 -- Each agent may be zero to many transactionagents.
 
 -- changeset chicoreus:050
-create unique index idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
+CREATE UNIQUE INDEX idx_transagent_u_roletransagent on transactionagent(role, agent_id, transactionc_id);
 
 -- changeset chicoreus:051
 CREATE TABLE agent (
@@ -1111,64 +1111,64 @@ DEFAULT CHARSET=utf8;
 -- catching up on agent relations 
 
 -- changeset chicoreus:51fksmodagent
-alter table principal add constraint fk_principal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table systemuser add constraint fk_systemuser_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table systemuserprincipal add constraint fk_systemuserprincipal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table scope add constraint fk_scope_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table codetableint add constraint fk_codetableint_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table identification add constraint fk_ident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table preparation add constraint fk_prep_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table part add constraint fk_part_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table identifiableitem add constraint fk_iditem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table unit add constraint fk_unit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table biologicalindividual add constraint fk_bioind_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table taxon add constraint fk_taxon_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table taxontreedef add constraint fk_taxontreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table taxontreedefitem add constraint fk_taxontreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table materialsample add constraint fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table catalognumberseries add constraint fk_catalognumberseries_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table catnumseriescollection add constraint fk_catnumseriescollection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table othernumber add constraint fk_othernumber_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table journal add constraint fk_journal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table journaltitle add constraint fk_journaltitle_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table ctjournaltitletype add constraint fk_ctjourtitletype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table journalidentifier add constraint fk_journalidentifier_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table ctjournalidentifiertype add constraint fk_ctjouridenttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table publicationidentifier add constraint fk_publident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table ctpublicationidentifiertype add constraint fk_ctpublidenttyp_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table ctpublicationtype add constraint fk_ctpublicationtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table transactionc add constraint fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table transactionitem add constraint fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table loan add constraint fk_loan_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table gift add constraint fk_gift_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table borrow add constraint fk_borrow_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table deaccession add constraint fk_deaccession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table transactionagent add constraint fk_transagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table author add constraint fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table agent add constraint fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table picklist add constraint fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table picklistitem add constraint fk_picklistitem_mpicklistitemid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table picklistitemint add constraint fk_picklistitemint_mpicklistitemintid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table collectingevent add constraint fk_collectingevent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table eventdate add constraint fk_eventdate_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table locality add constraint fk_locality_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE principal ADD CONSTRAINT fk_principal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE systemuser ADD CONSTRAINT fk_systemuser_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE systemuserprincipal ADD CONSTRAINT fk_systemuserprincipal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE scope ADD CONSTRAINT fk_scope_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE codetableint ADD CONSTRAINT fk_codetableint_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE identification ADD CONSTRAINT fk_ident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE preparation ADD CONSTRAINT fk_prep_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE part ADD CONSTRAINT fk_part_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE identifiableitem ADD CONSTRAINT fk_iditem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE unit ADD CONSTRAINT fk_unit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE biologicalindividual ADD CONSTRAINT fk_bioind_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT fk_taxon_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE taxontreedef ADD CONSTRAINT fk_taxontreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE taxontreedefitem ADD CONSTRAINT fk_taxontreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE materialsample ADD CONSTRAINT fk_materialsample_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE catalognumberseries ADD CONSTRAINT fk_catalognumberseries_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE catnumseriescollection ADD CONSTRAINT fk_catnumseriescollection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE othernumber ADD CONSTRAINT fk_othernumber_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE journal ADD CONSTRAINT fk_journal_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE journaltitle ADD CONSTRAINT fk_journaltitle_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctjournaltitletype ADD CONSTRAINT fk_ctjourtitletype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE journalidentifier ADD CONSTRAINT fk_journalidentifier_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctjournalidentifiertype ADD CONSTRAINT fk_ctjouridenttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE publicationidentifier ADD CONSTRAINT fk_publident_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctpublicationidentifiertype ADD CONSTRAINT fk_ctpublidenttyp_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctpublicationtype ADD CONSTRAINT fk_ctpublicationtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE transactionc ADD CONSTRAINT fk_transactionc_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE transactionitem ADD CONSTRAINT fk_transactionitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE loan ADD CONSTRAINT fk_loan_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE gift ADD CONSTRAINT fk_gift_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE borrow ADD CONSTRAINT fk_borrow_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE deaccession ADD CONSTRAINT fk_deaccession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE transactionagent ADD CONSTRAINT fk_transagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE author ADD CONSTRAINT fk_author_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE agent ADD CONSTRAINT fk_agent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE picklist ADD CONSTRAINT fk_picklist_mpicklistid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE picklistitem ADD CONSTRAINT fk_picklistitem_mpicklistitemid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE picklistitemint ADD CONSTRAINT fk_picklistitemint_mpicklistitemintid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE collectingevent ADD CONSTRAINT fk_collectingevent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE eventdate ADD CONSTRAINT fk_eventdate_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE locality ADD CONSTRAINT fk_locality_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 
 
 -- changeset chicoreus:052
-ALTER TABLE catalogeditem add constraint foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE catalogeditem ADD CONSTRAINT foreign key fk_catagent (cataloger_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:053
-ALTER TABLE taxon add constraint foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
-ALTER TABLE taxon add constraint foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
-ALTER TABLE taxon add constraint foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
-ALTER TABLE taxon add constraint foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
-ALTER TABLE taxon add constraint foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
-ALTER TABLE taxon add constraint foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
-ALTER TABLE taxon add constraint foreign key fk_citauthagent (cited_in_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_authagent (author_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_parauthagent (parauthor_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_exauthagent (exauthor_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_parexauthagent (parexauthor_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_sanctauthagent (sanctauthor_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_parsaauthagent (parsanctauthor_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE taxon ADD CONSTRAINT foreign key fk_citauthagent (cited_in_agent_id) references agent (agent_id) on update cascade;
 
 -- changeset chicoreus:054
-alter table transactionagent add constraint fk_ta_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
-alter table transactionagent add constraint fk_ta_coltransid foreign key (transactionc_id) references agent(agent_id) on update cascade;
+ALTER TABLE transactionagent ADD CONSTRAINT fk_ta_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE transactionagent ADD CONSTRAINT fk_ta_coltransid foreign key (transactionc_id) references agent(agent_id) on update cascade;
 
 -- Each catalogeditem has zero or one cataloging agent.
 -- Each agent cataloged zero to many catalogeditems.
@@ -1185,7 +1185,7 @@ CREATE TABLE ctrelationshiptype (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:055ctreltypeConstraints
-alter table ctrelationshiptype add constraint fk_ctreltype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctrelationshiptype ADD CONSTRAINT fk_ctreltype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
 -- Each codetableint provides zero to one internationalization of ctrelationshiptype (join on relationship-key_name).
@@ -1201,15 +1201,15 @@ CREATE TABLE agentteam (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:056agentteamConstraints
-alter table agentteam add constraint fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
-alter table agentteam add constraint fk_agentt_membid foreign key (member_agent_id) references agent(agent_id) on delete no action on update cascade;
-alter table agentteam add constraint fk_agentteam_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE agentteam ADD CONSTRAINT fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
+ALTER TABLE agentteam ADD CONSTRAINT fk_agentt_membid foreign key (member_agent_id) references agent(agent_id) on delete no action on update cascade;
+ALTER TABLE agentteam ADD CONSTRAINT fk_agentteam_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agent is a member of zero to many agentteams.
 -- Each agent is the team for zero to many agentteams.
 -- Each agentteam links one and only one member agents.
 -- Each agentteam links one and only one team agent.
 
-create unique index idx_agentteam_u_teammember on agentteam(team_agent_id, member_agent_id);
+CREATE UNIQUE INDEX idx_agentteam_u_teammember on agentteam(team_agent_id, member_agent_id);
 
 -- changeset chicoreus:057
 CREATE TABLE agentnumberpattern (
@@ -1229,8 +1229,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:057anpConstraints
-alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent_id) references agent(agent_id) on delete cascade on update cascade;
-alter table agentnumberpattern add constraint fk_agentnumberpattern_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE agentnumberpattern ADD CONSTRAINT fk_anp_agent_id foreign key (agent_id) references agent(agent_id) on delete cascade on update cascade;
+ALTER TABLE agentnumberpattern ADD CONSTRAINT fk_agentnumberpattern_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agent has zero to many agentnumberpatterns.
 -- Each agentnumberpattern is for one and only one agent.
 
@@ -1247,19 +1247,19 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:059
-create index idx_refagentlks_refagent on agentreference (publication_id, agent_id);
-alter table agentreference add constraint fk_agentreference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+CREATE INDEX idx_refagentlks_refagent on agentreference (publication_id, agent_id);
+ALTER TABLE agentreference ADD CONSTRAINT fk_agentreference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agentreference is about one and only one agent.
 -- Each agent has zero to many agentreferences.
 
 -- changeset chicoreus:060
-alter table agentreference add constraint fk_aref_agent_id foreign key (agent_id) references agent (agent_id) on delete cascade on update cascade;
+ALTER TABLE agentreference ADD CONSTRAINT fk_aref_agent_id foreign key (agent_id) references agent (agent_id) on delete cascade on update cascade;
 
 -- Each agentreference is in one and only one publication.
 -- Each publication has zero to many agentreferences.
 
 -- changeset chicoreus:061
-alter table agentreference add constraint fk_aref_pubid_id foreign key (publication_id) references publication (publication_id) on delete cascade on update cascade;
+ALTER TABLE agentreference ADD CONSTRAINT fk_aref_pubid_id foreign key (publication_id) references publication (publication_id) on delete cascade on update cascade;
 
 -- changeset chicoreus:062
 CREATE TABLE agentlink (
@@ -1280,7 +1280,7 @@ DEFAULT CHARSET=utf8;
 -- Each agentlink is for one and only one agent.
 
 -- changeset chicoreus:062agentlinkConstraints
-alter table agentlink add constraint fk_alink_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE agentlink ADD CONSTRAINT fk_alink_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- changeset chicoreus:063
 CREATE TABLE agentname (
@@ -1299,10 +1299,10 @@ ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;  
 
 -- changeset chicoreus:063agentNameConstraints
-create unique index idx_agentname_u_idtype_name on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
+CREATE UNIQUE INDEX idx_agentname_u_idtype_name on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
 -- Can't create this foreign key relation, as agentname uses the myisam index for access to full text indexing.
--- alter table author add constraint fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
-alter table agentname add constraint fk_aname_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
+-- ALTER TABLE author ADD CONSTRAINT fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
+ALTER TABLE agentname ADD CONSTRAINT fk_aname_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- Each agent has zero to many agentnames.
 -- Each agentname is for one and only one agent.
@@ -1327,8 +1327,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:065ctantConstraints
-alter table agentname add constraint fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
-alter table ctagentnametype add constraint fk_ctagentnametype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE agentname ADD CONSTRAINT fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
+ALTER TABLE ctagentnametype ADD CONSTRAINT fk_ctagentnametype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:066
 CREATE TABLE agentrelation (
@@ -1361,7 +1361,8 @@ CREATE TABLE agentgeography (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-alter table agentgeography add constraint fk_agentgeog_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
+-- changeset chicoreus:067agentgeoConstraints
+ALTER TABLE agentgeography ADD CONSTRAINT fk_agentgeog_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:068
 CREATE TABLE agentspeciality (
@@ -1378,8 +1379,9 @@ CREATE TABLE agentspeciality (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-alter table agentspeciality add constraint fk_agentspeci_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
-alter table agentspeciality add constraint fk_agentspeci_taxonid foreign key (taxon_id) references taxon(taxon_id) on update cascade;
+-- changeset chicoreus:068agentspecConstraints
+ALTER TABLE agentspeciality ADD CONSTRAINT fk_agentspeci_agentid foreign key (agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE agentspeciality ADD CONSTRAINT fk_agentspeci_taxonid foreign key (taxon_id) references taxon(taxon_id) on update cascade;
 
 -- changeset chicoreus:069
 CREATE TABLE cttextattributetype (
@@ -1391,7 +1393,8 @@ CREATE TABLE cttextattributetype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table cttextattributetype add constraint fk_cttextatt_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+-- changeset chicoreus:069cttatConstraints
+ALTER TABLE cttextattributetype ADD CONSTRAINT fk_cttextatt_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:070
 CREATE TABLE textattribute (
@@ -1406,9 +1409,9 @@ CREATE TABLE textattribute (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-ALTER TABLE textattribute add constraint fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
-
-alter table textattribute add constraint fk_textattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+-- changeset chicoreus:070tatConstraints
+ALTER TABLE textattribute ADD CONSTRAINT fk_textattributetype foreign key (key_name) references cttextattributetype (key_name) on update cascade; 
+ALTER TABLE textattribute ADD CONSTRAINT fk_textattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each cttextattribute type is the key for zero to many textattributes.
 -- Each textattribute has one and only one cttextattributetype as a key.
 
@@ -1429,8 +1432,9 @@ CREATE TABLE inference (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
-alter table inference add constraint fk_inference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
+-- changeset chicoreus:071inferenceConstraints
+ALTER TABLE inference ADD CONSTRAINT fk_inference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 CREATE UNIQUE INDEX idx_infer_u_ftablefieldpkv ON inference(for_table,for_field,primary_key_value); -- allow zero or one inferences for one field in one table.
 
 -- Each inference applies to one and only one tuple (keyed on for_table, for_field, and primary_key_value)
@@ -1446,7 +1450,8 @@ CREATE TABLE ctnumericattributetype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table ctnumericattributetype add constraint fk_numatt_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+-- changeset chicoreus:072ctnuatttConstraint
+ALTER TABLE ctnumericattributetype ADD CONSTRAINT fk_numatt_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:073
 CREATE TABLE numericattribute (
@@ -1465,9 +1470,9 @@ DEFAULT CHARSET=utf8;
 -- Each numericattribute is of one and only one numericattrubutetype (ctnumericattributetype).
 -- Each ctnumericattributetype is the type of zero to many numeric attribtues.
 
-ALTER TABLE numericattribute add constraint fk_numericattributetype foreign key (name) references ctnumericattributetype (name) on update cascade; 
-
-alter table numericattribute add constraint fk_numericattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+-- changeset chicoreus:073numattConstraints
+ALTER TABLE numericattribute ADD CONSTRAINT fk_numericattributetype foreign key (name) references ctnumericattributetype (name) on update cascade; 
+ALTER TABLE numericattribute ADD CONSTRAINT fk_numericattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- definitions for pick lists associated with biological attributes and generic attributes.  Table picklist's table/field binding can't be used for these.
 
 -- changeset chicoreus:074
@@ -1483,7 +1488,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:074aFKModByAgent
-alter table ctbiologicalattributetype add constraint fk_ctbiolatttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctbiologicalattributetype ADD CONSTRAINT fk_ctbiolatttype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:075
 CREATE TABLE ctlengthunit (
@@ -1498,7 +1503,7 @@ DEFAULT CHARSET=utf8;
 -- Each ctlengthunit is the length unit for zero to many ctbiologicalattributetypes.
 
 -- changeset chicoreus:075aFKModByAgent
-alter table ctlengthunit add constraint fk_ctblengthunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctlengthunit ADD CONSTRAINT fk_ctblengthunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:076
 CREATE TABLE ctmassunit (
    -- Definition: controled vocabulary for units of mass.
@@ -1512,7 +1517,7 @@ DEFAULT CHARSET=utf8;
 -- Each ctmassunit is the mass unit for zero to many ctbiologicalattributetypes.
 
 -- changeset chicoreus:076aFKModByAgent
-alter table ctmassunit add constraint fk_ctmassunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctmassunit ADD CONSTRAINT fk_ctmassunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:077
 CREATE TABLE ctageclass (
@@ -1524,7 +1529,8 @@ CREATE TABLE ctageclass (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table ctageclass add constraint fk_ctageclass_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+-- changeset chicoreus:077ctageclConstraints
+ALTER TABLE ctageclass ADD CONSTRAINT fk_ctageclass_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each ctbiologicalattributetype is an age class in ctageclass.
 -- Each ctageclass is the age class for for zero to many ctbiologicalattributetypes.
 
@@ -1541,19 +1547,18 @@ CREATE TABLE scopect (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table scopect add constraint fk_scopect_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-
 -- Each {code table} has zero to many scopes in scopect.
 -- Each scopect provides the scope for zero to many {code table}.
 
-create unique index idx_scopect_u_keytable on scopect (key_name, ct_table_name, scope_id);
-
--- changeset chicoreus:079
-alter table scopect add constraint fk_scopect_scopeid foreign key (scope_id) references scope (scope_id) on update cascade;
 -- Each scopect has one and only one scope
 -- Each scope applies to zero to many scope_id
 -- Each scopect is for one and only one key name in a code table
 -- Each key name in a code table has zero to many scope-codetable relations in codect
+
+-- changeset chicoreus:079scopectConstraints
+ALTER TABLE scopect ADD CONSTRAINT fk_scopect_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+CREATE UNIQUE INDEX idx_scopect_u_keytable on scopect (key_name, ct_table_name, scope_id);
+ALTER TABLE scopect ADD CONSTRAINT fk_scopect_scopeid foreign key (scope_id) references scope (scope_id) on update cascade;
 
 -- changeset chicoreus:080
 CREATE TABLE biologicalattribute (
@@ -1573,15 +1578,15 @@ CREATE TABLE biologicalattribute (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
-alter table biologicalattribute add constraint fk_biologicalattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biologicalattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:081
-ALTER TABLE biologicalattribute add constraint fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
+ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
 -- Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).
 -- Each ctbiologicalattributetype is the type of zero to many biological attribtues.
 
-ALTER TABLE biologicalattribute add constraint fk_biolattidentitem foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade; 
-ALTER TABLE biologicalattribute add constraint fk_biolattpart foreign key (part_id) references part (part_id) on update cascade; 
+ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biolattidentitem foreign key (identifiableitem_id) references identifiableitem (identifiableitem_id) on update cascade; 
+ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biolattpart foreign key (part_id) references part (part_id) on update cascade; 
 -- Each biologicalattribute applies to zero or one identifiable item.
 -- Each identifiable item has zero to many biological attribtues.
 -- Each biologicalattribute applies to zero or one part.
@@ -1611,7 +1616,7 @@ DEFAULT CHARSET=utf8;
 -- Each audit log is for one and only one {table}.
 
 -- changeset chicoreus:083
-ALTER TABLE auditlog add constraint fk_auditlogagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE auditlog ADD CONSTRAINT fk_auditlogagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- changeset chicoreus:auditlogvarchar
 CREATE TABLE auditlogvarchar ( 
@@ -1632,7 +1637,7 @@ DEFAULT CHARSET=utf8;
 -- Each audit log is for one and only one {table}.
 
 -- changeset chicoreus:auditlogvarcharfk
-ALTER TABLE auditlogvarchar add constraint fk_auditlogvcagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE auditlogvarchar ADD CONSTRAINT fk_auditlogvcagent_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- Each auditlogvarchar records an action by one and noly one agent.
 -- Each agent made a change recorded in zero to many auditlogvarchars.
@@ -1673,11 +1678,11 @@ DEFAULT CHARSET=utf8;
 -- Each encumberance is visible to one and only one scope.
 -- Each scope provides the visiblility for zero to many encumberances.
 
-ALTER TABLE encumberance add constraint fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
+ALTER TABLE encumberance ADD CONSTRAINT fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 -- changeset chicoreus:086
-ALTER TABLE encumberance add constraint fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE encumberance ADD CONSTRAINT fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:087
-ALTER TABLE encumberance add constraint fk_encvisiblescope foreign key (visible_to_scope_id) references scope (scope_id) on update cascade;
+ALTER TABLE encumberance ADD CONSTRAINT fk_encvisiblescope foreign key (visible_to_scope_id) references scope (scope_id) on update cascade;
 
 -- changeset chicoreus:088
 CREATE TABLE catitemencumberance ( 
@@ -1744,11 +1749,11 @@ DEFAULT CHARSET=utf8;
 -- Each taxonencumberance is for one and only one taxon.
 
 -- changeset chicoreus:091encumbmodbyagent
-alter table encumberance add constraint fk_encumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table catitemencumberance add constraint fk_catitemencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table attachmentencumberance add constraint fk_attachmentencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table localityencumberance add constraint fk_localityencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table taxonencumberance add constraint fk_taxonencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE encumberance ADD CONSTRAINT fk_encumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE catitemencumberance ADD CONSTRAINT fk_catitemencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE attachmentencumberance ADD CONSTRAINT fk_attachmentencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE localityencumberance ADD CONSTRAINT fk_localityencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE taxonencumberance ADD CONSTRAINT fk_taxonencumberance_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:092
 CREATE TABLE address (
@@ -1776,17 +1781,17 @@ CREATE TABLE address (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-create unique index idx_address_u_startdateid on address(start_eventdate_id);  --  Event dates should not be reused.
-create unique index idx_address_u_enddateid on address(end_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_address_u_startdateid on address(start_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_address_u_enddateid on address(end_eventdate_id);  --  Event dates should not be reused.
 
-alter table address add constraint fk_address_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE address ADD CONSTRAINT fk_address_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:093
 CREATE INDEX idx_address_addagent_id on address(address_for_agent_id);
 
-ALTER TABLE address add constraint fk_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
+ALTER TABLE address ADD CONSTRAINT fk_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
 -- changeset chicoreus:094
-ALTER TABLE address add constraint fk_add_startevdate foreign key (start_eventdate_id) references eventdate (eventdate_id) on update cascade; 
-ALTER TABLE address add constraint fk_add_endevdate foreign key (end_eventdate_id) references eventdate (eventdate_id) on update cascade; 
+ALTER TABLE address ADD CONSTRAINT fk_add_startevdate foreign key (start_eventdate_id) references eventdate (eventdate_id) on update cascade; 
+ALTER TABLE address ADD CONSTRAINT fk_add_endevdate foreign key (end_eventdate_id) references eventdate (eventdate_id) on update cascade; 
 
 -- Each address is for one and only one agent.
 -- Each agent has zero to many addresses.
@@ -1806,7 +1811,7 @@ CREATE TABLE ctelectronicaddresstype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table ctelectronicaddresstype add constraint fk_ctelecaddresstype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctelectronicaddresstype ADD CONSTRAINT fk_ctelecaddresstype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:096
 CREATE TABLE electronicaddress ( 
@@ -1824,12 +1829,12 @@ CREATE TABLE electronicaddress (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table electronicaddress add constraint fk_electronicaddress_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-ALTER TABLE electronicaddress add constraint fk_ea_nametype foreign key (type_name) references ctelectronicaddresstype (type_name) on update cascade;
+ALTER TABLE electronicaddress ADD CONSTRAINT fk_electronicaddress_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE electronicaddress ADD CONSTRAINT fk_ea_nametype foreign key (type_name) references ctelectronicaddresstype (type_name) on update cascade;
 -- changeset chicoreus:097
-ALTER TABLE electronicaddress add constraint fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
+ALTER TABLE electronicaddress ADD CONSTRAINT fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
 
-create unique index idx_eaddress_u_agentprimary on electronicaddress(address_for_agent_id, is_primary);  --  Only one primary electronic address for an agent.
+CREATE UNIQUE INDEX idx_eaddress_u_agentprimary on electronicaddress(address_for_agent_id, is_primary);  --  Only one primary electronic address for an agent.
 
 -- Each electronicaddress is of one and only one (ct)electronicaddresstype.
 -- Each ctelectronicaddresstype provides the type for zero to many electronic addresses.
@@ -1859,16 +1864,16 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:099
-alter table addressofrecord add constraint fk_addressofrecord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-ALTER TABLE addressofrecord add constraint fk_aor_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade ; 
+ALTER TABLE addressofrecord ADD CONSTRAINT fk_addressofrecord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE addressofrecord ADD CONSTRAINT fk_aor_addressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade ; 
 
 -- Each addressofrecord is a preserved address for one and only one agent.
 -- Each agent has zero to many preserved addressesofrecord.
 
 -- changeset chicoreus:100
-ALTER TABLE loan add constraint fk_loan_loanaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
-ALTER TABLE gift add constraint fk_gift_giftaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
-ALTER TABLE borrow add constraint fk_borrow_senderaddress foreign key (sender_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+ALTER TABLE loan ADD CONSTRAINT fk_loan_loanaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+ALTER TABLE gift ADD CONSTRAINT fk_gift_giftaddress foreign key (recipient_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+ALTER TABLE borrow ADD CONSTRAINT fk_borrow_senderaddress foreign key (sender_addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
 
 -- Each loan has zero or one recipient addressofrecord.
 -- Each addressofrecord is the recipient address for zero to many loans.
@@ -1903,12 +1908,12 @@ CREATE TABLE accession (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table accession add constraint fk_accession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE accession ADD CONSTRAINT fk_accession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:102
-create unique index idx_access_u_dateackid on accession(date_acknowledged_eventdate_id);  --  Event dates should not be reused.
-create unique index idx_access_u_dateaccid on accession(date_accessioned_eventdate_id);  --  Event dates should not be reused.
-create unique index idx_access_u_daterecid on accession(date_received_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_access_u_dateackid on accession(date_acknowledged_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_access_u_dateaccid on accession(date_accessioned_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_access_u_daterecid on accession(date_received_eventdate_id);  --  Event dates should not be reused.
 
 -- Each accession was received on zero or one eventdate.
 -- Each accession was accessioned on zero or one eventdate.
@@ -1921,7 +1926,7 @@ create unique index idx_access_u_daterecid on accession(date_received_eventdate_
 -- Each scope provides visibility for zero to many accessions.
 
 -- changeset chicoreus:103
-alter table accession add constraint fk_acc_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
+ALTER TABLE accession ADD CONSTRAINT fk_acc_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
 
 -- changeset chicoreus:104
 CREATE TABLE repositoryagreement (
@@ -1941,7 +1946,7 @@ CREATE TABLE repositoryagreement (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table repositoryagreement add constraint fk_repositoryagreement_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE repositoryagreement ADD CONSTRAINT fk_repositoryagreement_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each accession is under zero to one repositoryagreement.
 -- Each repositoryagreement applies to zero to many accessions.
 
@@ -1949,16 +1954,16 @@ alter table repositoryagreement add constraint fk_repositoryagreement_magentid f
 -- Each addressofrecord is the source for zero or one accession.
 
 -- changeset chicoreus:105
-ALTER TABLE accession add constraint fk_acc_repositoryagreement foreign key (repositoryagreement_id) references repositoryagreement (repositoryagreement_id) on update cascade; 
+ALTER TABLE accession ADD CONSTRAINT fk_acc_repositoryagreement foreign key (repositoryagreement_id) references repositoryagreement (repositoryagreement_id) on update cascade; 
 -- changeset chicoreus:106
-ALTER TABLE accession add constraint fk_acc_addresofrecrod foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
+ALTER TABLE accession ADD CONSTRAINT fk_acc_addresofrecrod foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade; 
 
 -- changeset chicoreus:107
-alter table repositoryagreement add constraint fk_ra_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
+ALTER TABLE repositoryagreement ADD CONSTRAINT fk_ra_scope_id foreign key (scope_id) references scope (scope_id) on update cascade on delete NO ACTION;
 -- changeset chicoreus:108
-ALTER TABLE repositoryagreement add constraint fk_ra_agreementwith foreign key (agreement_with_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE repositoryagreement ADD CONSTRAINT fk_ra_agreementwith foreign key (agreement_with_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:109
-ALTER TABLE repositoryagreement add constraint fk_ra_addressofrecord foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade;
+ALTER TABLE repositoryagreement ADD CONSTRAINT fk_ra_addressofrecord foreign key (addressofrecord_id) references addressofrecord (addressofrecord_id) on update cascade;
 
 -- Each repositoryagreeement is visible within one and only one scope.
 -- Each scope provides visibility for zero to many repositoryagreements.
@@ -1982,10 +1987,10 @@ CREATE TABLE accessionagent (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-ALTER TABLE accessionagent add constraint fk_accessionagent foreign key (agent_id) references agent (agent_id) on update cascade; 
-ALTER TABLE accessionagent add constraint fk_accessionforagent foreign key (accession_id) references accession (accession_id) on update cascade on delete cascade; 
+ALTER TABLE accessionagent ADD CONSTRAINT fk_accessionagent foreign key (agent_id) references agent (agent_id) on update cascade; 
+ALTER TABLE accessionagent ADD CONSTRAINT fk_accessionforagent foreign key (accession_id) references accession (accession_id) on update cascade on delete cascade; 
 
-alter table accessionagent add constraint fk_accessionagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE accessionagent ADD CONSTRAINT fk_accessionagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 --  an agent cannot have the same role twice in the same accession.
 CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role, accession_id); 
 
@@ -2018,7 +2023,7 @@ CREATE TABLE attachment (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table attachment add constraint fk_attachment_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE attachment ADD CONSTRAINT fk_attachment_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:112
 CREATE TABLE attachmentrelation (
    -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
@@ -2033,8 +2038,8 @@ CREATE TABLE attachmentrelation (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table attachmentrelation add constraint fk_attachmentrelation_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table attachmentrelation add constraint fk_attrel_attid foreign key (attachment_id) references attachment (attachment_id) on update cascade;
+ALTER TABLE attachmentrelation ADD CONSTRAINT fk_attachmentrelation_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE attachmentrelation ADD CONSTRAINT fk_attrel_attid foreign key (attachment_id) references attachment (attachment_id) on update cascade;
 
 -- Each attachmentrelation involves one and only one attachment.
 -- Each attachment is involved in zero to many attachmentrelations.
@@ -2056,13 +2061,13 @@ CREATE TABLE collector (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table collector add constraint fk_collector_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE collector ADD CONSTRAINT fk_collector_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:114
-ALTER TABLE collector add constraint fk_col_collectoragent foreign key (agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE collector ADD CONSTRAINT fk_col_collectoragent foreign key (agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:115
-ALTER TABLE collector add constraint fk_col_pricollectoragent foreign key (primary_collector_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE collector ADD CONSTRAINT fk_col_pricollectoragent foreign key (primary_collector_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:116
-ALTER TABLE collectingevent add constraint fk_colevent_col foreign key (collector_id) references collector (collector_id) on update cascade;
+ALTER TABLE collectingevent ADD CONSTRAINT fk_colevent_col foreign key (collector_id) references collector (collector_id) on update cascade;
 
 -- Each collector is zero to one agent.
 -- Each agent is one to many collectors.
@@ -2082,7 +2087,7 @@ CREATE TABLE ctcoordinatetype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table ctcoordinatetype add constraint fk_ctcoordtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE ctcoordinatetype ADD CONSTRAINT fk_ctcoordtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each coordinate is of one and only one (ct)coordinatetype.
 -- Each (ct)coordintetype is the type for zero to many coordinates.
@@ -2134,12 +2139,12 @@ CREATE TABLE coordinate (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-create unique index idx_coord_u_typelocalityid on coordinate(coordinate_type, locality_id);  --  Localities are limited to one coordinate of a given type.
+CREATE UNIQUE INDEX idx_coord_u_typelocalityid on coordinate(coordinate_type, locality_id);  --  Localities are limited to one coordinate of a given type.
 
 -- changeset chicoreus:118acoordinateFK
 
-alter table coordinate add constraint fk_coord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table coordinate add constraint fk_coordtype_ctcoordtype foreign key (coordinate_type) references ctcoordinatetype(coordinate_type) on update cascade;
+ALTER TABLE coordinate ADD CONSTRAINT fk_coord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE coordinate ADD CONSTRAINT fk_coordtype_ctcoordtype foreign key (coordinate_type) references ctcoordinatetype(coordinate_type) on update cascade;
 
 -- Each locality has zero to many coordinates.  [Each locality has zero to one coordinate of a given type]
 -- Each coordinate is for one and only one locality.
@@ -2190,15 +2195,15 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:120
-create unique index idx_georef_u_dategeorefid on georeference(georeference_eventdate_id);  --  Event dates should not be reused.
+CREATE UNIQUE INDEX idx_georef_u_dategeorefid on georeference(georeference_eventdate_id);  --  Event dates should not be reused.
 
 -- changeset chicoreus:121
-alter table georeference add constraint fk_georef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-ALTER TABLE georeference add constraint fk_gr_byagent foreign key (by_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE georeference ADD CONSTRAINT fk_georef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE georeference ADD CONSTRAINT fk_gr_byagent foreign key (by_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:122
-ALTER TABLE georeference add constraint fk_gr_geography foreign key (locality_id) references locality (locality_id) on update cascade;
+ALTER TABLE georeference ADD CONSTRAINT fk_gr_geography foreign key (locality_id) references locality (locality_id) on update cascade;
 -- changeset chicoreus:123
-ALTER TABLE georeference add constraint fk_gr_georefdate foreign key (georeference_eventdate_id) references eventdate (eventdate_id) on update cascade;
+ALTER TABLE georeference ADD CONSTRAINT fk_gr_georefdate foreign key (georeference_eventdate_id) references eventdate (eventdate_id) on update cascade;
 
 -- Each locality has zero to many georeferences.
 -- Each georeference is for one and only one locality.
@@ -2237,11 +2242,11 @@ CREATE TABLE geography (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-create index idx_geog_name on geography(name);
-create index idx_geog_full_name on geography(full_name(200));
+CREATE INDEX idx_geog_name on geography(name);
+CREATE INDEX idx_geog_full_name on geography(full_name(200));
 
-alter table geography add constraint fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
-alter table geography add constraint fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
+ALTER TABLE geography ADD CONSTRAINT fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
+ALTER TABLE geography ADD CONSTRAINT fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
 
 -- Each locality is politically contained in zero or one geography.
 -- Each locality is geographically contained in zero or one geography.
@@ -2279,23 +2284,23 @@ CREATE TABLE geographytreedefitem (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-alter table geographytreedefitem add constraint fk_geogtrdi_treeid foreign key (geographytreedef_id) references geographytreedef(geographytreedef_id) on update cascade;
+ALTER TABLE geographytreedefitem ADD CONSTRAINT fk_geogtrdi_treeid foreign key (geographytreedef_id) references geographytreedef(geographytreedef_id) on update cascade;
 
 -- changeset chicoreus:127
-alter table geography add constraint fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
+ALTER TABLE geography ADD CONSTRAINT fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
 
 
 -- changeset chicoreus:128
-alter table locality add constraint fk_local_polgeogid foreign key (geopolitical_geography_id) references geography (geography_id) on update cascade;
+ALTER TABLE locality ADD CONSTRAINT fk_local_polgeogid foreign key (geopolitical_geography_id) references geography (geography_id) on update cascade;
 -- changeset chicoreus:129
-alter table locality add constraint fk_local_geogeogid foreign key (geographic_geography_id) references geography (geography_id) on update cascade;
+ALTER TABLE locality ADD CONSTRAINT fk_local_geogeogid foreign key (geographic_geography_id) references geography (geography_id) on update cascade;
 
 -- changeset chicoreus:130
-alter table agentgeography add constraint fk_agentgeog_geogid foreign key (geography_id) references geography(geography_id) on update cascade;
+ALTER TABLE agentgeography ADD CONSTRAINT fk_agentgeog_geogid foreign key (geography_id) references geography(geography_id) on update cascade;
 
-alter table geography add constraint fk_geography_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table geographytreedef add constraint fk_geographytreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table geographytreedefitem add constraint fk_geographytreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE geography ADD CONSTRAINT fk_geography_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE geographytreedef ADD CONSTRAINT fk_geographytreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE geographytreedefitem ADD CONSTRAINT fk_geographytreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each geographytreedef is the tree for zero to many geographytreedefitem nodes.
 -- Each geographytreedefitem is a node in one and only one geographytreedef.
@@ -2324,13 +2329,13 @@ CREATE TABLE collection (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
-create index idx_coll_name on collection(collection_name(200));
-alter table collection add constraint fk_collection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+CREATE INDEX idx_coll_name on collection(collection_name(200));
+ALTER TABLE collection ADD CONSTRAINT fk_collection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:132
-ALTER TABLE catalogeditem add constraint fk_ci_collection_id foreign key (collection_id) references collection(collection_id);
+ALTER TABLE catalogeditem ADD CONSTRAINT fk_ci_collection_id foreign key (collection_id) references collection(collection_id);
 -- changeset chicoreus:133
-ALTER TABLE catnumseriescollection add constraint fk_cnsc_collid foreign key (collection_id) references collection(collection_id) on update cascade;
+ALTER TABLE catnumseriescollection ADD CONSTRAINT fk_cnsc_collid foreign key (collection_id) references collection(collection_id) on update cascade;
 
 -- Each catalogeditem is cataloged in one and only one collection.
 -- Each collection catalogs zero to many catalogeditems.
@@ -2373,7 +2378,7 @@ DEFAULT CHARSET=utf8;
 CREATE INDEX idx_stdi_name ON storagetreedefitem(name);
 CREATE INDEX idx_stdi_rank ON storagetreedefitem(rank_id);
 
-ALTER TABLE storagetreedefitem add constraint fk_stdi_treeid foreign key (storagetreedef_id) references storagetreedef(storagetreedef_id);
+ALTER TABLE storagetreedefitem ADD CONSTRAINT fk_stdi_treeid foreign key (storagetreedef_id) references storagetreedef(storagetreedef_id);
 
 -- changeset chicoreus:136
 CREATE TABLE storage (
@@ -2395,16 +2400,16 @@ DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_storage_parentid ON storage(parent_id);
 CREATE INDEX idx_storage_name ON storage(name);
-ALTER TABLE storage add constraint fk_stor_parent_id foreign key (parent_id) references storage (storage_id) on update cascade;
-ALTER TABLE storage add constraint fk_stor_treeitemdefid foreign key (storagetreedefitem_id) references storagetreedefitem (storagetreedefitem_id) on update cascade;
+ALTER TABLE storage ADD CONSTRAINT fk_stor_parent_id foreign key (parent_id) references storage (storage_id) on update cascade;
+ALTER TABLE storage ADD CONSTRAINT fk_stor_treeitemdefid foreign key (storagetreedefitem_id) references storagetreedefitem (storagetreedefitem_id) on update cascade;
 
 -- changeset chicoreus:136storagemodbyagent
-alter table storage add constraint fk_storage_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table storagetreedef add constraint fk_storagetreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table storagetreedefitem add constraint fk_storagetreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE storage ADD CONSTRAINT fk_storage_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE storagetreedef ADD CONSTRAINT fk_storagetreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE storagetreedefitem ADD CONSTRAINT fk_storagetreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:137
-ALTER TABLE preparation add constraint fk_prep_storage_id foreign key (storage_id) references storage (storage_id) on update cascade;
+ALTER TABLE preparation ADD CONSTRAINT fk_prep_storage_id foreign key (storage_id) references storage (storage_id) on update cascade;
 
 -- Each preparation has one and only one storage location.
 -- Each storage is the location for zero to many preparations.
@@ -2443,8 +2448,8 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
 
-alter table rocktimeunit add constraint fk_geoltp_parent_id foreign key (parent_id) references rocktimeunit (rocktimeunit_id);
-alter table rocktimeunit add constraint fk_geoltp_accepted_id foreign key (accepted_id) references rocktimeunit (rocktimeunit_id);
+ALTER TABLE rocktimeunit ADD CONSTRAINT fk_geoltp_parent_id foreign key (parent_id) references rocktimeunit (rocktimeunit_id);
+ALTER TABLE rocktimeunit ADD CONSTRAINT fk_geoltp_accepted_id foreign key (accepted_id) references rocktimeunit (rocktimeunit_id);
 
 -- Each rocktimeunit has zero or one parent rocktimeunit. 
 -- Each rocktimeunit is the parent for zero to many rocktimeunits.
@@ -2514,20 +2519,20 @@ DEFAULT CHARSET=utf8;
 
 
 -- changeset chicoreus:142
-alter table paleocontext add constraint fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
-alter table paleocontext add constraint fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
-alter table paleocontext add constraint fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
+ALTER TABLE paleocontext ADD CONSTRAINT fk_paleoctx_earlgeounit foreign key (earlyest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
+ALTER TABLE paleocontext ADD CONSTRAINT fk_paleoctx_latgeounit foreign key (latest_geochronologic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
+ALTER TABLE paleocontext ADD CONSTRAINT fk_paleoctx_lithunit foreign key (lithostratigraphic_unit_id) references rocktimeunit (rocktimeunit_id) on update cascade;
 
 -- changeset chicoreus:142geolmodby
-alter table rocktimeunit add constraint fk_rocktimeunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table rocktimeunittreedef add constraint fk_rocktimeunittreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table rocktimeunittreedefitem add constraint fk_rocktimeunittreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
-alter table paleocontext add constraint fk_paleocontext_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE rocktimeunit ADD CONSTRAINT fk_rocktimeunit_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE rocktimeunittreedef ADD CONSTRAINT fk_rocktimeunittreedef_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE rocktimeunittreedefitem ADD CONSTRAINT fk_rocktimeunittreedefitem_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+ALTER TABLE paleocontext ADD CONSTRAINT fk_paleocontext_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:143
-alter table locality add constraint fk_local_paleocontext foreign key (paleocontext_id) references paleocontext (paleocontext_id) on update cascade;
+ALTER TABLE locality ADD CONSTRAINT fk_local_paleocontext foreign key (paleocontext_id) references paleocontext (paleocontext_id) on update cascade;
 -- changeset chicoreus:144
-alter table collectingevent add constraint fk_colev_paleoid foreign key (paleocontext_id) references paleocontext(paleocontext_id) on update cascade;
+ALTER TABLE collectingevent ADD CONSTRAINT fk_colev_paleoid foreign key (paleocontext_id) references paleocontext(paleocontext_id) on update cascade;
 
 -- Each collectingevent has zero or one paleocontext.
 -- Each locality has zero or one paleocontext.
@@ -2546,19 +2551,19 @@ alter table collectingevent add constraint fk_colev_paleoid foreign key (paleoco
 -- additional accumulated foreign key constraints
 
 -- changeset chicoreus:145
-alter table collectingevent add constraint fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
+ALTER TABLE collectingevent ADD CONSTRAINT fk_colev_localityid foreign key (locality_id) references locality(locality_id) on update cascade;
 -- changeset chicoreus:146
-alter table collectingevent add constraint fk_colev_eventdateid foreign key (date_collected_eventdate_id) references eventdate(eventdate_id) on update cascade;
+ALTER TABLE collectingevent ADD CONSTRAINT fk_colev_eventdateid foreign key (date_collected_eventdate_id) references eventdate(eventdate_id) on update cascade;
 
 -- Each systemuser is one and only one agent
 -- Each agent is also zero or one systemuser
 -- changeset chicoreus:147
-create unique index idx_sysuser_u_useragentid on systemuser(user_agent_id);
+CREATE UNIQUE INDEX idx_sysuser_u_useragentid on systemuser(user_agent_id);
 -- changeset chicoreus:148
-alter table systemuser add constraint fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
+ALTER TABLE systemuser ADD CONSTRAINT fk_sysuser_useragentid foreign key (user_agent_id) references agent (agent_id) on update cascade;
 
 -- changeset chicoreus:catitemindexes
-create index idx_ii_catitem on identifiableitem(catalogeditem_id);
-create index idx_prep_catitem on preparation(catalogeditem_id);
+CREATE INDEX idx_ii_catitem on identifiableitem(catalogeditem_id);
+CREATE INDEX idx_prep_catitem on preparation(catalogeditem_id);
 
 --  Last liquibase changeset in this document was number 148.
