@@ -1184,6 +1184,7 @@ CREATE TABLE ctrelationshiptype (
    modified_by_agent_id bigint not null default 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:055ctreltypeConstraints
 alter table ctrelationshiptype add constraint fk_ctreltype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each ctrelationshiptype has zero to many internationalization in codetableint (join on relationship-key_name).
@@ -1199,9 +1200,9 @@ CREATE TABLE agentteam (
    modified_by_agent_id bigint not null default 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:056agentteamConstraints
 alter table agentteam add constraint fk_agentt_tagent_id foreign key (team_agent_id) references agent(agent_id) on delete no action on update cascade;
 alter table agentteam add constraint fk_agentt_membid foreign key (member_agent_id) references agent(agent_id) on delete no action on update cascade;
-
 alter table agentteam add constraint fk_agentteam_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agent is a member of zero to many agentteams.
 -- Each agent is the team for zero to many agentteams.
@@ -1227,8 +1228,8 @@ CREATE TABLE agentnumberpattern (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:057anpConstraints
 alter table agentnumberpattern add constraint fk_anp_agent_id foreign key (agent_id) references agent(agent_id) on delete cascade on update cascade;
-
 alter table agentnumberpattern add constraint fk_agentnumberpattern_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agent has zero to many agentnumberpatterns.
 -- Each agentnumberpattern is for one and only one agent.
@@ -1247,7 +1248,6 @@ DEFAULT CHARSET=utf8;
 
 -- changeset chicoreus:059
 create index idx_refagentlks_refagent on agentreference (publication_id, agent_id);
-
 alter table agentreference add constraint fk_agentreference_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each agentreference is about one and only one agent.
 -- Each agent has zero to many agentreferences.
@@ -1279,6 +1279,7 @@ DEFAULT CHARSET=utf8;
 -- Each agent has zero to many agentlinks.
 -- Each agentlink is for one and only one agent.
 
+-- changeset chicoreus:062agentlinkConstraints
 alter table agentlink add constraint fk_alink_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- changeset chicoreus:063
@@ -1297,11 +1298,10 @@ CREATE TABLE agentname (
 ENGINE=myisam -- to ensure support for fulltext index
 DEFAULT CHARSET=utf8;  
 
+-- changeset chicoreus:063agentNameConstraints
 create unique index idx_agentname_u_idtype_name on agentname(agent_id,type,name); --  combination of recordedbyid, name, and type must be unique.
-
 -- Can't create this foreign key relation, as agentname uses the myisam index for access to full text indexing.
 -- alter table author add constraint fk_authoragentname foreign key (agentname_id) references agentname (agentname_id) on update cascade;
-
 alter table agentname add constraint fk_aname_agentid_id foreign key (agent_id) references agent (agent_id) on update cascade;
 
 -- Each agent has zero to many agentnames.
@@ -1326,9 +1326,10 @@ CREATE TABLE ctagentnametype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:065ctantConstraints
 alter table agentname add constraint fk_aname_type foreign key (type) references ctagentnametype (type) on update cascade;
-
 alter table ctagentnametype add constraint fk_ctagentnametype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
 -- changeset chicoreus:066
 CREATE TABLE agentrelation (
    -- Definition: A relationship between one agent and another, serves to represent relationships (family,marrage,mentorship) amongst agents.
