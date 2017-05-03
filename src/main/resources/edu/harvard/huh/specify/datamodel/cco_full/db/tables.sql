@@ -1578,9 +1578,9 @@ CREATE TABLE biologicalattribute (
 )
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
-ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biologicalattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:081
+ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biologicalattribute_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE biologicalattribute ADD CONSTRAINT fk_biologicalattributetype foreign key (name) references ctbiologicalattributetype (name) on update cascade; 
 -- Each biologicalattribute is of one and only one biologicalattrubutetype (ctbiologicalattributetype).
 -- Each ctbiologicalattributetype is the type of zero to many biological attribtues.
@@ -1678,8 +1678,8 @@ DEFAULT CHARSET=utf8;
 -- Each encumberance is visible to one and only one scope.
 -- Each scope provides the visiblility for zero to many encumberances.
 
-ALTER TABLE encumberance ADD CONSTRAINT fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 -- changeset chicoreus:086
+ALTER TABLE encumberance ADD CONSTRAINT fk_enctype foreign key (encumberance_type) references ctencumberancetype (encumberance_type) on update cascade;
 ALTER TABLE encumberance ADD CONSTRAINT fk_encagent foreign key (createdby_agent_id) references agent (agent_id) on update cascade;
 -- changeset chicoreus:087
 ALTER TABLE encumberance ADD CONSTRAINT fk_encvisiblescope foreign key (visible_to_scope_id) references scope (scope_id) on update cascade;
@@ -1781,6 +1781,7 @@ CREATE TABLE address (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:092adddateConstraints
 CREATE UNIQUE INDEX idx_address_u_startdateid on address(start_eventdate_id);  --  Event dates should not be reused.
 CREATE UNIQUE INDEX idx_address_u_enddateid on address(end_eventdate_id);  --  Event dates should not be reused.
 
@@ -1811,6 +1812,7 @@ CREATE TABLE ctelectronicaddresstype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:095cteatConstraints
 ALTER TABLE ctelectronicaddresstype ADD CONSTRAINT fk_ctelecaddresstype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:096
@@ -1829,11 +1831,11 @@ CREATE TABLE electronicaddress (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:096eladdConstraints
 ALTER TABLE electronicaddress ADD CONSTRAINT fk_electronicaddress_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE electronicaddress ADD CONSTRAINT fk_ea_nametype foreign key (type_name) references ctelectronicaddresstype (type_name) on update cascade;
--- changeset chicoreus:097
 ALTER TABLE electronicaddress ADD CONSTRAINT fk_eaddressforagent foreign key (address_for_agent_id) references agent (agent_id) on update cascade; 
-
+-- changeset chicoreus:097
 CREATE UNIQUE INDEX idx_eaddress_u_agentprimary on electronicaddress(address_for_agent_id, is_primary);  --  Only one primary electronic address for an agent.
 
 -- Each electronicaddress is of one and only one (ct)electronicaddresstype.
@@ -1908,6 +1910,7 @@ CREATE TABLE accession (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:101accessionConstraints
 ALTER TABLE accession ADD CONSTRAINT fk_accession_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:102
@@ -1946,6 +1949,7 @@ CREATE TABLE repositoryagreement (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:104ramodagentConstraint
 ALTER TABLE repositoryagreement ADD CONSTRAINT fk_repositoryagreement_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- Each accession is under zero to one repositoryagreement.
 -- Each repositoryagreement applies to zero to many accessions.
@@ -1987,10 +1991,13 @@ CREATE TABLE accessionagent (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:110accessionAgentConstraints
 ALTER TABLE accessionagent ADD CONSTRAINT fk_accessionagent foreign key (agent_id) references agent (agent_id) on update cascade; 
 ALTER TABLE accessionagent ADD CONSTRAINT fk_accessionforagent foreign key (accession_id) references accession (accession_id) on update cascade on delete cascade; 
 
 ALTER TABLE accessionagent ADD CONSTRAINT fk_accessionagent_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
+-- changeset chicoreus:110accessionAgentIndex
 --  an agent cannot have the same role twice in the same accession.
 CREATE UNIQUE INDEX idx_accessionagent_agroacc on accessionagent(agent_id, role, accession_id); 
 
@@ -2023,7 +2030,9 @@ CREATE TABLE attachment (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:111attachmentConstraints
 ALTER TABLE attachment ADD CONSTRAINT fk_attachment_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
+
 -- changeset chicoreus:112
 CREATE TABLE attachmentrelation (
    -- Definition: relationship between any row in any table and an attached media object.  Means of associating media objects with data records.
@@ -2038,6 +2047,7 @@ CREATE TABLE attachmentrelation (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:112arConstraints
 ALTER TABLE attachmentrelation ADD CONSTRAINT fk_attachmentrelation_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE attachmentrelation ADD CONSTRAINT fk_attrel_attid foreign key (attachment_id) references attachment (attachment_id) on update cascade;
 
@@ -2061,6 +2071,7 @@ CREATE TABLE collector (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:113collmodagConstraint
 ALTER TABLE collector ADD CONSTRAINT fk_collector_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 -- changeset chicoreus:114
 ALTER TABLE collector ADD CONSTRAINT fk_col_collectoragent foreign key (agent_id) references agent (agent_id) on update cascade;
@@ -2087,6 +2098,7 @@ CREATE TABLE ctcoordinatetype (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:117ctctConstraints
 ALTER TABLE ctcoordinatetype ADD CONSTRAINT fk_ctcoordtype_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- Each coordinate is of one and only one (ct)coordinatetype.
@@ -2139,9 +2151,10 @@ CREATE TABLE coordinate (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:118acoordinateIndex
 CREATE UNIQUE INDEX idx_coord_u_typelocalityid on coordinate(coordinate_type, locality_id);  --  Localities are limited to one coordinate of a given type.
 
--- changeset chicoreus:118acoordinateFK
+-- changeset chicoreus:118bcoordinateFK
 
 ALTER TABLE coordinate ADD CONSTRAINT fk_coord_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 ALTER TABLE coordinate ADD CONSTRAINT fk_coordtype_ctcoordtype foreign key (coordinate_type) references ctcoordinatetype(coordinate_type) on update cascade;
@@ -2242,9 +2255,11 @@ CREATE TABLE geography (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:124geogIndexes
 CREATE INDEX idx_geog_name on geography(name);
 CREATE INDEX idx_geog_full_name on geography(full_name(200));
 
+-- changeset chicoreus:124geogConstraints
 ALTER TABLE geography ADD CONSTRAINT fk_geo_parent_id foreign key (parent_id) references geography (geography_id);
 ALTER TABLE geography ADD CONSTRAINT fk_geo_accepted_id foreign key (accepted_id) references geography (geography_id);
 
@@ -2284,11 +2299,11 @@ CREATE TABLE geographytreedefitem (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:126getdiConstraints
 ALTER TABLE geographytreedefitem ADD CONSTRAINT fk_geogtrdi_treeid foreign key (geographytreedef_id) references geographytreedef(geographytreedef_id) on update cascade;
 
 -- changeset chicoreus:127
 ALTER TABLE geography ADD CONSTRAINT fk_geo_treedefitem_id foreign key (geographytreedefitem_id) references geographytreedefitem (geographytreedefitem_id);
-
 
 -- changeset chicoreus:128
 ALTER TABLE locality ADD CONSTRAINT fk_local_polgeogid foreign key (geopolitical_geography_id) references geography (geography_id) on update cascade;
@@ -2329,7 +2344,9 @@ CREATE TABLE collection (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:131collectionIndex
 CREATE INDEX idx_coll_name on collection(collection_name(200));
+-- changeset chicoreus:131collectionConstraint
 ALTER TABLE collection ADD CONSTRAINT fk_collection_magentid foreign key (modified_by_agent_id) references agent(agent_id) on update cascade;
 
 -- changeset chicoreus:132
@@ -2375,9 +2392,11 @@ CREATE TABLE storagetreedefitem (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:135stortdiIndexes
 CREATE INDEX idx_stdi_name ON storagetreedefitem(name);
 CREATE INDEX idx_stdi_rank ON storagetreedefitem(rank_id);
 
+-- changeset chicoreus:135stortdiConstraint
 ALTER TABLE storagetreedefitem ADD CONSTRAINT fk_stdi_treeid foreign key (storagetreedef_id) references storagetreedef(storagetreedef_id);
 
 -- changeset chicoreus:136
@@ -2398,8 +2417,11 @@ CREATE TABLE storage (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:136storageIndexes
 CREATE INDEX idx_storage_parentid ON storage(parent_id);
 CREATE INDEX idx_storage_name ON storage(name);
+
+-- changeset chicoreus:136storageConstraints
 ALTER TABLE storage ADD CONSTRAINT fk_stor_parent_id foreign key (parent_id) references storage (storage_id) on update cascade;
 ALTER TABLE storage ADD CONSTRAINT fk_stor_treeitemdefid foreign key (storagetreedefitem_id) references storagetreedefitem (storagetreedefitem_id) on update cascade;
 
@@ -2429,7 +2451,6 @@ ALTER TABLE preparation ADD CONSTRAINT fk_prep_storage_id foreign key (storage_i
 -- a model for geological context 
 
 -- changeset chicoreus:138
-
 CREATE TABLE rocktimeunit (
    -- Definition: a geological time, rock, or rock/time unit (lithostratigraphic unit, chronostratigraphic unit.
    rocktimeunit_id bigint not null primary key auto_increment, -- surrogate numeric primary key
@@ -2447,7 +2468,7 @@ CREATE TABLE rocktimeunit (
 ENGINE=InnoDB 
 DEFAULT CHARSET=utf8;
 
-
+-- changeset chicoreus:138rtuConstraints
 ALTER TABLE rocktimeunit ADD CONSTRAINT fk_geoltp_parent_id foreign key (parent_id) references rocktimeunit (rocktimeunit_id);
 ALTER TABLE rocktimeunit ADD CONSTRAINT fk_geoltp_accepted_id foreign key (accepted_id) references rocktimeunit (rocktimeunit_id);
 
@@ -2466,6 +2487,7 @@ CREATE TABLE rocktimeunittreedef (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8;
 
+-- changeset chicoreus:139rtytdindex
 CREATE UNIQUE INDEX idx_geotimpertdef_u_name ON rocktimeunittreedef (name);
 
 -- changeset chicoreus:140
@@ -2566,4 +2588,4 @@ ALTER TABLE systemuser ADD CONSTRAINT fk_sysuser_useragentid foreign key (user_a
 CREATE INDEX idx_ii_catitem on identifiableitem(catalogeditem_id);
 CREATE INDEX idx_prep_catitem on preparation(catalogeditem_id);
 
---  Last liquibase changeset in this document was number 148.
+--  Last numbered liquibase changeset in this document was number 148.
